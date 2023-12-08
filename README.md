@@ -17,3 +17,20 @@ conda install -c conda-forge numpy
 conda install -c conda-forge scikit-image
 pip install itk-elastix
 ```
+
+(TODO: make pip-installable)
+
+Then clone the repo:
+```
+git clone https://github.com/juremaj/track2p
+```
+
+cd to the directory:
+```
+cd track2p
+```
+
+And install the package:
+```
+pip install -e .
+```
