@@ -6,7 +6,7 @@ def check_nplanes(track_ops):
 
     for ds_path in track_ops.all_ds_path:
         # check how many subfolders starting with plane* in suite2p folder
-        n_planes = len([name for name in os.listdir(ds_path + 'suite2p') if name.startswith('plane')])
+        n_planes = len([name for name in os.listdir(ds_path + '/suite2p') if name.startswith('plane')])
         print(f'Found {n_planes} planes in {ds_path}')
         all_nplanes.append(n_planes)
     track_ops.all_nplanes = all_nplanes
@@ -33,7 +33,7 @@ def load_all_imgs(track_ops):
         ds_avg_ch2 = []
 
         for i in range(track_ops.nplanes):
-            ops = np.load(ds_path + 'suite2p/plane' + str(i) + '/ops.npy', allow_pickle=True).item()
+            ops = np.load(ds_path + '/suite2p/plane' + str(i) + '/ops.npy', allow_pickle=True).item()
             nchannels = ops['nchannels']
             print('nchannels: ' + str(nchannels) + ' for plane ' + str(i) + ' in dataset ' + ds_path)
             ds_avg_ch1.append(ops['meanImg'])

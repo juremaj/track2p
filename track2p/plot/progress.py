@@ -7,7 +7,7 @@ from track2p.plot.utils import match_hist_all
 
 def plot_all_planes(all_ds_avg_ch, track_ops, sat_perc=99):
     nplanes = track_ops.nplanes
-    fig, axs = plt.subplots(nplanes, len(track_ops.all_ds_path), figsize=(10, 10))
+    fig, axs = plt.subplots(nplanes, len(track_ops.all_ds_path), figsize=(3 * len(track_ops.all_ds_path), 3 * nplanes), dpi=300)
     # add dummy dimension to axs if only one plane
     if nplanes==1:
         axs = np.expand_dims(axs, axis=0)
