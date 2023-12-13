@@ -20,13 +20,14 @@ class DefaultTrackOps:
             ]
         # self.save_path = 'data/ac/ac444118/track2p/'
         self.save_path = 'data/jm/jm032/track2p/'
-        self.reg_chan = 1 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
+        self.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
         self.transform_type = 'affine' # 'affine' or 'nonrigid'
         self.sat_perc = 99 # percentile to saturate image at (only affects visualisation not the registration/matching)
-        self.iscell_thr = 0.95 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be present in all datasets)
+        self.iscell_thr = 0.50 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be present in all datasets)
         # do not change these
         self.save_path_fig = self.save_path + 'figures/'
-        self.show_roi_reg_output = True # this is slow because plt.contour is slow and also very memory intensive(it can easily crash)
+        self.show_roi_reg_output = False # this is slow because plt.contour is slow and also very memory intensive(it can easily crash)
+        self.matching_method='cent_int-filt' # 'cent_int-filt' or 'cent_int'  (TODO: implement iou method from original algo)
 
         # make the output directories when initialising the object
         make_dir(self.save_path)
