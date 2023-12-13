@@ -5,6 +5,7 @@ def get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops): # chooses
         all_ds_avg = all_ds_avg_ch1
     elif track_ops.reg_chan==1:
         all_ds_avg = all_ds_avg_ch2
+        print('WARNING: using anatomical channel for registration (this is not always available)')
 
     all_ds_ref_img = []
     all_ds_mov_img = []
