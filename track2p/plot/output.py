@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from skimage.exposure import match_histograms
-from track2p.plot.utils import make_rgb_img, saturate_perc
+from track2p.plot.utils import make_rgb_img, saturate_perc, get_all_wind_mean_img
 
 def plot_reg_img_output(track_ops):
     # make a plot where on the top its all the images and the bottom is the overlays before and after registration
@@ -169,31 +169,72 @@ def plot_roi_reg_output(track_ops):
     fig.savefig(track_ops.save_path_fig + 'reg_roi_output.png', bbox_inches='tight', dpi=200)     
 
 
-# plot the fistribution of the thresholding metric 
 def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
-    fig, axs = plt.subplots(1, len(all_ds_thr_met), figsize=(6*len(all_ds_thr_met), 6*track_ops.nplanes), sharey=True)
+    fig, axs = plt.subplots(track_ops.nplanes, len(all_ds_thr_met), figsize=(6*len(all_ds_thr_met), 6*track_ops.nplanes), sharey=True, sharex=True)
     for i in range(len(all_ds_thr_met)):
-        for j in range(len(all_ds_thr_met[i])):
-            this_ax = axs[i] if len([all_ds_thr_met[i]])==1 else axs[i][j]
+        for j in range(track_ops.nplanes):
+            this_ax = axs[i] if track_ops.nplanes==1 else axs[j][i]
             n_reg_roi = len(all_ds_thr_met[i][j])
             n_abovethr_roi = np.sum(all_ds_thr_met[i][j]>all_ds_thr[i][j])
             this_ax.hist(all_ds_thr_met[i][j], bins=20)
             this_ax.axvline(all_ds_thr[i][j], color='grey', linestyle='--')
             # label the line with 'otsu threshold'
             this_ax.text(all_ds_thr[i][j]+0.02, this_ax.get_ylim()[1]*0.9, f'otsu thr.: {all_ds_thr[i][j]:.2f}')
-            this_ax.set_title(f'reg_idx: {i}, ref_idx: {j} (above_thr {n_abovethr_roi}/{n_reg_roi} rat. {n_abovethr_roi/n_reg_roi:.2f})')
+            this_ax.set_title(f'ds_ref{i}, ds_reg:{i+1} (above_thr {n_abovethr_roi}/{n_reg_roi} rat. {n_abovethr_roi/n_reg_roi:.2f})')
+            
+            if i==0:
+                this_ax.set_ylabel(f'ROI count (plane{j})')
     
     # remove the top and right spines
     for a in axs.flatten():
         a.spines['top'].set_visible(False)
         a.spines['right'].set_visible(False)
 
-    # label y axis in lefmost plot
-    this_ax = axs[0] if len([all_ds_thr_met[i]])==1 else axs[0][0]
-    this_ax.set_ylabel('Number of ROIs')
-    # set bottom left plot to have x axis label
-    this_ax = axs[0] if len([all_ds_thr_met[i]])==1 else axs[-1][0]
-    this_ax.set_xlabel('Thresholding metric')
     
     plt.tight_layout()
     plt.show()
+
+
+def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64):
+
+    nrows = len(neuron_ids)
+    ncols = len(all_ds_mean_img)
+    fig, axs = plt.subplots(nrows, ncols, figsize=(2*ncols, 2*nrows), dpi=100)
+
+    for (i, nrn_id) in enumerate(neuron_ids):
+        # check if neuron is not matched (if ith row of all_pl_match_mat is all None)
+        if any(all_pl_match_mat[plane_idx][nrn_id,:]==None):
+            continue
+        
+        # get all wind_mean_img (small window around centroid)
+        all_wind_mean_img = get_all_wind_mean_img(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, nrn_id, plane_idx=plane_idx, win_size=win_size)
+           
+        for j in range(len(all_ds_mean_img)):
+            wind_mean_img = all_wind_mean_img[j]
+            ref_img = all_wind_mean_img[0]
+            matched = match_histograms(wind_mean_img, ref_img)
+            axs[i, j].imshow(matched, cmap='gray')
+            # scatter middle pixel of the window
+            axs[i, j].scatter(win_size/2, win_size/2, color='C0')
+            if i==0:
+                axs[i, j].set_title(f'ds {j} (pl {plane_idx})')
+            if j==0:
+                axs[i, j].set_ylabel(f'ROI {nrn_id} ({i}/{nrows})')
+
+    # remove axes labels
+    for ax in axs.flat:
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+    plt.tight_layout()
+    plt.savefig(track_ops.save_path_fig + f'roi_match_plane{plane_idx}.png', dpi=100)
+    plt.show()
+
+def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48):
+
+    for i in range(track_ops.nplanes):
+        pl_neuron_ids = np.arange(all_pl_match_mat[i].shape[0])
+        for j in range(len(track_ops.save_path)):
+            neuron_ids = pl_neuron_ids[~np.any(all_pl_match_mat[i]==None, axis=1)]
+
+        plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=i, win_size=win_size)

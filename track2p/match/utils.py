@@ -15,7 +15,7 @@ def get_centroids(all_roi):
         except IndexError:
             print('IndexError in get_centroids')
             print('roi index', i)
-            centroids.append([np.nan, np.nan])
+            centroids.append([0, 0])
 
     return np.array(centroids)
 
