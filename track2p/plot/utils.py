@@ -28,3 +28,23 @@ def saturate_perc(img_rgb, sat_perc=99):
     img_rgb = np.clip(img_rgb, 0, np.percentile(img_rgb, sat_perc)) 
     img_rgb = (img_rgb / np.max(img_rgb) * 255).astype(np.uint8)
     return img_rgb
+
+def get_all_wind_mean_img(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, nrn_id, plane_idx=0, win_size=64):
+
+    all_wind_mean_img = []
+    for i in range(len(all_ds_mean_img)):
+        centroid_ids = all_pl_match_mat[plane_idx][nrn_id,:]
+        cent = all_ds_centroids[i][plane_idx][centroid_ids[i]]
+        mean_img = all_ds_mean_img[i][plane_idx]
+
+        # pad mean image with mean and shift the centroid appropriately
+        # mean_img = np.pad(mean_img, ((win_size,win_size),(win_size,win_size)))
+        mean_img = np.pad(mean_img, ((win_size,win_size),(win_size,win_size)), mode='constant', constant_values=0)
+        cent = cent + win_size
+    
+        wind_mean_img = mean_img[int(cent[0]-win_size/2):int(cent[0]+win_size/2), int(cent[1]-win_size/2):int(cent[1]+win_size/2)]
+
+
+        all_wind_mean_img.append(wind_mean_img)
+
+    return all_wind_mean_img

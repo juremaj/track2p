@@ -35,7 +35,6 @@ def get_all_ds_assign(track_ops, all_ds_all_roi_ref, all_ds_all_roi_reg):
 
             # 4) for each matched pair (len(all_roi_ref)) compute thresholding metric (in this case IOU, the filtering will be done afterwards in the all-day assignment)
             thr_met = get_iou(all_roi_ref[:,:,ref_ind], all_roi_reg[:,:,reg_ind])
-
             # 5) compute otsu threshold on thr_met
             thr = threshold_otsu(thr_met)
 
@@ -91,5 +90,7 @@ def get_all_pl_match_mat(all_ds_all_roi_ref, all_ds_assign_thr, track_ops):
         # compute how many ROIs are tracked across all days
         n_tracked = np.sum(np.all(pl_match_mat!=None, axis=1))
         print(f'Number of ROIs tracked in plane{i} across all days: {n_tracked}')
-
+        track_ops.all_pl_match_mat = all_pl_match_mat
+        track_ops.n_tracked = n_tracked
+        
     return all_pl_match_mat

@@ -59,3 +59,51 @@ def load_all_imgs(track_ops):
         exit()
 
     return all_ds_avg_ch1, all_ds_avg_ch2
+
+def load_all_ds_stat_iscell(track_ops):
+    all_ds_stat_iscell = []
+    for (i, ds_path) in enumerate(track_ops.all_ds_path):
+        ds_stat_iscell = []
+        for j in range(track_ops.nplanes):
+            stat = np.load(os.path.join(ds_path, 'suite2p', f'plane{j}', 'stat.npy'), allow_pickle=True)
+            iscell = np.load(os.path.join(ds_path, 'suite2p', f'plane{j}', 'iscell.npy'), allow_pickle=True)
+            stat_iscell = stat[iscell[:,1]>track_ops.iscell_thr]
+            ds_stat_iscell.append(stat_iscell)
+        all_ds_stat_iscell.append(ds_stat_iscell)
+
+    return all_ds_stat_iscell
+
+def load_all_ds_ops(track_ops):
+    all_ds_ops = []
+    for ds_path in track_ops.all_ds_path:
+        ds_ops = []
+        for j in range(track_ops.nplanes):
+            ops = np.load(os.path.join(ds_path, 'suite2p', f'plane{j}', 'ops.npy'), allow_pickle=True).item()
+            ds_ops.append(ops)
+        all_ds_ops.append(ds_ops)
+    
+    return all_ds_ops
+
+def load_all_ds_mean_img(track_ops):
+    all_ds_ops = load_all_ds_ops(track_ops)
+    all_ds_mean_img = [] 
+    for ds_ops in all_ds_ops:
+        ds_mean_img = []
+        for ops in ds_ops:
+            ds_mean_img.append(ops['meanImg'])
+        all_ds_mean_img.append(ds_mean_img)
+        
+    return all_ds_mean_img
+
+def load_all_ds_centroids(all_ds_stat_iscell, track_ops):
+    all_ds_centroids = []
+    for i in range(len(track_ops.all_ds_path)):
+        ds_centroids = []
+        for stat_iscell in all_ds_stat_iscell[i]:
+            centroids = []
+            for roi_stat in stat_iscell:
+                centroids.append(roi_stat['med'])
+            ds_centroids.append(np.array(centroids))
+        all_ds_centroids.append(ds_centroids)
+        
+    return all_ds_centroids
