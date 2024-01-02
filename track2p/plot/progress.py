@@ -22,3 +22,4 @@ def plot_all_planes(all_ds_avg_ch, track_ops, sat_perc=99):
             axs[i, j].set_title('Plane ' + str(i) + ' in dataset ' + str(j))
             axs[i, j].axis('off')
             
+

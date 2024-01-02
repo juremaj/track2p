@@ -19,7 +19,7 @@ def plot_reg_img_output(track_ops):
     for i in range(nplanes):
         axs[i, 0].set_ylabel(f'plane{i}\nchan{track_ops.reg_chan}', rotation=0, size='large', ha='right', va='center', labelpad=20)
         for j in range(len(track_ops.all_ds_path)):
-            img = track_ops.all_ds_avg_ch1[j][i]
+            img = track_ops.all_ds_avg_ch1[j][i] if track_ops.reg_chan==0 else track_ops.all_ds_avg_ch2[j][i]
             axs[i, j].imshow(img, cmap='gray', vmin=0, vmax=np.percentile(img, 99))
 
 
@@ -167,3 +167,33 @@ def plot_roi_reg_output(track_ops):
 
     # save figure into the output path
     fig.savefig(track_ops.save_path_fig + 'reg_roi_output.png', bbox_inches='tight', dpi=200)     
+
+
+# plot the fistribution of the thresholding metric 
+def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
+    fig, axs = plt.subplots(1, len(all_ds_thr_met), figsize=(6*len(all_ds_thr_met), 6*track_ops.nplanes), sharey=True)
+    for i in range(len(all_ds_thr_met)):
+        for j in range(len(all_ds_thr_met[i])):
+            this_ax = axs[i] if len([all_ds_thr_met[i]])==1 else axs[i][j]
+            n_reg_roi = len(all_ds_thr_met[i][j])
+            n_abovethr_roi = np.sum(all_ds_thr_met[i][j]>all_ds_thr[i][j])
+            this_ax.hist(all_ds_thr_met[i][j], bins=20)
+            this_ax.axvline(all_ds_thr[i][j], color='grey', linestyle='--')
+            # label the line with 'otsu threshold'
+            this_ax.text(all_ds_thr[i][j]+0.02, this_ax.get_ylim()[1]*0.9, f'otsu thr.: {all_ds_thr[i][j]:.2f}')
+            this_ax.set_title(f'reg_idx: {i}, ref_idx: {j} (above_thr {n_abovethr_roi}/{n_reg_roi} rat. {n_abovethr_roi/n_reg_roi:.2f})')
+    
+    # remove the top and right spines
+    for a in axs.flatten():
+        a.spines['top'].set_visible(False)
+        a.spines['right'].set_visible(False)
+
+    # label y axis in lefmost plot
+    this_ax = axs[0] if len([all_ds_thr_met[i]])==1 else axs[0][0]
+    this_ax.set_ylabel('Number of ROIs')
+    # set bottom left plot to have x axis label
+    this_ax = axs[0] if len([all_ds_thr_met[i]])==1 else axs[-1][0]
+    this_ax.set_xlabel('Thresholding metric')
+    
+    plt.tight_layout()
+    plt.show()
