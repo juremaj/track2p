@@ -66,10 +66,18 @@ def get_cost_mat(all_roi_ref, all_roi_reg, track_ops):
         # costa mat here is smaller than above since the matches are filtered
         # additionally when outputting we need to be careful to index with the filtered indices as well
         cost_mat, all_inds_ref_filt, all_inds_reg_filt = get_cent_dist_mat_non_overlap(all_roi_ref, all_roi_reg) 
-    # TODO: implement method that uses intersection of ROIs as cost matrix (as was done originally)
+    elif track_ops.matching_method=='iou':
+        cost_mat = 1-get_cross_iou_mat(all_roi_ref, all_roi_reg, dist_thr=track_ops.iou_dist_thr)
+        all_inds_ref_filt = np.arange(all_roi_ref.shape[2])
+        all_inds_reg_filt = np.arange(all_roi_reg.shape[2])
     else:
         raise Exception('Matching method not implemented')
-
+    
+    print(f'cost_mat computed with method: {track_ops.matching_method}')
+    print(f'cost_mat shape: {cost_mat.shape}')
+    print(f'cost_mat min: {np.min(cost_mat)}')
+    print(f'cost_mat max: {np.max(cost_mat)}')
+    
     return cost_mat, all_inds_ref_filt, all_inds_reg_filt
 
 def get_iou(all_roi_ref, all_roi_reg):
@@ -83,6 +91,23 @@ def get_iou(all_roi_ref, all_roi_reg):
         ious.append(intersection/union)
 
     return np.array(ious)
+
+def get_cross_iou_mat(all_roi_ref, all_roi_reg, dist_thr=16):
+    # if the distance between two rois is larger than dist_thr, we assume they are not the same cell and just skip the computation
+    distances = get_cent_dist_mat(all_roi_ref, all_roi_reg)
+
+    cross_iou_mat = np.zeros((all_roi_ref.shape[2], all_roi_reg.shape[2]))
+    for i in range(all_roi_ref.shape[2]):
+        for j in range(all_roi_reg.shape[2]):
+            if distances[i,j] > dist_thr: # skipping if far apart
+                continue
+            # compute IOU
+            intersection = np.logical_and(all_roi_ref[:,:,i], all_roi_reg[:,:,j])
+            union = np.logical_or(all_roi_ref[:,:,i], all_roi_reg[:,:,j])
+            iou_score = np.sum(intersection) / np.sum(union)
+            cross_iou_mat[i,j] = iou_score
+
+    return cross_iou_mat
 
 def init_all_pl_match_mat(all_ds_all_roi_ref, all_ds_assign_thr, track_ops):
     all_pl_match_mat = []

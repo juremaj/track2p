@@ -1,5 +1,5 @@
 import numpy as np 
-from skimage.filters import threshold_otsu
+from skimage.filters import threshold_otsu, threshold_minimum
 from scipy.optimize import linear_sum_assignment
 
 from track2p.match.utils import get_cost_mat, get_iou, init_all_pl_match_mat
@@ -35,8 +35,14 @@ def get_all_ds_assign(track_ops, all_ds_all_roi_ref, all_ds_all_roi_reg):
 
             # 4) for each matched pair (len(all_roi_ref)) compute thresholding metric (in this case IOU, the filtering will be done afterwards in the all-day assignment)
             thr_met = get_iou(all_roi_ref[:,:,ref_ind], all_roi_reg[:,:,reg_ind])
+            thr_met_compute = thr_met[thr_met>0] if track_ops.thr_remove_zeros else thr_met # remove zeros for computing the threshold (otsu thresholding is squed 
+
             # 5) compute otsu threshold on thr_met
-            thr = threshold_otsu(thr_met)
+            if track_ops.thr_method == 'otsu':
+                thr = threshold_otsu(thr_met_compute)
+            elif track_ops.thr_method == 'min':
+                thr = threshold_minimum(thr_met_compute)
+
 
             ds_assign.append([ref_ind, reg_ind])
             ds_assign_thr.append([ref_ind[thr_met>thr], reg_ind[thr_met>thr]])
