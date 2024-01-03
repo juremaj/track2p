@@ -1,11 +1,13 @@
 # contains code for generating plots based on track_ops object after the pipeline is run (this will be saved as an npy file)
 # here all functions just take the track_ops object as input
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 from skimage.exposure import match_histograms
 from track2p.plot.utils import make_rgb_img, saturate_perc, get_all_wind_mean_img
+from track2p.io.loaders import load_stat_ds_plane, get_all_roi_array_from_stat
 
 def plot_reg_img_output(track_ops):
     # make a plot where on the top its all the images and the bottom is the overlays before and after registration
@@ -179,8 +181,8 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
             this_ax.hist(all_ds_thr_met[i][j], bins=20)
             this_ax.axvline(all_ds_thr[i][j], color='grey', linestyle='--')
             # label the line with 'otsu threshold'
-            this_ax.text(all_ds_thr[i][j]+0.02, this_ax.get_ylim()[1]*0.9, f'otsu thr.: {all_ds_thr[i][j]:.2f}')
-            this_ax.set_title(f'ds_ref{i}, ds_reg:{i+1} (above_thr {n_abovethr_roi}/{n_reg_roi} rat. {n_abovethr_roi/n_reg_roi:.2f})')
+            this_ax.text(all_ds_thr[i][j]+0.02, this_ax.get_ylim()[1]*0.9, f'{track_ops.thr_method} thr.: {all_ds_thr[i][j]:.2f}')
+            this_ax.set_title(f'ds{i} (ref) to ds{i+1} (reg); matched {n_abovethr_roi}/{n_reg_roi} ({n_abovethr_roi/n_reg_roi*100:.1f}%)')
             
             if i==0:
                 this_ax.set_ylabel(f'ROI count (plane{j})')
@@ -192,14 +194,18 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
 
     
     plt.tight_layout()
+    plt.savefig(track_ops.save_path_fig + 'thr_met_hist.png', dpi=200)
     plt.show()
 
 
-def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64):
+def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64, k=0, n=None):
+
+    if n is None:
+        n = len(neuron_ids)
 
     nrows = len(neuron_ids)
     ncols = len(all_ds_mean_img)
-    fig, axs = plt.subplots(nrows, ncols, figsize=(2*ncols, 2*nrows), dpi=100)
+    fig, axs = plt.subplots(nrows, ncols, figsize=(2*ncols, 2*nrows), dpi=50)
 
     for (i, nrn_id) in enumerate(neuron_ids):
         # check if neuron is not matched (if ith row of all_pl_match_mat is all None)
@@ -219,7 +225,7 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
             if i==0:
                 axs[i, j].set_title(f'ds {j} (pl {plane_idx})')
             if j==0:
-                axs[i, j].set_ylabel(f'ROI {nrn_id} ({i}/{nrows})')
+                axs[i, j].set_ylabel(f'ROI {nrn_id} ({i+k}/{n})')
 
     # remove axes labels
     for ax in axs.flat:
@@ -227,7 +233,7 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
         ax.set_yticks([])
 
     plt.tight_layout()
-    plt.savefig(track_ops.save_path_fig + f'roi_match_plane{plane_idx}.png', dpi=100)
+    plt.savefig(track_ops.save_path_fig + f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png', dpi=50)
     plt.show()
 
 def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48):
@@ -237,4 +243,65 @@ def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_ma
         for j in range(len(track_ops.save_path)):
             neuron_ids = pl_neuron_ids[~np.any(all_pl_match_mat[i]==None, axis=1)]
 
-        plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=i, win_size=win_size)
+        if len(neuron_ids) < 100:
+            plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=i, win_size=win_size)
+        else:
+            # plot in batches of 100
+            for k in range(0, len(neuron_ids), 100):
+                plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids[k:k+100], track_ops, plane_idx=i, win_size=win_size, k=k, n=len(neuron_ids))
+
+
+def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
+    
+
+    fig, axs = plt.subplots(track_ops.nplanes, len(track_ops.all_ds_path), figsize=(4*len(track_ops.all_ds_path), 4*track_ops.nplanes), dpi=300)
+
+    for ds_idx, ds_path in enumerate(track_ops.all_ds_path):
+        for plane_idx in range(track_ops.nplanes):
+            # saturating the reference image
+            ref_mean_img = all_ds_mean_img[0][plane_idx]
+            perc = np.percentile(ref_mean_img, track_ops.sat_perc)
+            ref_mean_img[ref_mean_img>perc] = perc
+
+            ax = axs[ds_idx] if track_ops.nplanes==1 else axs[plane_idx, ds_idx]
+            mean_img = all_ds_mean_img[ds_idx][plane_idx]
+            mean_img_matched = match_histograms(mean_img, ref_mean_img)
+            ax.imshow(mean_img_matched, cmap='gray')
+            ax.set_title(f'ds{ds_idx} (plane{plane_idx})')
+
+    # add contours
+    for plane_idx in range(track_ops.nplanes):
+        pl_neuron_ids = np.arange(all_pl_match_mat[plane_idx].shape[0])
+        neuron_ids = pl_neuron_ids[~np.any(all_pl_match_mat[plane_idx]==None, axis=1)]
+        neuron_colors = [np.random.rand(3) for i in range(len(neuron_ids))]
+
+        for ds_idx, _ in enumerate(track_ops.all_ds_path):
+            
+            stat_ds_plane, _ = load_stat_ds_plane(track_ops.all_ds_path[ds_idx], track_ops, plane_idx=plane_idx)
+            all_roi_array = get_all_roi_array_from_stat(stat_ds_plane, track_ops)
+            
+            ax = axs[ds_idx] if track_ops.nplanes==1 else axs[plane_idx, ds_idx]
+        
+            for (i, neuron_idx) in enumerate(neuron_ids):
+                idx_orig = all_pl_match_mat[plane_idx][neuron_idx, ds_idx] # neurons index in the original recording
+                cont = stat_ds_plane
+
+                cont_plot = ax.contour(all_roi_array[:,:,idx_orig], linewidths=0.5)
+
+                for collection in cont_plot.collections:
+                    collection.set_edgecolor(neuron_colors[i])  # RGB value for red
+
+        left_axs = axs[plane_idx,0] if track_ops.nplanes>0 else axs[0]
+        left_axs.set_ylabel(f'plane{plane_idx} (n={len(neuron_ids)})')
+
+    # remove axes elements
+    for ax in axs.flat:
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+
+    plt.suptitle(f'ROIs matched (plane{plane_idx} n={len(neuron_ids)})')
+    plt.tight_layout()
+    plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_allroi_n{len(neuron_ids)}.png'), dpi=300)
+    plt.show()
