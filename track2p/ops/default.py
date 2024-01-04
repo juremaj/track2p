@@ -5,23 +5,23 @@ from track2p.io.utils import make_dir
 class DefaultTrackOps:
     def __init__(self):
         # input list of dataset paths (each contains a 'suite2p' folder)
-        # self.all_ds_path = [
-        #     'data/ac/ac444118/2022-09-14_a',
-        #     'data/ac/ac444118/2022-09-15_a',
-        #     'data/ac/ac444118/2022-09-16_a'
-        # ]
         self.all_ds_path = [
-            # 'data/jm/jm032/2023-10-18_a/',
-            'data/jm/jm032/2023-10-19_a/',
-            'data/jm/jm032/2023-10-20_a/',
-            'data/jm/jm032/2023-10-21_a/',
-            'data/jm/jm032/2023-10-22_a/',
-            'data/jm/jm032/2023-10-23_a/'
-            ]
+            'data/ac/ac444118/2022-09-14_a',
+            'data/ac/ac444118/2022-09-15_a',
+            'data/ac/ac444118/2022-09-16_a'
+        ]
+        # self.all_ds_path = [
+        #     # 'data/jm/jm032/2023-10-18_a/',
+        #     'data/jm/jm032/2023-10-19_a/',
+        #     'data/jm/jm032/2023-10-20_a/',
+        #     'data/jm/jm032/2023-10-21_a/',
+        #     'data/jm/jm032/2023-10-22_a/',
+        #     'data/jm/jm032/2023-10-23_a/'
+        #     ]
         
-        # self.save_path = 'data/ac/ac444118/track2p/'
-        self.save_path = 'data/jm/jm032/track2p/'
-        self.reg_chan = 1 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
+        self.save_path = 'data/ac/ac444118/track2p/'
+        # self.save_path = 'data/jm/jm032/track2p/'
+        self.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
         self.transform_type = 'affine' # 'affine' or 'nonrigid'
         self.iscell_thr = 0.50 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
 
