@@ -290,8 +290,8 @@ def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
 
                 for collection in cont_plot.collections:
                     collection.set_edgecolor(neuron_colors[i])  # RGB value for red
-
-        left_axs = axs[plane_idx,0] if track_ops.nplanes>0 else axs[0]
+        
+        left_axs = axs[0] if track_ops.nplanes==1 else axs[plane_idx,0]
         left_axs.set_ylabel(f'plane{plane_idx} (n={len(neuron_ids)})')
 
     # remove axes elements
@@ -301,7 +301,6 @@ def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
         ax.set_xticklabels([])
         ax.set_yticklabels([])
 
-    plt.suptitle(f'ROIs matched (plane{plane_idx} n={len(neuron_ids)})')
     plt.tight_layout()
     plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_allroi_n{len(neuron_ids)}.png'), dpi=300)
     plt.show()
