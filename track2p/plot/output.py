@@ -83,7 +83,7 @@ def plot_reg_img_output(track_ops):
     
 
     # save figure into the output path
-    fig.savefig(track_ops.save_path_fig + 'reg_img_output.png', bbox_inches='tight', dpi=200)
+    fig.savefig(os.path.join(track_ops.save_path_fig, 'reg_img_output.png'), bbox_inches='tight', dpi=200)
 
 
 def plot_roi_reg_output(track_ops):
@@ -194,7 +194,7 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
 
     
     plt.tight_layout()
-    plt.savefig(track_ops.save_path_fig + 'thr_met_hist.png', dpi=200)
+    plt.savefig(os.path.join(track_ops.save_path_fig, 'thr_met_hist.png'), dpi=200)
     plt.show()
 
 
@@ -214,7 +214,12 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
         
         # get all wind_mean_img (small window around centroid)
         all_wind_mean_img = get_all_wind_mean_img(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, nrn_id, plane_idx=plane_idx, win_size=win_size)
-           
+
+        if i == 0:
+            fig_ref = all_wind_mean_img[0] # reference image for matching histograms along whole image
+        else:
+            all_wind_mean_img[0] = match_histograms(all_wind_mean_img[0], fig_ref) # if not first ROI of whole image then match to first ROI of whole image
+
         for j in range(len(all_ds_mean_img)):
             wind_mean_img = all_wind_mean_img[j]
             ref_img = all_wind_mean_img[0]
@@ -233,7 +238,7 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
         ax.set_yticks([])
 
     plt.tight_layout()
-    plt.savefig(track_ops.save_path_fig + f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png', dpi=50)
+    plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png'), dpi=50)
     plt.show()
 
 def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48):
@@ -302,5 +307,5 @@ def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
         ax.set_yticklabels([])
 
     plt.tight_layout()
-    plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_allroi_n{len(neuron_ids)}.png'), dpi=300)
+    plt.savefig(os.path.join(track_ops.save_path_fig, f'all_roi_match.png'), dpi=300)
     plt.show()

@@ -1,5 +1,5 @@
 # make dummy track_ops object (would be input from command line or gui)
-
+import os
 from track2p.io.utils import make_dir
 
 class DefaultTrackOps:
@@ -32,7 +32,6 @@ class DefaultTrackOps:
         self.thr_method = 'min' # 'otsu' or 'min' (min is just local minimum of pdf of thr_met)
 
         # do not change these
-        self.save_path_fig = self.save_path + 'figures/'
         self.show_roi_reg_output = False # this is slow because plt.contour is slow and also very memory intensive(it can easily crash) but the visualisation is nice for presentations (for example by increasing self.iscell_thr)
 
         # plotting parameters
@@ -40,5 +39,9 @@ class DefaultTrackOps:
         self.sat_perc = 99.9 # percentile to saturate image at (only affects visualisation not the registration/matching)
 
         # make the output directories when initialising the object
+        
+    def init_save_paths(self):
+        self.save_path = os.path.join(self.save_path, 'track2p/')
+        self.save_path_fig = os.path.join(self.save_path, 'fig/')
         make_dir(self.save_path)
         make_dir(self.save_path_fig)
