@@ -30,7 +30,7 @@ cd to the directory:
 cd track2p
 ```
 
-And install the package:
+And install the local package (all modules within the track2p subfolder):
 ```
 pip install -e .
 ```
