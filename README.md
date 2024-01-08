@@ -62,7 +62,7 @@ And then open `demo.ipynb`, where you can then set the paths to the suite2p outp
 
 ## Changing algorithm parameters
 
-TODO: add documentation of algorithm parameters (for now use the defaults, they should work well)
+TODO: add documentation of algorithm parameters (for now use the defaults saved at `track2p/ops/default.py`, they should work well)
 
 # Outputs
 
@@ -91,6 +91,3 @@ The figures are the following (in the order of importance):
 
 - `all_roi_match.png` visualises all matches across the FOV for all days. Here the full ROIs are drawn and the color is maintained across days.
 
-
-test
-test2
