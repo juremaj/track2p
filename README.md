@@ -93,7 +93,7 @@ The figures are the following (in the order of importance):
 
 - `roi_match_plane#_idx###-###.png` visualises a window of the mean gcamp image around an example match for all days. If there is more than 100 matches, they are split to separate figures. The dot in the middle shows the centroid of the ROI (whole ROI is not drawn to not bias the estimation of match).
 
-![ex_roi_match_plane#_idx###-###.jpeg](docs/media/readme/ex_roi_match_plane#_idx###-###.png)
+![ex_roi_match.png](docs/media/readme/ex_roi_match.png)
 
 - `all_roi_match.png` visualises all matches across the FOV for all days. Here the full ROIs are drawn and the color is maintained across days.
 
