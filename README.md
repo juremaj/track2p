@@ -5,7 +5,9 @@ Cell tracking for longitudinal calcium imaging recordings.
 
 ## Setting up the environment
 
-Set up conda environment with python 3.9
+First make sure that you have an updated version of conda installed (the procedure below is based on conda 23.11.0).
+
+Next, set up conda environment with python 3.9:
 
 ```
 conda create --name track2p python=3.9
