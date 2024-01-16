@@ -27,7 +27,7 @@ Additionally if using the `demo.ipynb` notebook you should install jupyter, for 
 conda install conda-forge::jupyterlab
 ```
 
-# Platform specific issues/requirements:
+### Platform specific installation issues/requirements:
 MacOS Sonoma: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install
 `
 
