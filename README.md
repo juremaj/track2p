@@ -27,6 +27,14 @@ Additionally if using the `demo.ipynb` notebook you should install jupyter, for 
 conda install conda-forge::jupyterlab
 ```
 
+# Platform specific issues/requirements:
+MacOS Sonoma: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install
+`
+
+Linux Ubuntu: (not tested yet)
+
+Windows: (not tested yet)
+
 ## Setting up track2p
 
 For now track2p can only be installed from source via GitHub (TODO: make pip-installable)
