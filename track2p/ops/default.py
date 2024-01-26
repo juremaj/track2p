@@ -23,7 +23,7 @@ class DefaultTrackOps:
         # self.save_path = 'data/jm/jm032/track2p/'
         self.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
         self.transform_type = 'affine' # 'affine' or 'nonrigid'
-        self.iscell_thr = 0.50 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
+        self.iscell_thr = 0.25 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
 
         self.matching_method='iou' # 'iou', 'cent' or 'cent_int-filt'  (iou takes longer but is more accurate, cent is faster but less accurate)
         self.iou_dist_thr = 16 # distance between centroids (in pixels) above which to skip iou computation (to save time) (this is only relevant if self.matching_method=='iou')
