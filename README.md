@@ -46,6 +46,15 @@ And install the local package (all modules within the track2p/track2p subfolder)
 pip install -e .
 ```
 
+And thats it, track2p should be succesfully installed :)
+
+### Platform specific installation issues/requirements:
+**MacOS**: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install`
+
+**Linux Ubuntu**: (not tested yet)
+
+**Windows**: (not tested yet)
+
 # Usage
 
 ## Simple usage
