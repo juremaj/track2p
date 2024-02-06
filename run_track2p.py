@@ -12,11 +12,11 @@ if __name__ == '__main__':
 
     # for now parameters are defined manually:
     track_ops.all_ds_path = [
-            'data_proc/jm/jm019/2023-04-05_a',
-            'data_proc/jm/jm019/2023-04-06_a',
-            'data_proc/jm/jm019/2023-04-07_a',
-            'data_proc/jm/jm019/2023-04-08_a',
-            'data_proc/jm/jm019/2023-04-10_a',
+            '/home/jure/data_proc/jm/jm019/2023-04-05_a',
+            '/home/jure/data_proc/jm/jm019/2023-04-06_a',
+            '/home/jure/data_proc/jm/jm019/2023-04-07_a',
+            '/home/jure/data_proc/jm/jm019/2023-04-08_a',
+            '/home/jure/data_proc/jm/jm019/2023-04-10_a',
             ]
 
     track_ops.save_path = 'data_proc/jm/jm019/' # path where to save the outputs of algorithm (a 'track2p' folder will be created where figures for visualisation and matrices of matches would be saved)
