@@ -45,3 +45,23 @@ class DefaultTrackOps:
         self.save_path_fig = os.path.join(self.save_path, 'fig/')
         make_dir(self.save_path)
         make_dir(self.save_path_fig)
+
+
+    def to_dict(self):
+        # this is useful for saving the object to avoid needing class definition in downstream analysis
+        track_ops_dict = {}
+        for attr in dir(self):
+            if not attr.startswith('__') and not callable(getattr(self, attr)):
+                track_ops_dict[attr] = getattr(self, attr)
+        
+        # print all keys
+        print('DefaultTrackOps successfully transformed to dictionary; keys:')
+        for key in track_ops_dict:
+            print(key)
+
+        return track_ops_dict
+
+    def from_dict(self, track_ops_dict):
+        # loop through all the keys and set the attributes
+        for key in track_ops_dict:
+            setattr(self, key, track_ops_dict[key])

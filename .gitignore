@@ -1,5 +1,6 @@
-# data folder
+# data 
 data/
+data_proc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
