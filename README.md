@@ -51,7 +51,7 @@ And thats it, track2p should be succesfully installed :)
 ### Platform specific installation issues/requirements:
 **MacOS**: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install`
 
-**Linux Ubuntu**: (not tested yet)
+**Linux Ubuntu**: Installation works, make sure to have Conda up to date, otherwise no issues for now.
 
 **Windows**: (not tested yet)
 
