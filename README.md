@@ -61,7 +61,7 @@ And thats it, track2p should be succesfully installed :)
 
 The current version (v1.0.0) is not extremely user friendly, but this will be improved soon. It is recommended to run through `run_track2p.py`
 
-### Run via script
+### Recommended: Run via script
 This is fairly simple, everything is handled by the `run_track2p.py` script in the root of the directory. All that needs to be done is to set the paths to all the suite2p folders used for cell tracking by editing the script. The output directory to save the figures and results of tracking should also be defined there. Additional parameters can also be specified by overwriting the defaults (for basic documentation see `track2p/ops/default.py`, more documentation will be added soon).
 
 After defining the paramters just open a terminal and run:
