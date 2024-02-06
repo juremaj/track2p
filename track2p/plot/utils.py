@@ -1,5 +1,4 @@
 import numpy as np
-
 from skimage.exposure import match_histograms
 
 

@@ -84,7 +84,7 @@ def plot_reg_img_output(track_ops):
 
     # save figure into the output path
     fig.savefig(os.path.join(track_ops.save_path_fig, 'reg_img_output.png'), bbox_inches='tight', dpi=200)
-
+    plt.close(fig)
 
 def plot_roi_reg_output(track_ops):
     # make a plot where on the top its all the images and the bottom is the overlays before and after registration
@@ -169,6 +169,7 @@ def plot_roi_reg_output(track_ops):
 
     # save figure into the output path
     fig.savefig(track_ops.save_path_fig + 'reg_roi_output.png', bbox_inches='tight', dpi=200)     
+    plt.close(fig)
 
 
 def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
@@ -195,7 +196,7 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
     
     plt.tight_layout()
     plt.savefig(os.path.join(track_ops.save_path_fig, 'thr_met_hist.png'), dpi=200)
-    plt.show()
+    plt.close(fig)
 
 
 def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64, k=0, n=None):
@@ -239,7 +240,7 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
 
     plt.tight_layout()
     plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png'), dpi=50)
-    plt.show()
+    plt.close(fig)
 
 def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48):
 
@@ -308,4 +309,4 @@ def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
 
     plt.tight_layout()
     plt.savefig(os.path.join(track_ops.save_path_fig, f'all_roi_match.png'), dpi=300)
-    plt.show()
+    plt.close(fig)
