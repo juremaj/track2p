@@ -10,20 +10,12 @@ class DefaultTrackOps:
             'data/ac/ac444118/2022-09-15_a',
             'data/ac/ac444118/2022-09-16_a'
         ]
-        # self.all_ds_path = [
-        #     # 'data/jm/jm032/2023-10-18_a/',
-        #     'data/jm/jm032/2023-10-19_a/',
-        #     'data/jm/jm032/2023-10-20_a/',
-        #     'data/jm/jm032/2023-10-21_a/',
-        #     'data/jm/jm032/2023-10-22_a/',
-        #     'data/jm/jm032/2023-10-23_a/'
-        #     ]
-        
+ 
         self.save_path = 'data/ac/ac444118/track2p/'
         # self.save_path = 'data/jm/jm032/track2p/'
         self.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
         self.transform_type = 'affine' # 'affine' or 'nonrigid'
-        self.iscell_thr = 0.25 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
+        self.iscell_thr = 0.50 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
 
         self.matching_method='iou' # 'iou', 'cent' or 'cent_int-filt'  (iou takes longer but is more accurate, cent is faster but less accurate)
         self.iou_dist_thr = 16 # distance between centroids (in pixels) above which to skip iou computation (to save time) (this is only relevant if self.matching_method=='iou')
@@ -53,12 +45,6 @@ class DefaultTrackOps:
         for attr in dir(self):
             if not attr.startswith('__') and not callable(getattr(self, attr)):
                 track_ops_dict[attr] = getattr(self, attr)
-        
-        # print all keys
-        print('DefaultTrackOps successfully transformed to dictionary; keys:')
-        for key in track_ops_dict:
-            print(key)
-
         return track_ops_dict
 
     def from_dict(self, track_ops_dict):
