@@ -87,7 +87,7 @@ TODO: add documentation of algorithm parameters (for now use the defaults saved 
 
 # Outputs
 
-All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user in the Jupyter notebook. 
+All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user when running the algorithm. For an introduction on how to use the outputs for further downstream analysis we provide a useful demo notebook `demo_t2p_outlput.ipynb` in the root of this repository.
 
 ## Matches
 
