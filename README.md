@@ -44,28 +44,25 @@ cd track2p
 pip install -e .
 ```
 
-### Platform specific installation issues/requirements:
-**MacOS**: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install`
-
-**Linux Ubuntu**: Everything works well.
-
-**Windows**: (not tested yet)
-
 # Usage
 
-## Simple usage
+The current version (0.2.1) is not extremely user friendly, but this will be improved soon. It is recommended to run through `run_track2p.py`, which should be modified manually (see below). After correctly configuring, simply run:
 
-The current version (v1.0.0) is not extremely user friendly, but this will be improved soon. It is recommended to run through `run_track2p.py`
-
-### Recommended: Run via script
-This is fairly simple, everything is handled by the `run_track2p.py` script in the root of the directory. All that needs to be done is to set the paths to all the suite2p folders used for cell tracking by editing the script. The output directory to save the figures and results of tracking should also be defined there. Additional parameters can also be specified by overwriting the defaults (for basic documentation see `track2p/ops/default.py`, more documentation will be added soon).
-
-After defining the paramters just open a terminal and run:
 ```
 conda activate track2p
 python -m run_track2p
 ```
+
 This should start printing out the progress and will tell you once the algorithm is finished :)
+
+## Setting up `run_track2p.py`
+
+`run_track2p.py` script in the root of the directory and specifies:
+
+- `track_ops.all_ds_path`: list of paths to datasets containing a `suite2p` folder
+- `track_ops.save_path`: where the outputs will be saved (a `track2p` folder will be generated here)
+- `track_ops.---`: `---` being different parameter names overwriting the defaults (for basic documentation see comments in `track2p/ops/default.py`, more documentation will be added soon).
+
 
 ## Changing algorithm parameters
 
@@ -86,7 +83,7 @@ There are two types of output from track2p:
 
 ## Visualisations
 
-There are several visualisations that can be used to evaluate the registration and cell matching quality. These will all be saved in the path defined by `track_ops.save_path` under `track2p/fig`
+There are several visualisations that can be used to evaluate the registration and cell matching quality (these figures are generated automatically when running the algorithm). These will all be saved in the path defined by `track_ops.save_path` under `track2p/fig`
 
 The figures are the following (in the order of importance):
 
