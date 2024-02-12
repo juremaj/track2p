@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='track2p',
-    version='2.0.1',
+    version='0.2.0',
     packages=['track2p'],
     install_requires=[
         'numpy',

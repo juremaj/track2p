@@ -3,7 +3,7 @@ Cell tracking for longitudinal calcium imaging recordings.
 
 # Installation
 
-## Setting up the environment
+## Installing via pip (recommended)
 
 First make sure that you have an updated version of conda installed (the procedure below is based on conda 23.11.0).
 
@@ -14,44 +14,40 @@ conda create --name track2p python=3.9
 conda activate track2p
 ```
 
-Install dependencies:
-```
-conda install -c conda-forge matplotlib
-conda install -c conda-forge numpy
-conda install -c conda-forge scikit-image
-pip install itk-elastix
-```
+Install the tack2p package using pip:
 
-Additionally if using the `demo.ipynb` notebook you should install jupyter, for example:
 ```
-conda install conda-forge::jupyterlab
-```
-
-## Setting up track2p
-
-For now track2p can only be installed from source via GitHub (TODO: make pip-installable)
-
-For this first clone the repo:
-```
-git clone https://github.com/juremaj/track2p
-```
-
-cd to the root directory:
-```
-cd track2p
-```
-
-And install the local package (all modules within the track2p/track2p subfolder):
-```
-pip install -e .
+pip install track2p
 ```
 
 And thats it, track2p should be succesfully installed :)
 
+(for instructions on how to run the algorithm, see the 'Usage' section)
+
+Note: 
+Additionally it can be useful to install jupyter for example for using the demo on how to use track2p outputs for downstream analysis (`demo_t2p_outputs.ipynb`). Jupyter can be installed by for example:
+
+```
+conda install conda-forge::jupyterlab
+```
+
+## Installing via Github (discouraged)
+
+Alternatively track2p can also be installed directly from the Github repository (this is currently discouraged, since the repo is under active development).
+To install via Github run:
+
+```
+conda create --name track2p python=3.9
+conda activate track2p
+git clone https://github.com/juremaj/track2p
+cd track2p
+pip install -e .
+```
+
 ### Platform specific installation issues/requirements:
 **MacOS**: You might need to have xcode enabled during installation. If you run into `xcrun: error: invalid active developer path .../.../... , missing xcrun at .../.../... ` then enable xcode by running: `xcode-select --install`
 
-**Linux Ubuntu**: Installation works, make sure to have Conda up to date, otherwise no issues for now.
+**Linux Ubuntu**: Everything works well.
 
 **Windows**: (not tested yet)
 
@@ -71,19 +67,9 @@ python -m run_track2p
 ```
 This should start printing out the progress and will tell you once the algorithm is finished :)
 
-### Not recommended any more: Jupyter notebook
-Another possible way (soon deprecated) is to do it thorugh a jupyter notebook:
-```
-conda activate track2p
-cd track2p
-jupyter lab
-```
-
-And then open `demo_t2p.ipynb`, where you can then set the paths to the suite2p output directories of the datasets to be matched, as well as the path where the outputs should be saved.
-
 ## Changing algorithm parameters
 
-TODO: add documentation of algorithm parameters (for now use the defaults saved at `track2p/ops/default.py`, they should work well)
+TODO: add documentation of algorithm parameters (for now use the defaults saved at `track2p/ops/default.py`, they should work well). If some parameters should be overwritten its recommended to do so in the `run_track2p.py` script (see section above).
 
 # Outputs
 
