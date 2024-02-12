@@ -1,4 +1,4 @@
-from track2p.run_t2p import run_t2p
+from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
 
 
