@@ -20,7 +20,13 @@ Install the tack2p package using pip:
 pip install track2p
 ```
 
-And thats it, track2p should be succesfully installed :)
+After the installation we will also need to access the `run_track2p.py` script from this directory, which we can get using
+
+```
+git clone https://github.com/juremaj/track2p
+```
+
+And thats it, track2p should be succesfully set up :)
 
 (for instructions on how to run the algorithm, see the 'Usage' section)
 
