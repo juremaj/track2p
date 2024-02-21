@@ -5,8 +5,8 @@ with open('README.md', 'r') as f:
 
 setup(
     name='track2p',
-    version='0.3.1',
-    packages=['track2p'],
+    version='0.3.2',
+    packages=find_packages(),
     install_requires=[
         'numpy==1.23.5',
         'matplotlib==3.5.3',
