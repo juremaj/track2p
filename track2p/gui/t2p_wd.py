@@ -1,10 +1,11 @@
 
-from PyQt5.QtCore import Qt
 import os
 from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox
 from PyQt5.QtCore import Qt
 from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
+import sys 
+from track2p.gui.terminal_gui import ConsoleOutput
 
 
 class NewWindow(QWidget):
@@ -77,14 +78,6 @@ class NewWindow(QWidget):
             fileLayout.addWidget(self.boxFileListWidget)
             layout.addRow("", fileLayout)
             
-            retrieveLayout=QHBoxLayout()
-            retrieveLayout.setAlignment(Qt.AlignLeft)
-            self.retrieveButton = QPushButton("Save parameters", self)
-            self.retrieveButton.clicked.connect(self.retrieveText)
-            self.retrieveButton.setFixedWidth(150)
-            retrieveLayout.addWidget(self.retrieveButton)
-            layout.addRow(retrieveLayout)
-            
             runLayout=QHBoxLayout()
             runLayout.setAlignment(Qt.AlignLeft)
             self.runButton = QPushButton("Run", self)
@@ -92,9 +85,23 @@ class NewWindow(QWidget):
             self.runButton.setFixedWidth(100)
             runLayout.addWidget(self.runButton)
             layout.addRow(runLayout)
+            
+            consoleOutput = ConsoleOutput()
+            consoleOutput.setFixedWidth(1000)
+            sys.stdout = consoleOutput
+            sys.stderr = consoleOutput
+            layout.addWidget(consoleOutput)
+        
 
-                
         def run(self):
+            # Store the text in a variable
+            self.storedIscellText = self.textbox.text()
+            self.storedRegchanText= self.textbox1.text()
+            self.storedsavepathText= self.directory  
+            self.storedall_ds_path = []
+            for i in range(self.boxFileListWidget.count()):
+                self.storedall_ds_path.append(os.path.join(self.directory,self.boxFileListWidget.item(i).text()))
+            print("All parameters have been recorded ! The track2p algorithm is running...")
             track_ops = DefaultTrackOps()
             track_ops.all_ds_path= self.storedall_ds_path
             #print(track_ops.all_ds_path)
@@ -106,7 +113,7 @@ class NewWindow(QWidget):
             #print(track_ops.iscell_thr)
             run_t2p(track_ops)
             self.askQuestion()
-            
+ 
         
         def askQuestion(self):
             reply = QMessageBox.question(self, "","Run completed successfully!\nDo you want to launch the gui?", QMessageBox.Yes |
@@ -120,7 +127,6 @@ class NewWindow(QWidget):
         def importDirectory(self):
         # Open a QFileDialog to select a directory
             directory = QFileDialog.getExistingDirectory(self, "Select Directory")
-            print(directory)
             if directory:
             # Clear the QListWidget
                 self.computerFileListWidget.clear()
@@ -136,6 +142,7 @@ class NewWindow(QWidget):
             for item in selectedItems:
             # Remove the item from the computer file list
                 self.computerFileListWidget.takeItem(self.computerFileListWidget.row(item))
+                
             # Add the item to the box file list
                 self.boxFileListWidget.addItem(item.text())
 
@@ -149,16 +156,3 @@ class NewWindow(QWidget):
                 self.computerFileListWidget.addItem(item.text())
                 
 
-        def retrieveText(self):
-        # Retrieve the text from the QLineEdit
-            iscellText = self.textbox.text()
-            regchanText=self.textbox1.text()
-            savepathText = self.directory   
-        # Store the text in a variable
-            self.storedIscellText = iscellText
-            self.storedRegchanText= regchanText
-            self.storedsavepathText= savepathText
-            self.storedall_ds_path = []
-            for i in range(self.boxFileListWidget.count()):
-                self.storedall_ds_path.append(os.path.join(self.directory,self.boxFileListWidget.item(i).text()))
-            print("Done")

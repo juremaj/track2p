@@ -12,17 +12,11 @@ if __name__ == '__main__':
 
     # for now parameters are defined manually:
     track_ops.all_ds_path = [
-                'data/el/el017/2023-02-21_a',
-                'data/el/el017/2023-02-22_a',
-                'data/el/el017/2023-02-23_a',
-                'data/el/el017/2023-02-24_a',
-                'data/el/el017/2023-02-25_a',
-                'data/el/el017/2023-02-26_a',
-                'data/el/el017/2023-02-27_a',
-                'data/el/el017/2023-02-28_a'
+                '/Users/manonmantez/el017/2023-02-21_a',
+                '/Users/manonmantez/el017/2023-02-22_a',
             ]
 
-    track_ops.save_path = 'data/el/el017/' # path where to save the outputs of algorithm (a 'track2p' folder will be created where figures for visualisation and matrices of matches would be saved)
+    track_ops.save_path = '/Users/manonmantez/el017/' # path where to save the outputs of algorithm (a 'track2p' folder will be created where figures for visualisation and matrices of matches would be saved)
     track_ops.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (use 0 if only recording gcamp!)
     track_ops.iscell_thr = 0.25
 

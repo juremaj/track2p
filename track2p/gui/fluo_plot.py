@@ -51,6 +51,7 @@ class FluorescencePlotWidget(FigureCanvas):
     
     def draw_point(self):
         if hasattr(self, 'point') and self.point in self.ax_fluorescence.collections:
+            print(self.ax_fluorescence.collections)
             self.ax_fluorescence.collections.remove(self.point)
         self.point = self.ax_fluorescence.scatter([self.x0], [self.y0], s=5, color='w')  # Create a new point
         self.draw()

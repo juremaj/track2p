@@ -105,7 +105,7 @@ class CellPlotWidget(FigureCanvas):
                 if np.any((xpix == int(x)) & (ypix == int(y))):
                     self.selected_cell_index = j
                     self.update_selection_callback(j)
-                    print(f"Cellule sélectionnée : {j + 1}", flush=True)
+                    print(f"Cell selected: {j + 1}", flush=True)
                     break
         print(f'time taken for updating: {time.time()-start}')
         
