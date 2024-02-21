@@ -8,10 +8,13 @@ setup(
     version='0.2.1',
     packages=['track2p'],
     install_requires=[
-        'numpy',
-        'matplotlib',
-        'scikit-image',
-        'itk-elastix'],
+        'numpy==1.23.5',
+        'matplotlib==3.5.3',
+        'scikit-image==0.20.0',
+        'itk-elastix==0.19.0',
+        'PyQt5==5.15.10',
+        'qtpy==2.4.1',
+        ],
     long_description=long_description,
     long_description_content_type='text/markdown'
     )
