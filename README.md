@@ -3,110 +3,63 @@ Cell tracking for longitudinal calcium imaging recordings.
 
 # Installation
 
-## Installing via pip (recommended)
+## Installing via pip
 
-First make sure that you have an updated version of conda installed (the procedure below is based on conda 23.11.0).
-
-Next, set up conda environment with python 3.9:
+Next, set up a conda environment with python 3.9:
 
 ```
 conda create --name track2p python=3.9
 conda activate track2p
 ```
 
-Install the tack2p package using pip:
+Install the track2p package using pip:
 
 ```
 pip install track2p
 ```
 
-After the installation we will also need to access the `run_track2p.py` script from this directory, which we can get using
-
-```
-git clone https://github.com/juremaj/track2p
-```
-
 And thats it, track2p should be succesfully set up :)
-
-(for instructions on how to run the algorithm, see the 'Usage' section)
-
-Note: 
-Additionally it can be useful to install jupyter for example for using the demo on how to use track2p outputs for downstream analysis (`demo_t2p_outputs.ipynb`). Jupyter can be installed by for example:
+You can simply run it by:
 
 ```
-conda install conda-forge::jupyterlab
+python -m track2p
 ```
 
-## Installing via Github (discouraged)
+Which opens a GUI allowing the user to launch the algorithm and visualise the results interactively.
 
-Alternatively track2p can also be installed directly from the Github repository (this is currently discouraged, since the repo is under active development).
-To install via Github run:
-
-```
-conda create --name track2p python=3.9
-conda activate track2p
-git clone https://github.com/juremaj/track2p
-cd track2p
-pip install -e .
-```
+(For instructions on running track2p without the GUI see the 'Run via script' under the 'Usage' section)
 
 # Usage
 
-The current version (0.2.1) is not extremely user friendly, but this will be improved soon. It is recommended to run through `run_track2p.py`, which should be modified manually (see below). After correctly configuring, simply run:
+## Run through GUI
+
+After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. Once these have been set the user can click on 'Run', which will launch the track2p algorithm, with the progress being printed in the window below.
+
+When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI (for more information see section below).
+
+## GUI visualisation
+
+
+The GUI supports both visualisation after algorithm run (as described above), as well as visualising previously processed data. The latter can be done by navigating to File -> Load processed data on the top left of the GUI.
+
+(Manon: add screenshot)
+
+Briefly the GUI allows the user to visualise the mean field of view on all days, with the ROIs of all matched cells visualised. The user can then interactively select a cell by clicking on the ROI on the mean image. This will display a zoomed-in view of this cell across all days on the right, and the extracted fluorescence time series below.
+
+## Run via script
+
+To run via script you can use the `run_track2p.py` script in the root of this repo as a template. It is exactly the same as running thrugh the gui, only that the paths and the parameters are defined within the script (for more on parameters etc. see documentation). When running make sure you are running it within the track2p environment, for example:
 
 ```
 conda activate track2p
 python -m run_track2p
 ```
 
-This should start printing out the progress and will tell you once the algorithm is finished :)
-
-## Setting up `run_track2p.py`
-
-`run_track2p.py` script in the root of the directory and specifies:
-
-- `track_ops.all_ds_path`: list of paths to datasets containing a `suite2p` folder
-- `track_ops.save_path`: where the outputs will be saved (a `track2p` folder will be generated here)
-- `track_ops.---`: `---` being different parameter names overwriting the defaults (for basic documentation see comments in `track2p/ops/default.py`, more documentation will be added soon).
-
-
-## Changing algorithm parameters
-
-TODO: add documentation of algorithm parameters (for now use the defaults saved at `track2p/ops/default.py`, they should work well). If some parameters should be overwritten its recommended to do so in the `run_track2p.py` script (see section above).
-
 # Outputs
 
-All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user when running the algorithm. For an introduction on how to use the outputs for further downstream analysis we provide a useful demo notebook `demo_t2p_outlput.ipynb` in the root of this repository.
+All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user when running the algorithm. For an introduction on how to use the outputs for further downstream analysis we provide a useful demo notebook `demo_t2p_outlput.ipynb` in the root of this repository. Note: You will need to additionally install jupyter for this to work. For example:
 
-## Matches
-
-There are two types of output from track2p:
-
-- A matrix (`plane#_match_mat.npy`) containing the indices of matched neurons across the session for a given plane (`#` is the index of the plane). Since matching is done from first day to last, some neurons will not be sucessfully tracked after one or a few days. In this case the matrix contains `None` values. To get neurons tracked across all days only take the rows of the matrices containing no `None` values. 
-
-- A `track_ops.npy` object that contains the parameters used for the algorithm and some intermediate results that can be used for visualisations (e. g. registered images and ROIs etc.)
-
-
-## Visualisations
-
-There are several visualisations that can be used to evaluate the registration and cell matching quality (these figures are generated automatically when running the algorithm). These will all be saved in the path defined by `track_ops.save_path` under `track2p/fig`
-
-The figures are the following (in the order of importance):
-
-- `reg_img_output.png` image visualising the quality of image registration across the two days. Each pair of recordings is visualised as red/green overlay of the mean images on the two days before (above) and after (below) registration. If the bottom images don't show good alignment the output of the algorithm would be completely useless (if this happen make sure everyhting is correct with the data)
-
-![ex_reg_img_output.png](docs/media/readme/ex_reg_img_output.png)
-
-- `thr_met_hist.png` visualises the IOU of the matched ROIs. TODO: document how the algorithm works, this will make it clearer. For now refer to other examples for explanation e. g. https://www.cell.com/cell-reports/pdf/S2211-1247(17)31430-4.pdf
-
-![ex_thr_met_hist.png](docs/media/readme/ex_thr_met_hist.png)
-
-- `roi_match_plane#_idx###-###.png` visualises a window of the mean gcamp image around an example match for all days. If there is more than 100 matches, they are split to separate figures. The dot in the middle shows the centroid of the ROI (whole ROI is not drawn to not bias the estimation of match).
-
-![ex_roi_match.png](docs/media/readme/ex_roi_match.png)
-
-- `all_roi_match.png` visualises all matches across the FOV for all days. Here the full ROIs are drawn and the color is maintained across days.
-
-![ex_all_roi_match.png](docs/media/readme/ex_all_roi_match.png)
-
+```
+conda install conda-forge::jupyterlab
+```
 

@@ -11,7 +11,8 @@ if __name__ == '__main__':
     # track_ops = get_track_ops_from_gui() # for example
 
     # for now parameters are defined manually:
-    track_ops.all_ds_path = [
+
+    track_ops.all_ds_path = [                           # list of paths to datasets containing a `suite2p` folder
                 '/Users/manonmantez/el017/2023-02-21_a',
                 '/Users/manonmantez/el017/2023-02-22_a',
             ]
