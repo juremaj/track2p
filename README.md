@@ -25,7 +25,7 @@ You can simply run it by:
 python -m track2p
 ```
 
-Which opens a GUI allowing the user to launch the algorithm and visualise the results interactively.
+This opens a GUI allowing the user to launch the algorithm and visualise the results interactively.
 
 (For instructions on running track2p without the GUI see the 'Run via script' under the 'Usage' section)
 
