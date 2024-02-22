@@ -11,7 +11,7 @@ setup(
         'numpy==1.23.5',
         'matplotlib==3.5.3',
         'scikit-image==0.20.0',
-        'itk-elastix==0.19.0',
+        'itk-elastix==0.19.1',
         'PyQt5==5.15.10',
         'qtpy==2.4.1',
         ],
