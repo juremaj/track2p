@@ -12,13 +12,13 @@ conda create --name track2p python=3.9
 conda activate track2p
 ```
 
-Install the track2p package using pip:
+Then simply install the track2p package using pip:
 
 ```
 pip install track2p
 ```
 
-And thats it, track2p should be succesfully set up :)
+Thats it, track2p should be succesfully set up :)
 You can simply run it by:
 
 ```
