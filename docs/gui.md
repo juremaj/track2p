@@ -2,7 +2,7 @@ The first thing to know is that we assume that each of the recording is same len
 
 After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters (see an example below). For each parameter, a brief explanation of what is expected by the user is displayed next to the input box or input button. 
 
-![ex_popup_runtrack2p.png](docs/media/plots/ex_popup_runtrack2p.png) 
+![ex_popup_runtrack2p.png](media/plots/ex_popup_runtrack2p.png) 
 
 - Iscell_thr input textobox: the user must enter the threshold used to filter suite2p outputs (based on suite2p classifier probability in iscell.npy). The default value is 0.5.
 - Reg_chan input textbox : the user must enter which channel to use for day-to-day registration (0-> functional 1-> anatomical (if available)). The default value is 0.
