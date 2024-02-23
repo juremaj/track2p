@@ -45,5 +45,5 @@ Once the cell is clicked:
   
 - At the bottom, the cell's fluorescence trace for each recording (per time bin) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of registration and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `cmd + =` to zoom in and `cmd + -` to zoom out.
 
-![ex_fluo_gui 16.32.43.png](media/plots/ex_fluo_gui 16.32.43.png)]
+![ex_fluo_gui.png](media/plots/ex_fluo_gui.png)]
 
