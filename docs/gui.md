@@ -16,5 +16,7 @@ When the algorithm is finished, another pop-up window will appear, asking the us
 
 # GUI visualisation
 
-The GUI supports both visualisation after algorithm run (as described above), as well as visualising previously processed data. The latter can be done by navigating to File -> Load processed data on the top left of the GUI. The user must import the directory containing the track2p subfolder (containing output of the algorithm (see outputs.md). 
+The GUI supports both visualisation after algorithm run (as described above), as well as visualising previously processed data. The latter can be done by navigating to File -> Load processed data on the top left of the GUI. The user must import the directory containing the track2p subfolder with outputs of the algorithm (see example below).
+
+
 
