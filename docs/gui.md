@@ -29,7 +29,7 @@ The GUI supports both visualisation after algorithm run (as described above), as
 ![ex_t2p_processed_data.png](media/plots/ex_t2p_processed_data.png) 
 
 
-# 
+# Visualisations
 
 The gui is divided into 3 parts: 
 
