@@ -20,7 +20,7 @@ When the algorithm is finished, another pop-up window will appear, asking the us
 
 # GUI visualisation
 
-The first thing to know is that we assume that each of the recording is same length, imaging frequency, number of planes and number of channels (otherwise might not work, or we cant guarantee). Moreover, for now the gui processes and displays only visualizations relating to the plane 0. 
+Here we assume that each of the recording is **same length**, **imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee). Moreover, for now the gui processes and displays only visualizations relating to the plane 0. 
 
 The GUI supports both visualisation after algorithm run (as described above), as well as visualising previously processed data. The latter can be done by navigating to File -> Load processed data on the top left of the GUI. The user must import the directory containing the track2p subfolder with outputs of the algorithm (see example below).
 
