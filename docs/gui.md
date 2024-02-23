@@ -39,5 +39,5 @@ Once the cell is clicked:
 
 - In the top right-hand corner a zoom (window of 25 pixels around the cell) from each mean image is displayed.
   
-- At the bottom, the cell's fluorence trace for each recording are displayed. The fluorescence trace at the top of the plot corresponds to the first day of registration and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `cmd + =` to zoom in and `cmd + -` to zoom out. 
+- At the bottom, the cell's fluorescence trace for each recording (per time bin) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of registration and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `cmd + =` to zoom in and `cmd + -` to zoom out. 
 
