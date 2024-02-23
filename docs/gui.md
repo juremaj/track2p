@@ -35,9 +35,15 @@ The gui is divided into 3 parts:
 
 - In the top left-hand corner, the mean image for each recording is displayed in a tab named according to the recording day number (day1, day2 ...). The user can navigate through these tabs by clicking on them. Each mean image is interactive, so that the use can zoom in on ROIs and zoom out, once in the desired ROI the user can click on a cell which be highlighted.
 
+![ex_meanimg_gui.png](media/plots/ex_meanimg_gui.png) 
+
 Once the cell is clicked: 
 
 - In the top right-hand corner a zoom (window of 25 pixels around the cell) from each mean image is displayed.
+
+![ex_roi_gui.png](media/plots/ex_roi_gui.png) 
   
-- At the bottom, the cell's fluorescence trace for each recording (per time bin) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of registration and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `cmd + =` to zoom in and `cmd + -` to zoom out. 
+- At the bottom, the cell's fluorescence trace for each recording (per time bin) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of registration and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `cmd + =` to zoom in and `cmd + -` to zoom out.
+
+![ex_fluo_gui.png](media/plots/ex_fluo_gui.png) 
 
