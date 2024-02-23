@@ -35,7 +35,7 @@ The gui is divided into 3 parts:
 
 - In the top left-hand corner, the mean image for each recording is displayed in a tab named according to the recording day number (day1, day2 ...). The user can navigate through these tabs by clicking on them. Each mean image is interactive, so that the use can zoom in on ROIs and zoom out, once in the desired ROI the user can click on a cell which be highlighted.
 
-![ex_meanimg_gui.png](media/plots/ex_meanimg_gui.png) 
+![ex_meanimg_Gui](media/plots/ex_meanimg_Gui.png) 
 
 Once the cell is clicked: 
 
