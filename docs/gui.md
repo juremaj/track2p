@@ -18,7 +18,7 @@ After activating the GUI through `python -m track2p` the user should navigate to
 
 When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI. If the user click on yes, all vizualizations will be displayed (see visualisations section). 
 
-# GUI visualisation
+# Load track2p processed data through gui
 
 Here we assume that each of the recording is **same length**, **imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee). Moreover, for now the gui processes and displays only visualizations relating to `plane0`. 
 
@@ -29,7 +29,7 @@ The GUI supports both visualisation after algorithm run (as described above), as
 ![ex_t2p_processed_data.png](media/plots/ex_t2p_processed_data.png) 
 
 
-# Visualisations 
+# 
 
 The gui is divided into 3 parts: 
 
