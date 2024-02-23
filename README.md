@@ -42,7 +42,8 @@ When the algorithm is finished, another pop-up window will appear, asking the us
 
 The GUI supports both visualisation after algorithm run (as described above), as well as visualising previously processed data. The latter can be done by navigating to File -> Load processed data on the top left of the GUI.
 
-(Manon: add screenshot)
+
+![gui_mainwindow.png](docs/media/plots/gui_mainwindow.png)
 
 Briefly the GUI allows the user to visualise the mean field of view on all days, with the ROIs of all matched cells visualised. The user can then interactively select a cell by clicking on the ROI on the mean image. This will display a zoomed-in view of this cell across all days on the right, and the extracted fluorescence time series below.
 
