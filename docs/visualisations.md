@@ -12,12 +12,12 @@ The figures are the following (in the order of importance):
 
 - `thr_met_hist.png` visualises the IOU of the matched ROIs. TODO: document how the algorithm works, this will make it clearer. For now refer to other examples for explanation e. g. https://www.cell.com/cell-reports/pdf/S2211-1247(17)31430-4.pdf
 
-![ex_thr_met_hist.png](docs/media/plots/ex_thr_met_hist.png)
+![ex_thr_met_hist.png](media/plots/ex_thr_met_hist.png)
 
 - `roi_match_plane#_idx###-###.png` visualises a window of the mean gcamp image around an example match for all days. If there is more than 100 matches, they are split to separate figures. The dot in the middle shows the centroid of the ROI (whole ROI is not drawn to not bias the estimation of match).
 
-![ex_roi_match.png](docs/media/plots/ex_roi_match.png)
+![ex_roi_match.png](media/plots/ex_roi_match.png)
 
 - `all_roi_match.png` visualises all matches across the FOV for all days. Here the full ROIs are drawn and the color is maintained across days.
 
-![ex_all_roi_match.png](docs/media/plots/ex_all_roi_match.png)
+![ex_all_roi_match.png](media/plots/ex_all_roi_match.png)
