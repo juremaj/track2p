@@ -10,7 +10,7 @@ After activating the GUI through `python -m track2p` the user should navigate to
   
 - Import directory button : the user has to import the directory containing subfolders of different recordings for the same mouse (each subfolder contains a ‘suite2p’ folder in default suite2p output format (see the example of a subfolder below)).
 
-mmm
+![ex_subfolder.png](media/plots/ex_subfolder.png) 
 
 Once imported, the directory path will be displayed (Imported directory: directory path) and all subfolders in the directory are displayed in the left-hand box (in alphabetical order). Next, the user must press -> to add the file to the list of paths to use for track2p in the right-hand box (the user can import subfolders from different directories).
 
