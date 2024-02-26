@@ -8,9 +8,14 @@ After activating the GUI through `python -m track2p` the user should navigate to
   
 - Reg_chan input textbox : the user must enter which channel to use for day-to-day registration (0-> functional 1-> anatomical (if available)). The default value is 0.
   
-- Import directory button : the user has to import the directory containing subfolders of different recordings for the same mouse (each subfolder contains a ‘suite2p’ folder in default suite2p output format). Once imported, the directory path will be displayed (Imported directory: directory path) and all subfolders in the directory are displayed in the left-hand box (in alphabetical order). Next, the user must press -> to add the file to the list of paths to use for track2p in the right-hand box (the user can import subfolders from different directories).
+- Import directory button : the user has to import the directory containing subfolders of different recordings for the same mouse (each subfolder contains a ‘suite2p’ folder in default suite2p output format (see the example of a subfolder below)).
+
+mmm
+
+Once imported, the directory path will be displayed (Imported directory: directory path) and all subfolders in the directory are displayed in the left-hand box (in alphabetical order). Next, the user must press -> to add the file to the list of paths to use for track2p in the right-hand box (the user can import subfolders from different directories).
 
 ***Warning: to avoid mismatch between ordered recording days and days that are displayed in the gui, the user should list the subfolders from oldest to most recent recording day in the right-hand box, so that the first day of recording (oldest day) correspond to the first day in the gui and so on.***
+
   
 - Save path button : the user must import the parent folder in which they desire to put a track2p subfolder containing outputs of the algorithm.
   
