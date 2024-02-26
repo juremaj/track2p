@@ -112,8 +112,8 @@ class MainWindow(QWidget):
 
         self.setLayout(self.central_widget)
         QApplication.setStyle('Cleanlooks')
-        self.setWindowTitle("Cell Visualization")
-        self.showMaximized()
+        self.setWindowTitle("track2p GUI")
+        self.resize(800,600)
         self.show()
             
 

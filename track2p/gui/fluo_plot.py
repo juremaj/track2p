@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import zscore
 from PyQt5.QtCore import Qt
 import matplotlib.patches as patches
+from PyQt5 import QtCore
 
 
 
@@ -44,7 +45,7 @@ class FluorescencePlotWidget(FigureCanvas):
         
     def on_key_press(self, event):
         """it allows to reset the zoom of the fluorescence plot. It is called when the Command key and - key are pressed."""
-        if event.key == 'cmd+-':
+        if event.key == 'r':
             self.ax_fluorescence.set_xlim(self.initial_xlim)
             self.ax_fluorescence.set_ylim(self.initial_ylim)
             self.fig.canvas.draw()
@@ -74,7 +75,7 @@ class FluorescencePlotWidget(FigureCanvas):
         
     def on_enter_pressed(self, event):
         """it allows to zoom in of the fluorescence plot. It is called when the Command key and + key are pressed."""
-        if event.key == 'cmd+=':
+        if event.key == 'enter':
             self.ax_fluorescence.set_xlim(self.x0, self.x1)
             self.ax_fluorescence.set_ylim(self.y0, self.y1)
             self.rect.set_visible(False) 
