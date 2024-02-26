@@ -1,6 +1,6 @@
 
 import os
-from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox,QListWidgetItem
 from PyQt5.QtCore import Qt
 from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
@@ -19,6 +19,7 @@ class NewWindow(QWidget):
             self.main_window = mainWindow
             layout = QFormLayout()
             self.setLayout(layout)
+            self.filePaths = {}
             
             iscellLayout=QVBoxLayout()
             iscellLayout.setAlignment(Qt.AlignLeft)
@@ -59,12 +60,25 @@ class NewWindow(QWidget):
             importbuttonLayout.addWidget(self.importButton)
             importbuttonLayout.addWidget(legend3)
             importdirLayout.addLayout(importbuttonLayout)
-            self.directoryLabel = QLabel()
-            importdirLayout.addWidget(self.directoryLabel)
+            self.labeldir= QLabel()
+            importdirLayout.addWidget(self.labeldir)
             instruction=QLabel("Once loaded press -> to add to the list of paths to use for track2p (from oldest to most recent recording day !)")
             importdirLayout.addWidget(instruction)
             layout.addRow(importdirLayout)
-        
+            
+            importsaveLayout=QVBoxLayout()
+            importsaveLayout.setAlignment(Qt.AlignLeft)
+            self.saveButton = QPushButton("Save path", self)
+            self.saveButton.clicked.connect(self.saveDirectory)
+            self.saveButton.setFixedWidth(150)
+            savebuttonLayout=QHBoxLayout()
+            legend4= QLabel("parent folder of a track2p subfolder containing outputs of the algorithm")
+            savebuttonLayout.addWidget(self.saveButton)
+            savebuttonLayout.addWidget(legend4)
+            importsaveLayout.addLayout(savebuttonLayout)
+            self.savedirectoryLabel = QLabel()
+            importsaveLayout.addWidget(self.savedirectoryLabel)
+            
             fileLayout = QHBoxLayout()
             self.computerFileListWidget = QListWidget(self)
             fileLayout.addWidget(self.computerFileListWidget)
@@ -77,6 +91,8 @@ class NewWindow(QWidget):
             self.boxFileListWidget = QListWidget(self)
             fileLayout.addWidget(self.boxFileListWidget)
             layout.addRow("", fileLayout)
+            
+            layout.addRow(importsaveLayout)
             
             runLayout=QHBoxLayout()
             runLayout.setAlignment(Qt.AlignLeft)
@@ -91,26 +107,23 @@ class NewWindow(QWidget):
             sys.stdout = consoleOutput
             sys.stderr = consoleOutput
             layout.addWidget(consoleOutput)
-        
+            
 
         def run(self):
             # Store the text in a variable
             self.storedIscellText = self.textbox.text()
             self.storedRegchanText= self.textbox1.text()
-            self.storedsavepathText= self.directory  
+            self.storedsavepathText= self.savedirectory  
             self.storedall_ds_path = []
             for i in range(self.boxFileListWidget.count()):
-                self.storedall_ds_path.append(os.path.join(self.directory,self.boxFileListWidget.item(i).text()))
+                self.storedall_ds_path.append(self.boxFileListWidget.item(i).data(Qt.UserRole))
             print("All parameters have been recorded ! The track2p algorithm is running...")
             track_ops = DefaultTrackOps()
             track_ops.all_ds_path= self.storedall_ds_path
-            #print(track_ops.all_ds_path)
+            print(f'track_ops.all_ds_path : {track_ops.all_ds_path}')
             track_ops.save_path = self.storedsavepathText
-            #print(track_ops.save_path)
             track_ops.reg_chan=int(self.storedRegchanText)
-            #print(track_ops.reg_chan)
             track_ops.iscell_thr=float(self.storedIscellText)
-            #print(track_ops.iscell_thr)
             run_t2p(track_ops)
             self.askQuestion()
  
@@ -121,38 +134,44 @@ class NewWindow(QWidget):
 
             if reply == QMessageBox.Yes:
                 self.main_window.loadFiles(self.storedsavepathText)
+                self.close()
             if reply == QMessageBox.No:
                 self.close()
         
+        def saveDirectory(self):
+            savedirectory= QFileDialog.getExistingDirectory(self, "Select Directory")
+            if savedirectory:
+                self.savedirectory=savedirectory
+                self.savedirectoryLabel.setText(f'A track2p subfolder will be created in the directory: {self.savedirectory}')
+                
         def importDirectory(self):
-        # Open a QFileDialog to select a directory
             directory = QFileDialog.getExistingDirectory(self, "Select Directory")
             if directory:
-            # Clear the QListWidget
+                self.labeldir.setText(f'Imported directory: {directory}')
                 self.computerFileListWidget.clear()
-                self.directory=directory 
-                self.directoryLabel.setText(f'A track2p subfolder containing outputs of the algorithm will be created in the directory: {self.directory}')
-            # Add the files in the directory to the QListWidget
-                for file in os.listdir(directory):
-                    self.computerFileListWidget.addItem(file)
+                files= os.listdir(directory)
+                for file in sorted(files):
+                    full_path = os.path.join(directory, file)
+                    item=QListWidgetItem(file)
+                    item.setData(Qt.UserRole, full_path)
+                   # print(f'file_name={item.text()}')
+                    #print(f'full_path={item.data(Qt.UserRole)}')
+                    self.computerFileListWidget.addItem(item)
+
 
         def moveFileToBox(self):
-        # Get the selected items in the computer file list
             selectedItems = self.computerFileListWidget.selectedItems()
             for item in selectedItems:
-            # Remove the item from the computer file list
                 self.computerFileListWidget.takeItem(self.computerFileListWidget.row(item))
-                
-            # Add the item to the box file list
-                self.boxFileListWidget.addItem(item.text())
+                self.boxFileListWidget.addItem(item)
+            #for i in range(self.boxFileListWidget.count()):
+              #  print(self.boxFileListWidget.item(i).text())
+              # print(self.boxFileListWidget.item(i).data(Qt.UserRole))
 
         def moveFileToComputer(self):
-        # Get the selected items in the box file list
             selectedItems = self.boxFileListWidget.selectedItems()
             for item in selectedItems:
-            # Remove the item from the box file list
                 self.boxFileListWidget.takeItem(self.boxFileListWidget.row(item))
-            # Add the item to the computer file list
-                self.computerFileListWidget.addItem(item.text())
+                self.computerFileListWidget.addItem(item)
                 
 
