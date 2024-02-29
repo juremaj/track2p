@@ -25,7 +25,7 @@ class ZoomPlotWidget(FigureCanvas):
         roi_dict={} #it is used to store the roi and the median coordinates of the selected cell for each recording (day)
         if self.all_ops is not None and self.all_stat_t2p is not None and self.all_is_cell is not None:
             for i in range(len(self.all_ops)):
-                wind = 20
+                wind = 40
                 mean_img = self.all_ops[i]['meanImg']
                 stat_t2p = self.all_stat_t2p[i]
                 median_coord = stat_t2p[selected_cell_index]['med']
@@ -95,7 +95,13 @@ class ZoomPlotWidget(FigureCanvas):
                     roi_dict[i] = (roi, median_coord)
             
             for i, (roi, median_coord) in enumerate(roi_dict.items()):
-
+                iscell=self.all_is_cell[i]
+                indices_lignes_1 = np.where(iscell[:,0]==1)[0]
+                match_index=self.t2p_match_mat_allday[selected_cell_index,i]
+                print(match_index)
+                true_index=indices_lignes_1[match_index]
+                print(true_index)
+                prob=round(iscell[true_index,1],2)
                 stat_t2p = self.all_stat_t2p[i]
                 ypix=stat_t2p[selected_cell_index]['ypix']
                 xpix=stat_t2p[selected_cell_index]['xpix']
@@ -112,6 +118,8 @@ class ZoomPlotWidget(FigureCanvas):
                 
                 ax.imshow(match_roi, cmap='gray')
                 ax.set_title(f'Day {i + 1}', color='white', fontsize=10)
+                ax.text(0.5, -0.2, f'i: {true_index}', color='white', fontsize=10, ha='center', va='center', transform=ax.transAxes)
+                ax.text(0.5, -0.4, f'p: {prob}', color='white', fontsize=10, ha='center', va='center', transform=ax.transAxes)
 
                 ax.axis('off')
         
