@@ -98,9 +98,9 @@ class ZoomPlotWidget(FigureCanvas):
                 iscell=self.all_is_cell[i]
                 indices_lignes_1 = np.where(iscell[:,0]==1)[0]
                 match_index=self.t2p_match_mat_allday[selected_cell_index,i]
-                print(match_index)
+                #print(match_index)
                 true_index=indices_lignes_1[match_index]
-                print(true_index)
+                #print(true_index)
                 prob=round(iscell[true_index,1],2)
                 stat_t2p = self.all_stat_t2p[i]
                 ypix=stat_t2p[selected_cell_index]['ypix']
