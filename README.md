@@ -1,6 +1,11 @@
 # track2p
 Cell tracking for longitudinal calcium imaging recordings.
 
+[![PyPI version](https://img.shields.io/pypi/v/track2p)](https://pypi.org/project/track2p/)
+[![All time downloads](https://static.pepy.tech/badge/track2p)](https://pepy.tech/project/track2p)
+[![Monthly downloads](https://img.shields.io/pypi/dm/track2p)](https://pypi.org/project/track2p/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # Installation
 
 ## Installing via pip
@@ -64,3 +69,12 @@ All the outputs of the script will be saved in a `track2p` folder created within
 conda install conda-forge::jupyterlab
 ```
 
+# Reference
+
+For now if you use the algorithm please reference the Cosyne abstract:
+
+  **Majnik, J., Zangila, S., Cossart, R. & Platel, J. C. (2024). _Emergence of state modulation in a developing circuit_. COSYNE Abstract.**
+
+  
+
+You can also see the YouTube recording of the talk for a reference use-case in neocortical development: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
