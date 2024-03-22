@@ -139,12 +139,12 @@ class MainWindow(QWidget):
             t2p_match_mat = np.load(os.path.join(folderPath,"track2p" ,"plane0_match_mat.npy"), allow_pickle=True)
             self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
             vector_curation=np.arange(self.t2p_match_mat_allday.shape[0])
-            print(vector_curation)
+
             track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
             track_ops = SimpleNamespace(**track_ops_dict)
 
             iscell_thr = track_ops.iscell_thr
-            print(track_ops.iscell_thr)
+
             
             for (i, ds_path) in enumerate(track_ops.all_ds_path):
                 ops = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'ops.npy'), allow_pickle=True).item()
@@ -155,13 +155,11 @@ class MainWindow(QWidget):
                 if track_ops.iscell_thr==None:
                     stat_iscell = stat[iscell[:, 0] == 1]
                     f_iscell = f[iscell[:, 0] == 1, :]
-                    print("manually")
-                    print(len(stat_iscell))
-                    print(len(f_iscell))
+
                 else:
                     stat_iscell = stat[iscell[:, 1] > iscell_thr]
                     f_iscell = f[iscell[:, 1] > iscell_thr, :]
-                    print("probability")
+                  
 
                 stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
                 f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
@@ -190,12 +188,12 @@ class MainWindow(QWidget):
                 if track_ops.iscell_thr==None:
                     stat_iscell = stat[iscell[:, 0] == 1]
                     f_iscell = f[iscell[:, 0] == 1, :]
-                    print("manually")
+             
                 
                 else:
                     stat_iscell = stat[iscell[:, 1] > iscell_thr]
                     f_iscell = f[iscell[:, 1] > iscell_thr, :]
-                    print("probability")
+     
 
                 stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
                 f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
