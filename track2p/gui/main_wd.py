@@ -10,6 +10,8 @@ from track2p.gui.cell_plot import CellPlotWidget
 from track2p.gui.fluo_plot import FluorescencePlotWidget
 from track2p.gui.roi_plot import ZoomPlotWidget
 from track2p.gui.t2p_wd import NewWindow
+from track2p.gui.import_wd import ImportWindow
+from track2p.gui.raster_wd import RasterWindow
 
 class MainWindow(QWidget):
     """This class is used to create the main window of the application. QWidget is the base class for all user interface objects in PyQt5 """
@@ -79,8 +81,10 @@ class MainWindow(QWidget):
         
         File=menuBar.addMenu("File")
         Run=menuBar.addMenu("Run")
-        File.addAction("Load processed data (folder with track2p and suite2p subfolders)", self.importFolder)
+        Visualization=menuBar.addMenu("Visualization")
+        File.addAction("Load processed data", self.runProcessedData)
         Run.addAction("Run track2p alogorithm", self.runTrack2p)
+        Visualization.addAction("Generate raster plot", self.generateRasterPlot)
         
         self.bottom = QFrame()
         self.bottom.setFrameShape(QFrame.StyledPanel)
@@ -117,45 +121,91 @@ class MainWindow(QWidget):
         self.show()
             
 
-    def importFolder(self):
-        folderPath = QFileDialog.getExistingDirectory(self, "Select suite2p Folder")
-        if folderPath:
-            self.loadFiles(folderPath)
+    #def importFolder(self):
+      #  folderPath = QFileDialog.getExistingDirectory(self, "Select suite2p Folder")
+      #  if folderPath:
+          #  self.loadFiles(folderPath)
 
     
-    def loadFiles(self, folderPath):
+    def loadFiles(self, folderPath, plane):
         
         if self.fluorescence_plot is not None:
             #self.close()
             self.clearData()
            # if self.close():  # Check if the window was successfully closed
               #  self.__init__()  # Create a new instance of MainWindow
-    
-        t2p_match_mat = np.load(os.path.join(folderPath, "track2p", "plane0_match_mat.npy"), allow_pickle=True)
-        self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
-        track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
-        track_ops = SimpleNamespace(**track_ops_dict)
+        
+        if plane==0:
+            t2p_match_mat = np.load(os.path.join(folderPath,"track2p" ,"plane0_match_mat.npy"), allow_pickle=True)
+            self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
+            vector_curation=np.arange(self.t2p_match_mat_allday.shape[0])
+            print(vector_curation)
+            track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
+            track_ops = SimpleNamespace(**track_ops_dict)
 
-        iscell_thr = track_ops.iscell_thr
+            iscell_thr = track_ops.iscell_thr
+            print(track_ops.iscell_thr)
+            
+            for (i, ds_path) in enumerate(track_ops.all_ds_path):
+                ops = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'ops.npy'), allow_pickle=True).item()
+                stat = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'stat.npy'), allow_pickle=True)
+                f = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'F.npy'), allow_pickle=True)
+                iscell = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'iscell.npy'), allow_pickle=True)
 
-        for (i, ds_path) in enumerate(track_ops.all_ds_path):
-            ops = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'ops.npy'), allow_pickle=True).item()
-            stat = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'stat.npy'), allow_pickle=True)
-            f = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'F.npy'), allow_pickle=True)
-            iscell = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'iscell.npy'), allow_pickle=True)
+                if track_ops.iscell_thr==None:
+                    stat_iscell = stat[iscell[:, 0] == 1]
+                    f_iscell = f[iscell[:, 0] == 1, :]
+                    print("manually")
+                    print(len(stat_iscell))
+                    print(len(f_iscell))
+                else:
+                    stat_iscell = stat[iscell[:, 1] > iscell_thr]
+                    f_iscell = f[iscell[:, 1] > iscell_thr, :]
+                    print("probability")
 
-            stat_iscell = stat[iscell[:, 1] > iscell_thr]
-            f_iscell = f[iscell[:, 1] > iscell_thr, :]
+                stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
+                f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
 
-            stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
-            f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
+                self.all_stat_t2p.append(stat_t2p)
+                self.all_fluorescence.append(f_t2p)
+                self.all_ops.append(ops)
+                self.all_is_cell.append(iscell)
+            self.meanimage()
+            self.show_cell(1)
 
-            self.all_stat_t2p.append(stat_t2p)
-            self.all_fluorescence.append(f_t2p)
-            self.all_ops.append(ops)
-            self.all_is_cell.append(iscell)
-        self.meanimage()
-        self.show_cell(1)
+        elif plane==1:
+            t2p_match_mat = np.load(os.path.join(folderPath, "track2p", "plane1_match_mat.npy"), allow_pickle=True)
+            self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
+            track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
+            track_ops = SimpleNamespace(**track_ops_dict)
+
+            iscell_thr = track_ops.iscell_thr
+
+            for (i, ds_path) in enumerate(track_ops.all_ds_path):
+                ops = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'ops.npy'), allow_pickle=True).item()
+                stat = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'stat.npy'), allow_pickle=True)
+                f = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'F.npy'), allow_pickle=True)
+                iscell = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'iscell.npy'), allow_pickle=True)
+                
+                if track_ops.iscell_thr==None:
+                    stat_iscell = stat[iscell[:, 0] == 1]
+                    f_iscell = f[iscell[:, 0] == 1, :]
+                    print("manually")
+                
+                else:
+                    stat_iscell = stat[iscell[:, 1] > iscell_thr]
+                    f_iscell = f[iscell[:, 1] > iscell_thr, :]
+                    print("probability")
+
+                stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
+                f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
+
+                self.all_stat_t2p.append(stat_t2p)
+                self.all_fluorescence.append(f_t2p)
+                self.all_ops.append(ops)
+                self.all_is_cell.append(iscell)
+            self.meanimage()
+            self.show_cell(1)
 
     def clearData(self):
         self.all_fluorescence = []
@@ -178,7 +228,14 @@ class MainWindow(QWidget):
     def runTrack2p(self):
         self.newWindow=NewWindow(self)
         self.newWindow.show()
+    
+    def runProcessedData(self):
+        self.importWindow=ImportWindow(self)
+        self.importWindow.show()
         
+    def generateRasterPlot(self):
+        self.rasterWindow=RasterWindow(self)
+        self.rasterWindow.show()
         
     def meanimage(self):
         self.colors = self.generate_vibrant_colors(len(self.all_stat_t2p[0]))    

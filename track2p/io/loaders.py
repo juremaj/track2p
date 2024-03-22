@@ -9,7 +9,13 @@ def load_stat_ds_plane(track_ops_path, track_ops, plane_idx=0):
     iscell = np.load(track_ops_path + f'/suite2p/plane{plane_idx}/iscell.npy', allow_pickle=True)
     # filter based on track_ops.iscell_thr
     len_stat_allcell = len(stat)
-    stat = stat[iscell[:,1] > track_ops.iscell_thr]
+    
+    if track_ops.iscell_thr==None:
+        stat = stat[iscell[:,0] ==1]
+        print("manually")
+    else:
+        stat= stat[iscell[:,1]>track_ops.iscell_thr]
+        print("probability")
     len_stat_iscell = len(stat)
     print(f'Loading ROIs for plane{plane_idx} in dataset {track_ops_path.split("/")[-2]}')
     print(f'Chose {len_stat_iscell}/{len_stat_allcell} ROIs, based on s2p iscell threshold {track_ops.iscell_thr} (see track_ops.iscell_thr)')
