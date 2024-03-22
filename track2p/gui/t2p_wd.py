@@ -23,7 +23,7 @@ class NewWindow(QWidget):
             self.file_paths = {}
             
         
-            label_imp_button=QLabel(" Import the directory containing subfolders of different recordings for the same mouse:")
+            label_imp_button=QLabel(" Import the directory containing subfolders of different recordings for the same subject:")
             self.importButton = QPushButton("Import", self)
             self.importButton.clicked.connect(self.importDirectory)
             layout.addRow(label_imp_button,self.importButton)
@@ -37,7 +37,7 @@ class NewWindow(QWidget):
             instruction=QLabel("Once loaded press '->' to add to the list of paths to use for track2p (in the right order):")
             #layout.addRow(instruction)
             
-            label_checkbox= QLabel("Choose an option:")
+            label_checkbox= QLabel("Choose an option for selecting suite2p ROIs:")
             field_checkbox= QVBoxLayout()
             self.checkbox1 = QCheckBox('manually curated', self)
             self.checkbox2 = QCheckBox('iscell threshold', self)
@@ -80,7 +80,7 @@ class NewWindow(QWidget):
             layout.addRow(chan_label,self.reg_chan)
             
             
-            label_imp_save_button=QLabel("Import the directory will contain a 'track2p' folder (with the outputs of the algorithm):")
+            label_imp_save_button=QLabel("Import the directory where the outputs will be saved (a 'track2p' sub-folder will be created here):")
             self.importSaveButton = QPushButton("Import", self)
             self.importSaveButton.clicked.connect(self.saveDirectory)
             layout.addRow(label_imp_save_button,self.importSaveButton)
@@ -96,6 +96,8 @@ class NewWindow(QWidget):
             self.run_button.clicked.connect(self.run)
             layout.addRow("Run the algorithm:", self.run_button)
             
+            terminal_intruction=QLabel("To monitor the progress of the algorith see outputs in the terminal where the GUI was launched from")
+            layout.addRow(terminal_intruction)
      
     
 ############################################################################################################################################################################

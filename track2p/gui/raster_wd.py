@@ -1,6 +1,6 @@
 import os
 import io
-from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QCheckBox, QComboBox,QGraphicsView,QGraphicsScene,QSplitter,QGroupBox
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QCheckBox, QComboBox,QGraphicsView,QGraphicsScene,QSplitter,QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 import numpy as np
@@ -51,10 +51,11 @@ class RasterWindow(QWidget):
             field_checkbox= QVBoxLayout()
             self.checkbox1 = QCheckBox('without sorting', self)
             self.checkbox2 = QCheckBox('sorting by PCA', self)
-            self.checkbox3 = QCheckBox('sorting by PCA and given day', self)
+            self.checkbox3 = QCheckBox('sorting by PCA on given day', self)
             self.checkbox4 = QCheckBox('sorting by tSNE', self)
-            self.checkbox5 = QCheckBox('sorting by tSNE and given day', self)
+            self.checkbox5 = QCheckBox('sorting by tSNE on given day', self)
             self.day_choice= QComboBox(self)
+            self.day_choice.addItem('Choose recording index (for sorting on given day)')
             field_checkbox.addWidget(self.checkbox1)
             field_checkbox.addWidget(self.checkbox2)
             field_checkbox.addWidget(self.checkbox3)
@@ -97,7 +98,7 @@ class RasterWindow(QWidget):
             field_run.clicked.connect(self.generate_raster_plt)
             layout.addRow(label_run,field_run)
             
-            label_save= QLabel("Please select the location where you want to save the analysis:")
+            label_save= QLabel("Location where you want to save the figures:")
             field_save = QPushButton("Save")
             field_save.clicked.connect(self.get_output_save_path)
             layout.addRow(label_save,field_save)
