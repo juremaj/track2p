@@ -47,7 +47,9 @@ Note: For common installation issues see [documentation](https://github.com/jure
 
 After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. Once these have been set the user can click on 'Run', which will launch the track2p algorithm, with the progress being printed in the window below.
 
-When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI (for more information see section below).
+When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI.
+
+For more details on how to run the algorithm through the GUI (descriptions of parameters etc.) see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md).
 
 ## GUI visualisation
 
@@ -58,6 +60,8 @@ The GUI supports both visualisation after algorithm run (as described above), as
 ![gui_mainwindow.png](docs/media/plots/gui_mainwindow.png)
 
 Briefly the GUI allows the user to visualise the mean field of view on all days, with the ROIs of all matched cells visualised. The user can then interactively select a cell by clicking on the ROI on the mean image. This will display a zoomed-in view of this cell across all days on the right, and the extracted fluorescence time series below.
+
+For more details on how to use the GUI for visualising track2p results see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md).
 
 ## Run via script
 
