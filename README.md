@@ -39,6 +39,8 @@ This opens a GUI allowing the user to launch the algorithm and visualise the res
 
 (For instructions on running track2p without the GUI see the 'Run via script' under the 'Usage' section)
 
+Note: For common installation issues see [documentation](https://github.com/juremaj/track2p/blob/main/docs/installation.md).
+
 # Usage
 
 ## Run through GUI
