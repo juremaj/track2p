@@ -49,7 +49,7 @@ After activating the GUI through `python -m track2p` the user should navigate to
 
 When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI.
 
-For more details on how to run the algorithm through the GUI (descriptions of parameters etc.) see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md).
+For more details on how to run the algorithm through the GUI see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of paramters see documentation [here](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
 
 ## GUI visualisation
 
@@ -79,6 +79,8 @@ All the outputs of the script will be saved in a `track2p` folder created within
 ```
 conda install conda-forge::jupyterlab
 ```
+
+For more information see documentation relating to track2p [viusalisations](https://github.com/juremaj/track2p/blob/main/docs/visualisations.md) and [outputs](https://github.com/juremaj/track2p/blob/main/docs/outputs.md).
 
 # Reference
 
