@@ -176,6 +176,7 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
     fig, axs = plt.subplots(track_ops.nplanes, len(all_ds_thr_met), figsize=(6*len(all_ds_thr_met), 6*track_ops.nplanes), sharey=True, sharex=True)
     for i in range(len(all_ds_thr_met)):
         for j in range(track_ops.nplanes):
+            axs = np.array([axs]) if type(axs) is not np.ndarray else axs
             this_ax = axs[i] if track_ops.nplanes==1 else axs[j][i]
             n_reg_roi = len(all_ds_thr_met[i][j])
             n_abovethr_roi = np.sum(all_ds_thr_met[i][j]>all_ds_thr[i][j])
