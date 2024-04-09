@@ -74,7 +74,7 @@ python -m run_track2p
 
 # Outputs
 
-All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user when running the algorithm. For an introduction on how to use the outputs for further downstream analysis we provide a useful demo notebook `demo_t2p_outlput.ipynb` in the root of this repository. Note: You will need to additionally install jupyter for this to work. For example:
+All the outputs of the script will be saved in a `track2p` folder created within the `track_ops.save_path` directory specified by the user when running the algorithm. For an introduction on how to use the outputs for further downstream analysis we provide a useful demo notebook `demo_t2p_output.ipynb` in the root of this repository. Note: You will need to additionally install jupyter for this to work. For example:
 
 ```
 conda install conda-forge::jupyterlab
