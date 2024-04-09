@@ -86,7 +86,7 @@ For more information see documentation relating to track2p [viusalisations](http
 
 For now if you use the algorithm please reference the Cosyne abstract:
 
-  **Majnik, J., Zangila, S., Cossart, R. & Platel, J. C. (2024). _Emergence of state modulation in a developing circuit_. COSYNE Abstract.**
+  **Majnik, J., Zangila, S., Cossart, R. & Platel, J. C. (2024). _Emergence of state modulation in a developing cortical circuit_. COSYNE Abstract.**
 
   
 
