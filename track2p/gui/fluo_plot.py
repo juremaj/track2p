@@ -11,10 +11,10 @@ from PyQt5 import QtCore
 
 class FluorescencePlotWidget(FigureCanvas):
     """this class is used to display the fluorescence of the selected cell across days. It also allows to select a region of interest (ROI) on the fluorescence plot and zoom in on the selected ROI"""
-    def __init__(self, all_fluorescence=None, all_ops=None, colors=None, all_stat_t2p=None):
+    def __init__(self, all_f_t2p=None, all_ops=None, colors=None, all_stat_t2p=None):
         self.fig, self.ax_fluorescence = plt.subplots(1, 1)
         super().__init__(self.fig)
-        self.all_fluorescence = all_fluorescence
+        self.all_f_t2p = all_f_t2p
         self.all_ops=all_ops
         self.fig.set_facecolor('black')
         self.colors = colors
@@ -83,10 +83,10 @@ class FluorescencePlotWidget(FigureCanvas):
             self.fig.canvas.draw()
 
 
-    def display_all_fluorescence(self, selected_cell_index):
+    def display_all_f_t2p(self, selected_cell_index):
         """it plots the fluroescence of the selected cell across days where each curve being a different day (the curve at the top of the plot is the first day)"""
         
-        if self.all_fluorescence is not None and selected_cell_index is not None:
+        if self.all_f_t2p is not None and selected_cell_index is not None:
             self.ax_fluorescence.clear()
             self.ax_fluorescence.set_facecolor('black')
             self.ax_fluorescence.tick_params(axis='x', colors='white') 
@@ -96,7 +96,7 @@ class FluorescencePlotWidget(FigureCanvas):
             self.ax_fluorescence.spines['bottom'].set_color('#666') 
         
             
-            for i, fluorescence_data in list(enumerate(reversed(self.all_fluorescence))):
+            for i, fluorescence_data in list(enumerate(reversed(self.all_f_t2p))):
                 fluorescence_zscore = zscore(fluorescence_data, axis=1, ddof=1) #zscore is used to normalize the fluorescence data
                 offset = i * 12 #
                 y_values = fluorescence_zscore[selected_cell_index, :] + offset 
@@ -107,13 +107,13 @@ class FluorescencePlotWidget(FigureCanvas):
                 else:
                     h, l, s = colorsys.rgb_to_hls(*color)  
                     l_range = 1 - (l + 0.05)  
-                    l_add = l_range/len(self.all_fluorescence) 
+                    l_add = l_range/len(self.all_f_t2p) 
                     
                     adjusted_luminosity = l + (l_add *i) 
                     color = colorsys.hls_to_rgb(h, adjusted_luminosity, s)
                 ops=self.all_ops[i]
                 fs = ops['fs']
-                tstamps = np.arange(0,self.all_fluorescence[i].shape[1])/fs
+                tstamps = np.arange(0,self.all_f_t2p[i].shape[1])/fs
                 if len(tstamps) != len(y_values):
                     raise ValueError(f"tstamps and y_values must have the same length, but have lengths {len(tstamps)} and {len(y_values)}")
                 self.ax_fluorescence.plot(tstamps,y_values, label=f'Curve {i + 1}', color= color)

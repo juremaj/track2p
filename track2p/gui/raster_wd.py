@@ -98,7 +98,7 @@ class RasterWindow(QWidget):
             field_run.clicked.connect(self.generate_raster_plt)
             layout.addRow(label_run,field_run)
             
-            label_save= QLabel("Location where you want to save the figures:")
+            label_save= QLabel("Save the figure:")
             field_save = QPushButton("Save")
             field_save.clicked.connect(self.get_output_save_path)
             layout.addRow(label_save,field_save)
@@ -106,6 +106,7 @@ class RasterWindow(QWidget):
             label_output_path= QLabel("The figure has been saved here:")
             self.field_output_path=QLabel()
             layout.addRow(label_output_path,self.field_output_path)
+            
             self.view=QGraphicsView(self) #QGraphicsView is a subclass of QWidget
             
             splitter = QSplitter(Qt.Horizontal)            
@@ -133,23 +134,27 @@ class RasterWindow(QWidget):
                 self.vmax.setVisible(False)
                 
         def load_directory_contents(self):
-            load_directory= QFileDialog.getExistingDirectory(self, "Select Directory")
-            if load_directory:
+            self.load_directory= QFileDialog.getExistingDirectory(self, "Select Directory")
+            if self.load_directory:
                 #self.savedirectory=savedirectory
-                self.field_imp_path.setText(f'{load_directory}')
+                self.field_imp_path.setText(f'{self.load_directory}')
             #self.storedPlane = int(self.fieldPlane.text())
-            self.main_window.loadFiles(load_directory,plane=int(self.field_plane.text()))
-            self.all_f_t2p= self.main_window.all_fluorescence
+            plane=int(self.field_plane.text())
+            value=1
+            self.main_window.loadFiles(self.load_directory,plane,value)
+            self.all_f_t2p= self.main_window.all_f_t2p
             self.all_stat_t2p= self.main_window.all_stat_t2p
             for i in range(len(self.all_stat_t2p)):
                 self.day_choice.addItem(str(i + 1))
         
         def get_output_save_path(self):
-            save_path= QFileDialog.getExistingDirectory(self, "Select Directory")
-            if save_path:
-                self.field_output_path.setText(f'{save_path}')
-                filename=os.path.join(save_path,'rasterplot_{}_plane{}.pdf'.format(self.raster_type,str(self.field_plane.text())))
-                plt.savefig(filename)
+            #save_path= QFileDialog.getExistingDirectory(self, "Select Directory")
+            #if save_path:
+            raster_folder = os.path.join(self.load_directory,'track2p', 'raster')
+            os.makedirs(raster_folder, exist_ok=True)
+            self.field_output_path.setText(f'{raster_folder}')
+            filename=os.path.join(raster_folder,'rasterplot_{}_plane{}.pdf'.format(self.raster_type,str(self.field_plane.text())))
+            plt.savefig(filename)
                 
         def get_checkbox_choice(self):
             vmin=float(self.vmin.text())

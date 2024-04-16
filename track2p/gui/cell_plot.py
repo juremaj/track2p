@@ -11,7 +11,7 @@ class CellPlotWidget(FigureCanvas):
     cell_selected = Signal(int)
 
     def __init__(self, tab=None, ops=None, stat_t2p=None, f_t2p=None, colors=None, update_selection_callback=None,
-                 all_fluorescence=None, all_stat_t2p=None, all_ops=None):
+                 all_f_t2p=None, all_stat_t2p=None, all_ops=None, initial_colors=None):
         """It initializes the class attributes and connects certain events to their respective handlers. It also creates the figure and the axes to display the mean image of the recording."""
         self.fig, self.ax_image = plt.subplots(1, 1) 
         self.fig.set_facecolor('black')
@@ -19,10 +19,11 @@ class CellPlotWidget(FigureCanvas):
         self.ops = ops
         self.stat_t2p = stat_t2p
         self.f_t2p = f_t2p
-        self.all_fluorescence = all_fluorescence
+        self.all_fluorescence = all_f_t2p
         self.all_stat_t2p=all_stat_t2p
         self.all_ops=all_ops
         self.colors = colors
+        self.initial_colors=initial_colors
         self.selected_cell_index = None
         self.mpl_connect('button_press_event', self.on_mouse_press)
         self.update_selection_callback = update_selection_callback
@@ -43,13 +44,41 @@ class CellPlotWidget(FigureCanvas):
             bin_mask = np.zeros_like(self.ops['meanImg']) #create a binary mask with the same shape as the mean image of the recording
             bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
             color_cell=self.colors[cell]
+           
             self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1) 
         self.ax_image.axis('off')
         print(f'time for plotting cells on mean image for recording : {time.time()-start}')
         self.draw()
-
-
+        
            
+    def underline_cell_remix(self,selected_cell_index,vector_curation):
+        
+        for cell in range(self.nb_cells):
+            if cell == selected_cell_index:
+                bin_mask = np.zeros_like(self.ops['meanImg'])
+                if vector_curation[selected_cell_index] in [3,4]:
+                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
+                    color_cell = (0.4, 0.4, 0.4)
+                    self.colors[cell]=(0.4, 0.4, 0.4)
+                   # color_cell = (0.0, 0.0, 0.0)
+                   # self.colors[cell]=(0.0, 0.0, 0.0) #update colors of plor and fluo  
+                    
+                if vector_curation[selected_cell_index]==2:
+                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
+                    color_cell =(0.78, 0.78, 0.78)
+                    self.colors[cell]=(0.78, 0.78, 0.78)
+                   # color_cell = (0.4, 0.4, 0.4)
+                   # self.colors[cell]=(0.4, 0.4, 0.4) #update colors of plor and fluo 
+                if vector_curation[selected_cell_index]==1: 
+                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
+                    color_cell=self.initial_colors[cell]
+                    self.colors[cell]=self.initial_colors[cell] #update colors of plor and fluo  
+                self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1)
+                self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=3) #update mean image 
+        self.draw() 
+    
+   
+        
     def underline_cell(self,selected_cell_index):
         """It underlines the selected cell by increasing the linewidth of the contour of the cell"""
         for cell in range(self.nb_cells):
@@ -63,10 +92,9 @@ class CellPlotWidget(FigureCanvas):
     def remove_previous_underline(self):
         """It removes the underline of the previously selected cell by decreasing the linewidth of the contour of the cell."""
         for collection in self.ax_image.collections:
-            collection.set_linewidth(1)   
-        self.draw() # important, don't forget it ! (update the plot)
-                
-    
+            collection.set_linewidth(1)
+         # important, don't forget it ! (update the plot)
+            
     def initialize_interactions(self):
         """This method is used to initialize user interactions with the mean image. It connects the scroll event to the on_scroll method and records the initial xlim and ylim of the mean image."""
         self.cid_scroll = self.fig.canvas.mpl_connect('scroll_event', self.on_scroll)
@@ -105,7 +133,8 @@ class CellPlotWidget(FigureCanvas):
                 if np.any((xpix == int(x)) & (ypix == int(y))):
                     self.selected_cell_index = j
                     self.update_selection_callback(j)
-                    print(f"Cell selected: {j + 1}", flush=True)
+                    print(f"Cell selected: {j}", flush=True)
                     break
         print(f'time taken for updating: {time.time()-start}')
+        
         

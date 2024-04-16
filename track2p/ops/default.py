@@ -29,6 +29,14 @@ class DefaultTrackOps:
         # plotting parameters
         self.win_size = 48 # window size for visualising matched ROIs across days (crop of mean image)
         self.sat_perc = 99.9 # percentile to saturate image at (only affects visualisation not the registration/matching)
+        
+        self.colors = None # save color after curation
+        self.vector_curation=None #save the status of the ROIs after curation
+        self.init_colors=None #save the initial colors of the ROIs (before curation)
+        self.curated_cells=None #save the index of the curated cells
+        
+        
+        self.save_in_s2p_format = False # save the output in suite2p format (this is useful for downstream analysis with suite2p)
 
         # make the output directories when initialising the object
         

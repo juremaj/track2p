@@ -69,10 +69,8 @@ def load_all_ds_stat_iscell(track_ops):
             iscell = np.load(os.path.join(ds_path, 'suite2p', f'plane{j}', 'iscell.npy'), allow_pickle=True)
             if track_ops.iscell_thr==None:
                 stat_iscell = stat[iscell[:,0]==1]
-                print("manually")
             else: 
                 stat_iscell = stat[iscell[:,1]>track_ops.iscell_thr]
-                print("probability")
             ds_stat_iscell.append(stat_iscell)
         all_ds_stat_iscell.append(ds_stat_iscell)
 

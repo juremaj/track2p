@@ -1,8 +1,10 @@
 
 
 import os
-from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox,QListWidgetItem
+from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox,QListWidgetItem,QComboBox
 from PyQt5.QtCore import Qt
+from types import SimpleNamespace
+import numpy as np
 
 
 class ImportWindow(QWidget):
@@ -30,6 +32,10 @@ class ImportWindow(QWidget):
             self.textbox.setText('0')
             layout.addRow(plane_label,self.textbox)
             
+            label_combobox= QLabel("not_cell_count_over_days :")
+            self.comboBox = QComboBox(self)
+            layout.addRow(label_combobox,self.comboBox)
+            
             label_run= QLabel("Run the analysis:")
             self.runButton = QPushButton("Run", self)
             self.runButton.clicked.connect(self.run)
@@ -41,8 +47,14 @@ class ImportWindow(QWidget):
             if savedirectory:
                 self.savedirectory=savedirectory
                 self.savedirectoryLabel.setText(f'{self.savedirectory}')
+                track_ops_dict = np.load(os.path.join(self.savedirectory, "track2p", "track_ops.npy"), allow_pickle=True).item()
+                track_ops = SimpleNamespace(**track_ops_dict)
+                for i in range(len(track_ops.all_ds_path)):
+                    self.comboBox.addItem(str(i + 1))
+                
                 
         def run(self):
             self.storedPlane = int(self.textbox.text())
-            self.main_window.loadFiles(self.savedirectory,plane=self.storedPlane)
+            comboBoxResult = int(self.comboBox.currentText())
+            self.main_window.loadFiles(self.savedirectory, plane=self.storedPlane, combobox_value=comboBoxResult)
                 

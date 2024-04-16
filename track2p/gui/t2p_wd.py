@@ -1,9 +1,11 @@
 
 import os
-from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox,QListWidgetItem, QInputDialog,QCheckBox,QSizePolicy
+from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox,QListWidgetItem, QInputDialog,QCheckBox,QSizePolicy,QComboBox,QDialog
 from PyQt5.QtCore import Qt
 from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
+
+
 import sys 
 #from track2p.gui.terminal_gui import MultiStream, ConsoleOutput
 
@@ -20,6 +22,7 @@ class NewWindow(QWidget):
             layout = QFormLayout()
             self.setLayout(layout)
             self.stored_plane=None 
+            self.track_ops = DefaultTrackOps()
             self.file_paths = {}
             
         
@@ -91,7 +94,12 @@ class NewWindow(QWidget):
             self.save_path.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             layout.addRow(label_save_path,self.save_path)
             
-        
+            label_save_s2p= QLabel("Save the outputs in suite2p format (containing cells tracked on all days):")
+            self.checkbox3 = QCheckBox(self)
+            #self.checkbox3.stateChanged.connect(self.save_in_s2p_format)
+            layout.addRow(label_save_s2p,self.checkbox3)
+            
+
             self.run_button = QPushButton("Run", self)
             self.run_button.clicked.connect(self.run)
             layout.addRow("Run the algorithm:", self.run_button)
@@ -101,7 +109,7 @@ class NewWindow(QWidget):
      
     
 ############################################################################################################################################################################
-
+        
         def display_iscell(self,state):
             if state == Qt.Checked:
                 self.is_cell_thr.setVisible(True)
@@ -117,27 +125,31 @@ class NewWindow(QWidget):
             for i in range(self.paths_list.count()):
                 self.stored_all_ds_path.append(self.paths_list.item(i).data(Qt.UserRole))
             print("All parameters have been recorded ! The track2p algorithm is running...")
-            track_ops = DefaultTrackOps() #Initializes the track_ops object with the default parameters
-            track_ops.all_ds_path= self.stored_all_ds_path
-            print(f'track_ops.all_ds_path : {track_ops.all_ds_path}')
-            track_ops.save_path = self.save_track2p_path
-            track_ops.reg_chan=int(self.reg_channel)
+           # self.track_ops = DefaultTrackOps() #Initializes the self.track_ops object with the default parameters
+            self.track_ops.all_ds_path= self.stored_all_ds_path
+            #print(f'self.track_ops.all_ds_path : {self.track_ops.all_ds_path}')
+            self.track_ops.save_path = self.save_track2p_path
+            self.track_ops.reg_chan=int(self.reg_channel)
             if self.checkbox1.isChecked():
-                track_ops.iscell_thr=None
+                self.track_ops.iscell_thr=None
             if self.checkbox2.isChecked():
-                track_ops.iscell_thr=float(self.is_cell)
-            run_t2p(track_ops)
+                self.track_ops.iscell_thr=float(self.is_cell)
+            if self.checkbox3.isChecked():
+                self.track_ops.save_in_s2p_format=True
+            run_t2p(self.track_ops)
             self.askQuestion()
- 
 
+        # In your askQuestion method:
         def askQuestion(self):
             reply = QMessageBox.question(self, "", "Run completed successfully!\nDo you want to launch the gui?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                text, ok = QInputDialog.getText(self, '', 'Enter your plane:')
-                if ok:
-                    self.storedPlane=int(text)
-                    self.main_window.loadFiles(self.save_track2p_path, plane=self.storedPlane)
+                dialog = ComboBoxDialog(self)
+                if dialog.exec_():
+                    plane, comboBoxResult = dialog.getResults()
+                    self.storedPlane = int(plane)
+                    comboBoxResult = int(comboBoxResult)
+                    self.main_window.loadFiles(self.save_track2p_path, plane=self.storedPlane, combobox_value=comboBoxResult)
                     self.close()
             if reply == QMessageBox.No:
                 pass
@@ -158,8 +170,6 @@ class NewWindow(QWidget):
                     full_path = os.path.join(directory, file)
                     item=QListWidgetItem(file)
                     item.setData(Qt.UserRole, full_path)
-                   # print(f'file_name={item.text()}')
-                    #print(f'full_path={item.data(Qt.UserRole)}')
                     self.computer_file_list.addItem(item)
 
 
@@ -168,9 +178,7 @@ class NewWindow(QWidget):
             for item in selectedItems:
                 self.computer_file_list.takeItem(self.computer_file_list.row(item))
                 self.paths_list.addItem(item)
-            #for i in range(self.boxFileListWidget.count()):
-              #  print(self.boxFileListWidget.item(i).text())
-              # print(self.boxFileListWidget.item(i).data(Qt.UserRole))
+       
 
         def moveFileToComputer(self):
             selectedItems = self.paths_list.selectedItems()
@@ -179,3 +187,34 @@ class NewWindow(QWidget):
                 self.computer_file_list.addItem(item)
                 
 
+class ComboBoxDialog(QDialog):
+    def __init__(self, parent=None):
+        super(ComboBoxDialog, self).__init__(parent)
+        self.parent=parent
+        self.layout = QFormLayout(self)
+
+        # Add a label
+        label_plane= QLabel("Choose the plane to analyze:")
+        self.field_plane=QLineEdit()
+        self.field_plane.setText('0')
+        self.field_plane.setFixedWidth(50)
+        self.layout.addRow(label_plane,self.field_plane)
+        
+
+        label_combobox= QLabel("not_cell_count_over_days :")
+        self.comboBox = QComboBox(self)
+        for i in range(len(self.parent.stored_all_ds_path)):
+            self.comboBox.addItem(str(i + 1))
+        self.layout.addRow(label_combobox,self.comboBox)
+        # Add a "OK" button
+        self.okButton = QPushButton("OK", self)
+        self.okButton.clicked.connect(self.accept)
+        self.layout.addRow(self.okButton)
+        
+        self.setLayout(self.layout)
+    
+    def getResults(self):
+        return self.field_plane.text(), self.comboBox.currentText()
+        
+        
+          

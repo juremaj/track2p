@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 import os
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QTabWidget, QVBoxLayout, QWidget, QSplitter, QHBoxLayout, QFrame, QFrame, QPushButton, QFileDialog, QMenuBar, QLineEdit, QLabel, QFormLayout, QListWidget, QMessageBox
+from PyQt5.QtWidgets import QApplication, QTabWidget, QVBoxLayout, QWidget, QSplitter, QHBoxLayout, QFrame, QFrame,  QMenuBar,QToolBar,QMainWindow,QMenu,QAction,QToolButton,QSpinBox,QPushButton,QLabel
 from PyQt5.QtCore import Qt
 import matplotlib.colors as mcolors
 import random
@@ -12,49 +12,28 @@ from track2p.gui.roi_plot import ZoomPlotWidget
 from track2p.gui.t2p_wd import NewWindow
 from track2p.gui.import_wd import ImportWindow
 from track2p.gui.raster_wd import RasterWindow
+import pandas as pd 
 
-class MainWindow(QWidget):
+
+class MainWindow(QMainWindow):
     """This class is used to create the main window of the application. QWidget is the base class for all user interface objects in PyQt5 """
     def __init__(self):
-        """it initializes the class attributes and calls the initUI method to create the main window of the application. It also calls the show_cell method to display the first cell of the t2p_match_mat_allday and its fluorescence and zooms across days."""
+        """it initializes the class attributes and calls the initUI method to create the main window of the application. It also calls the init_cell method to display the first cell of the t2p_match_mat_allday and its fluorescence and zooms across days."""
         super(MainWindow,self).__init__()
-        self.all_fluorescence = []
+        self.all_f_t2p= []
         self.all_ops = []
         self.all_stat_t2p = []
-        self.all_is_cell = []
-        self.colors = None #It's a list of colors used to color the contours of the cells. Each cell has a specific color mainly for the purpose of tracking the same cell across different recordings.
+        self.all_iscell_t2p = []
+        self.init_colors = None
+        self.colors = None 
         self.t2p_match_mat_allday = None 
         self.selected_cell_index = None
         self.fluorescence_plot = None
-        self.zoom_plot = None
+        self.roi_plot = None
+        self.plot_dict =None
+        self.track_ops = None
         self.initUI()
-        #self.show_cell(1)
         
-   
-    def show_cell(self,index):
-        """it displays the first cell of the t2p_match_mat_allday and its fluorescence and zooms across days. It is called when the application is opened.
-        An instance of FluorescencePlotWidget and an instance of ZoomPlotWidget are created and added to attributes of the MainWindow class. """
-        tab_widget = self.tabs.widget(0)
-        cell_object = tab_widget.findChild(CellPlotWidget) #It finds the instance of the CellPlotWidget class in the first tab of the QTabWidget
-        cell_object.underline_cell(index)
-        cell_object.draw()
-            
-        if self.fluorescence_plot is None:
-            self.fluorescence_plot = FluorescencePlotWidget(all_fluorescence=self.all_fluorescence,
-                                                           all_ops=self.all_ops,
-                                                           colors=self.colors, all_stat_t2p=self.all_stat_t2p)
-            self.bottom_layout_right.addWidget(self.fluorescence_plot)
-        if self.zoom_plot is None:
-            self.zoom_plot = ZoomPlotWidget(all_ops=self.all_ops,
-                                            all_stat_t2p=self.all_stat_t2p,
-                                            colors=self.colors,
-                                            all_is_cell=self.all_is_cell,
-                                            t2p_match_mat_allday=self.t2p_match_mat_allday)
-            self.bottom_layout.addWidget(self.zoom_plot)
-        
-        self.fluorescence_plot.display_all_fluorescence(index)
-        self.zoom_plot.display_zooms(index)
-
     def initUI(self):
         """it creates the main window of the application. It also creates the layout of the main window and sets the style of the application."""
         self.setStyleSheet(
@@ -64,28 +43,62 @@ class MainWindow(QWidget):
             "QTabBar::tab:selected { background-color: #222; color: white; }"
             "QSplitter::handle { background: #888; }"
             "QFrame { background-color: black; color: black;  border: 1px solid black;}"
-            "QLabel { color: white; }"
+            "QLabel { color: black; background-color: none; border: none; font-size: 13px}"
             "QPushButton { background-color: #666; color: white; border: 1px solid #888; }"
             "QPushButton:hover { background-color: #888; color: white; }"
             "QPushButton:pressed { background-color: #333; color: white; }"
-            "QLineEdit { background-color: #666; color: white; }"
+            "QToolButton:pressed { background-color: #888; }"
             "QComboBox { background-color: black; color: white; }"
             "QComboBox QAbstractItemView { background-color: #666; color: white; }"
-            "QToolTip { background-color: #222; color: white; border: 1px solid white; }")
-        self.central_widget = QHBoxLayout(self)
-        #QTabWidget is used to create the tabs of the main window.
-        self.tabs = QTabWidget(self) 
+            )
     
-        menuBar=QMenuBar(self)
-        menuBar.setGeometry(0,0, 500, 25)
         
-        File=menuBar.addMenu("File")
-        Run=menuBar.addMenu("Run")
-        Visualization=menuBar.addMenu("Visualization")
-        File.addAction("Load processed data", self.runProcessedData)
-        Run.addAction("Run track2p alogorithm", self.runTrack2p)
-        Visualization.addAction("Generate raster plot", self.generateRasterPlot)
+        toolbar=QToolBar()
+      
+        self.addToolBar(toolbar)
+        file_menu = QMenu(self)
+        run_menu = QMenu(self)
+        visualization_menu = QMenu( self)
         
+        load_data_action = QAction("Load processed data (⌘L or Ctrl+L)", self)
+        load_data_action.setShortcut("Ctrl+L")
+        load_data_action.triggered.connect(self.runProcessedData)
+        file_menu.addAction(load_data_action)
+        
+        run_track_action = QAction("Run track2p alogorithm (⌘R or Ctrl+)", self)
+        run_track_action.setShortcut("Ctrl+R")
+        run_track_action.triggered.connect(self.runTrack2p)
+        run_menu.addAction(run_track_action)
+        
+        generate_rasterplot_action = QAction("Generate raster plot (⌘G or Ctrl+G)", self)
+        generate_rasterplot_action.setShortcut("Ctrl+G")
+        generate_rasterplot_action.triggered.connect(self.generateRasterPlot)
+        visualization_menu.addAction(generate_rasterplot_action)
+        
+        file_button = QToolButton()
+        file_button.setStyleSheet("""
+        QToolButton:pressed { background-color: gray; }
+        """)
+        file_button.setMenu(file_menu)
+        file_button.setPopupMode(QToolButton.InstantPopup)
+        file_button.setStyleSheet("font-size: 13px")
+        file_button.setText("File")
+        toolbar.addWidget(file_button)
+        
+        run_button = QToolButton()
+        run_button.setMenu(run_menu)
+        run_button.setPopupMode(QToolButton.InstantPopup)
+        run_button.setStyleSheet("font-size: 13px")
+        run_button.setText("Run")
+        toolbar.addWidget(run_button)
+
+        visualization_button = QToolButton()
+        visualization_button.setMenu(visualization_menu)
+        visualization_button.setPopupMode(QToolButton.InstantPopup)
+        visualization_button.setStyleSheet("font-size: 13px")
+        visualization_button.setText("Visualization")
+        toolbar.addWidget(visualization_button)
+      
         self.bottom = QFrame()
         self.bottom.setFrameShape(QFrame.StyledPanel)
         self.bottom_layout = QHBoxLayout(self.bottom)
@@ -98,7 +111,8 @@ class MainWindow(QWidget):
         self.bottomright.setFrameShape(QFrame.StyledPanel)
         self.bottom_layout_right = QVBoxLayout(self.bottomright)
 
-        #QSplitter is used to create the different sections of the main window
+        self.tabs = QTabWidget(self) 
+   
         self.splitter1 = QSplitter(Qt.Horizontal) 
         self.splitter1.addWidget(self.tabs)
         self.splitter1.addWidget(self.bottom)
@@ -111,115 +125,264 @@ class MainWindow(QWidget):
         self.splitter3.addWidget(self.splitter1)
         self.splitter3.addWidget(self.splitter2)
         self.splitter3.setSizes([100, 100])
+        
+   
+        central_layout = QVBoxLayout()
+        central_layout.addWidget(self.splitter3)
+        central_widget = QWidget()
+        central_widget.setLayout(central_layout)
+        self.setCentralWidget(central_widget)
+        
+        statusBar = self.statusBar()
+        status_widget = QWidget()
+        layout = QHBoxLayout()
+        
+        self.spin_box=QSpinBox()
+        self.spin_box.setFixedWidth(100)
+        self.spin_box.valueChanged.connect(self.spin_box_changed)
+        
+        self.status=QLabel("status: ")
+        self.status_value=QLabel()
+      
+        cross_button =QPushButton('✖️')
+        cross_button.clicked.connect(self.cross_button_clicked)
+        #cross_button.clicked.connect(self.cross_button_clicked)
+        
+        validate_button = QPushButton('✓')
+        validate_button.clicked.connect(self.validate_button_clicked)
+        
+        save_t2p_color=QPushButton('Save curation')
+        save_t2p_color.clicked.connect(self.save_t2p_color)
+        
+        layout.addWidget(self.spin_box)
+        layout.addWidget(self.status)
+        layout.addWidget(self.status_value)
+        layout.addWidget(cross_button)
+        layout.addWidget(validate_button)
+        layout.addWidget(save_t2p_color)
+        
+        status_widget.setLayout(layout)
+        statusBar.addWidget(status_widget)
+      
 
-        self.central_widget.addWidget(self.splitter3)
-
-        self.setLayout(self.central_widget)
         QApplication.setStyle('Cleanlooks')
         self.setWindowTitle("track2p GUI")
-        self.resize(800,600)
         self.show()
+        
+    def save_t2p_color(self):
+        track_ops_dict = np.load(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), allow_pickle=True).item() #load track2p dict
+        track_ops_dict['colors'] = self.new_colors #update and save track2p.colors for cells that were curated manually 
+        track_ops_dict['vector_curation']=self.vector_curation_t2p #update and save track2p.vector_curation for cells that were curated manually 
+        track_ops_dict['curated_cells']=self.curated_cells #update and save track2p.curated_cells for cells that were curated manually
+        np.save(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) #save track2p dict 
+        
+            # Create a table with cell number and status
+        data = {'Cell Number': list(self.vector_curation_t2p.keys()), 'Status': list(self.vector_curation_t2p.values())}
+        df = pd.DataFrame(data)
+        print(df)
+        
+        df.to_csv(os.path.join(self.t2p_folder_path, "track2p",'cell_status.csv'), index=False, sep=';')
+        
+    def spin_box_changed(self):
+        current_value = self.spin_box.value() #selected ROI 
+        value=self.vector_curation_t2p[current_value] #status of ROI 
+        self.status_value.setText(f"{value}") # display the status 
+        self.update_selection(current_value) #update 
+    
+    def cross_button_clicked(self):
+        if self.vector_curation_t2p[self.spin_box.value()] in [1, 2, 3]:
+            self.vector_curation_t2p[self.spin_box.value()]= 4
+        self.curated_cells.append(self.spin_box.value()) #add the cells to curated cells list
+           
             
-
-    #def importFolder(self):
-      #  folderPath = QFileDialog.getExistingDirectory(self, "Select suite2p Folder")
-      #  if folderPath:
-          #  self.loadFiles(folderPath)
+        #if self.vector_curation_t2p[self.spin_box.value()]==0:
+          #  self.vector_curation_t2p[self.spin_box.value()]= 4
+            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}") 
+       # if self.vector_curation_t2p[self.spin_box.value()]==1:
+        #    self.vector_curation_t2p[self.spin_box.value()]= 4
+            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
+        self.update_remix(self.spin_box.value())
+    
+    def validate_button_clicked(self):
+        if self.vector_curation_t2p[self.spin_box.value()] in [2, 3, 4]:
+            self.vector_curation_t2p[self.spin_box.value()]= 1
+        self.curated_cells.append(self.spin_box.value())
+            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
+            
+        #if self.vector_curation_t2p[self.spin_box.value()]==0:
+            #self.new_vector_curation[self.spin_box.value()]=1 !!!!!!!!!!!!!!!!!!!!!!
+           # self.vector_curation_t2p[self.spin_box.value()]= 1 
+            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
+        #if self.vector_curation_t2p[self.spin_box.value()]== 2:
+         #   self.vector_curation_t2p[self.spin_box.value()]= 1 
+            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
+        self.update_remix(self.spin_box.value())
+        
+    def update_remix(self,index):
+        #update and save the changes for track2p (new_colors is used for track2p.colors in save_t2p_color)
+        self.status_value.setText(f"Status: {self.vector_curation_t2p[index]}") 
+        if self.vector_curation_t2p[index]==2:
+            #self.new_colors[index]=(0.4, 0.4, 0.4)#grey
+            self.new_colors[index]=(0.78, 0.78, 0.78) #white
+        if self.vector_curation_t2p[index] in [3,4]:
+            self.new_colors[index]=(0.4, 0.4, 0.4)
+            #self.new_colors[index]=(0,0,0)
+        if self.vector_curation_t2p[index]==1: 
+            self.new_colors[index]=self.init_colors[index]
+        current_tab_index = self.tabs.currentIndex()
+        current_tab_widget = self.tabs.widget(current_tab_index)
+        cell_plot = current_tab_widget.findChild(CellPlotWidget)
+        
+             
+        if cell_plot:
+            cell_plot.underline_cell_remix(index,vector_curation=self.vector_curation_t2p)
+            
+               
+    def init_cell(self,index):
+        """it displays the first cell of the t2p_match_mat_allday and its fluorescence and zooms across days. It is called when the application is opened.
+        An instance of FluorescencePlotWidget and an instance of ZoomPlotWidget are created and added to attributes of the MainWindow class. """
+        tab_widget = self.tabs.widget(0)
+        cell_object = tab_widget.findChild(CellPlotWidget) #It finds the instance of the CellPlotWidget class in the first tab of the QTabWidget
+        cell_object.underline_cell(index)
+        cell_object.draw()
+        if self.fluorescence_plot is None:
+            self.fluorescence_plot = FluorescencePlotWidget(all_f_t2p=self.all_f_t2p,
+                                                           all_ops=self.all_ops,
+                                                           colors=self.colors, all_stat_t2p=self.all_stat_t2p)
+            self.bottom_layout_right.addWidget(self.fluorescence_plot)
+        if self.roi_plot is None:
+            self.roi_plot = ZoomPlotWidget(all_ops=self.all_ops,
+                                            all_stat_t2p=self.all_stat_t2p,
+                                            colors=self.colors,
+                                            all_iscell_t2p=self.all_iscell_t2p,
+                                            t2p_match_mat_allday=self.t2p_match_mat_allday,track_ops=self.track_ops)
+            self.bottom_layout.addWidget(self.roi_plot)
+        self.fluorescence_plot.display_all_f_t2p(index)
+        self.roi_plot.display_zooms(index)
+        self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}") #once files are loaded 
 
     
-    def loadFiles(self, folderPath, plane):
-        
+    def loadFiles(self, t2p_folder_path, plane, combobox_value):
+        self.t2p_folder_path = t2p_folder_path
         if self.fluorescence_plot is not None:
-            #self.close()
             self.clearData()
-           # if self.close():  # Check if the window was successfully closed
-              #  self.__init__()  # Create a new instance of MainWindow
-        
-        if plane==0:
-            t2p_match_mat = np.load(os.path.join(folderPath,"track2p" ,"plane0_match_mat.npy"), allow_pickle=True)
-            self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
-            vector_curation=np.arange(self.t2p_match_mat_allday.shape[0])
-
-            track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
-            track_ops = SimpleNamespace(**track_ops_dict)
-
-            iscell_thr = track_ops.iscell_thr
-
+        # load track2p outputs           
+        t2p_match_mat = np.load(os.path.join(self.t2p_folder_path,"track2p" ,f"plane{plane}_match_mat.npy"), allow_pickle=True)
+        self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
+        track_ops_dict = np.load(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), allow_pickle=True).item()
+        track_ops = SimpleNamespace(**track_ops_dict)
+        self.track_ops = track_ops
+        # process suite2p files 
+        for (i, ds_path) in enumerate(track_ops.all_ds_path):
+            ops = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'ops.npy'), allow_pickle=True).item()
+            stat = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'stat.npy'), allow_pickle=True)
+            f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'F.npy'), allow_pickle=True)
+            iscell = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'iscell.npy'), allow_pickle=True)
             
-            for (i, ds_path) in enumerate(track_ops.all_ds_path):
-                ops = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'ops.npy'), allow_pickle=True).item()
-                stat = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'stat.npy'), allow_pickle=True)
-                f = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'F.npy'), allow_pickle=True)
-                iscell = np.load(os.path.join(ds_path, 'suite2p', 'plane0', 'iscell.npy'), allow_pickle=True)
-
-                if track_ops.iscell_thr==None:
+            if track_ops.iscell_thr is None:
                     stat_iscell = stat[iscell[:, 0] == 1]
                     f_iscell = f[iscell[:, 0] == 1, :]
+            else:
+                    stat_iscell = stat[iscell[:, 1] > track_ops.iscell_thr]
+                    f_iscell = f[iscell[:, 1] > track_ops.iscell_thr, :] 
 
-                else:
-                    stat_iscell = stat[iscell[:, 1] > iscell_thr]
-                    f_iscell = f[iscell[:, 1] > iscell_thr, :]
-                  
+            stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
+            f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
+            self.all_stat_t2p.append(stat_t2p)
+            self.all_f_t2p.append(f_t2p)
+            self.all_ops.append(ops)
+            self.all_iscell_t2p.append(iscell)            
+        # initializes or retrieve track2p dictionary parameters
+        
+        if track_ops.curated_cells is None:
+            self.curated_cells=[]
+        else:
+            self.curated_cells=track_ops.curated_cells
+            
+        if track_ops.vector_curation is None:
+            self.vector_curation_keys=np.arange(self.t2p_match_mat_allday.shape[0]) #number of cells (rows in matrix)
+            self.vector_curation_values = np.ones_like(self.vector_curation_keys)
+            self.vector_curation_t2p = dict(zip(self.vector_curation_keys, self.vector_curation_values))
 
-                stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
-                f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
+            #self.new_vector_curation=self.vector_curation_t2p.copy()
+        else:
+            print('vector_curation is not None')
+            self.vector_curation_t2p=track_ops.vector_curation
+            #self.new_vector_curation=track_ops.vector_curation.copy()
+                    
+        if track_ops.colors is None:
+            self.colors=self.generate_vibrant_colors(len(self.all_stat_t2p[0])) 
+            self.new_colors=self.colors.copy()
+        else:
+            print('colors is not None')
+            self.colors= track_ops.colors #affected by the choice of the user (grey cells) 
+            self.new_colors=track_ops.colors.copy() #will be use only to save the change of cells curated manually in the UI 
 
-                self.all_stat_t2p.append(stat_t2p)
-                self.all_fluorescence.append(f_t2p)
-                self.all_ops.append(ops)
-                self.all_is_cell.append(iscell)
-            self.meanimage()
-            self.show_cell(1)
-
-        elif plane==1:
-            t2p_match_mat = np.load(os.path.join(folderPath, "track2p", "plane1_match_mat.npy"), allow_pickle=True)
-            self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
-            track_ops_dict = np.load(os.path.join(folderPath, "track2p", "track_ops.npy"), allow_pickle=True).item()
-            track_ops = SimpleNamespace(**track_ops_dict)
-
-            iscell_thr = track_ops.iscell_thr
-
-            for (i, ds_path) in enumerate(track_ops.all_ds_path):
-                ops = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'ops.npy'), allow_pickle=True).item()
-                stat = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'stat.npy'), allow_pickle=True)
-                f = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'F.npy'), allow_pickle=True)
-                iscell = np.load(os.path.join(ds_path, 'suite2p', 'plane1', 'iscell.npy'), allow_pickle=True)
+        if track_ops.init_colors is None: # the first time that the colors are generated (track2p opens with UI)
+            self.init_colors=self.colors.copy()
+            track_ops_dict['init_colors'] = self.init_colors
+            np.save(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) 
+        else:   
+            self.init_colors=track_ops.init_colors
                 
-                if track_ops.iscell_thr==None:
-                    stat_iscell = stat[iscell[:, 0] == 1]
-                    f_iscell = f[iscell[:, 0] == 1, :]
-             
-                
-                else:
-                    stat_iscell = stat[iscell[:, 1] > iscell_thr]
-                    f_iscell = f[iscell[:, 1] > iscell_thr, :]
-     
+        self.spin_box.setSuffix(f'/{len(self.t2p_match_mat_allday)-1}')
+        self.spin_box.setMinimum(0)
+        self.spin_box.setMaximum(len(self.t2p_match_mat_allday)-1) 
+            
+        for i, line in enumerate(self.t2p_match_mat_allday): #i= number of cells 
+        
+                all_iscell_value=[]
+                for j,index_match in enumerate(line): #j=number of days 
+    
+                    if track_ops.iscell_thr is None: #Manually curated 
+                        iscell=self.all_iscell_t2p[j] # retrieve the iscell of day j 
+                        indices_lignes_1 = np.where(iscell[:,0]==1)[0] # take the indices where the ROIs were considered as cells in suite2p
+                        true_index=indices_lignes_1[index_match] # take the "true index" 
+                        iscell_value=iscell[true_index,0] 
+                        all_iscell_value.append(iscell_value)
+                    else: 
+                        iscell=self.all_iscell_t2p[j]
+                        indices_lignes_1= np.where(iscell[:,1]>track_ops.iscell_thr)[0] # take the indices where the ROIs have a probability greater than trackops.is_cell_thr
+                        true_index=indices_lignes_1[index_match] # take the "true index" 
+                        iscell_value=iscell[true_index,0] 
+                        all_iscell_value.append(iscell_value)
+                if i not in self.curated_cells:      
+                    if all(value == 1.0 for value in all_iscell_value):
+                        self.colors[i]=self.colors[i] #colors
+                        self.vector_curation_t2p[i]=1      
+                    if all_iscell_value.count(0.0) != 0 and all_iscell_value.count(0.0) <= int(combobox_value):
+                        #self.colors[i]=(0.4, 0.4, 0.4) #grey
+                        self.colors[i]=(0.78, 0.78, 0.78) #white
+                        self.vector_curation_t2p[i]=2 
+                    if all_iscell_value.count(0.0) > int(combobox_value):
+                        self.colors[i]=(0.4, 0.4, 0.4)
+                        #self.colors[i]=(0.0, 0.0, 0.0) #noir
+                        self.vector_curation_t2p[i]= 3 
+                            
+        self.save_t2p_color()
+        self.meanimage()
+        self.init_cell(0)
 
-                stat_t2p = stat_iscell[self.t2p_match_mat_allday[:, i].astype(int)]
-                f_t2p = f_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
-
-                self.all_stat_t2p.append(stat_t2p)
-                self.all_fluorescence.append(f_t2p)
-                self.all_ops.append(ops)
-                self.all_is_cell.append(iscell)
-            self.meanimage()
-            self.show_cell(1)
-
+ 
+        
+        
+    
+    
     def clearData(self):
-        self.all_fluorescence = []
+        self.all_f_t2p= []
         self.all_ops = []
         self.all_stat_t2p = []
-        self.all_is_cell = []
+        self.all_iscell_t2p = []
         self.colors = None
         self.t2p_match_mat_allday = None
         if self.fluorescence_plot:
             self.bottom_layout_right.removeWidget(self.fluorescence_plot)
             self.fluorescence_plot.deleteLater()
             self.fluorescence_plot = None
-        if self.zoom_plot:
-            self.bottom_layout.removeWidget(self.zoom_plot)
-            self.zoom_plot.deleteLater()
-            self.zoom_plot = None
+        if self.roi_plot:
+            self.bottom_layout.removeWidget(self.roi_plot)
+            self.roi_plot.deleteLater()
+            self.roi_plot = None
         for i in range(self.tabs.count()):
             self.tabs.removeTab(0)
     
@@ -235,49 +398,48 @@ class MainWindow(QWidget):
         self.rasterWindow=RasterWindow(self)
         self.rasterWindow.show()
         
-    def meanimage(self):
-        self.colors = self.generate_vibrant_colors(len(self.all_stat_t2p[0]))    
+        
+    def meanimage(self): 
         for i, (ops, stat_t2p) in enumerate(zip(self.all_ops, self.all_stat_t2p)):
             tab = QWidget()  
-            cell_plot = CellPlotWidget(tab, ops=ops, stat_t2p=stat_t2p, f_t2p=self.all_fluorescence[i],
+            cell_plot = CellPlotWidget(tab, ops=ops, stat_t2p=stat_t2p, f_t2p=self.all_f_t2p[i],
                                        colors=self.colors, update_selection_callback=self.update_selection,
-                                       all_fluorescence=self.all_fluorescence, all_ops=self.all_ops)
+                                       all_f_t2p=self.all_f_t2p, all_ops=self.all_ops,initial_colors=self.init_colors)
             layout = QVBoxLayout(tab)
             layout.addWidget(cell_plot)
             tab.setLayout(layout)
             self.tabs.addTab(tab, f"Day {i + 1}")
-
-   
             cell_plot.cell_selected.connect(self.update_selection)
         
     def update_selection(self, selected_cell_index):
         self.selected_cell_index = selected_cell_index
-        if self.fluorescence_plot is None:
-            self.fluorescence_plot = FluorescencePlotWidget(all_fluorescence=self.all_fluorescence,
-                                                           all_ops=self.all_ops,
-                                                          colors=self.colors)
-            self.bottom_layout_right.addWidget(self.fluorescence_plot)
-        if self.zoom_plot is None:
-            self.zoom_plot = ZoomPlotWidget(all_ops=self.all_ops,
-                                            all_stat_t2p=self.all_stat_t2p,
-                                            colors=self.colors,
-                                            all_is_cell=self.all_is_cell,
-                                            t2p_match_mat_allday=self.t2p_match_mat_allday)
-            self.bottom_layout.addWidget(self.zoom_plot)
-        self.fluorescence_plot.display_all_fluorescence(selected_cell_index)
-        self.zoom_plot.display_zooms(selected_cell_index)
-        
+        self.spin_box.setValue(selected_cell_index) 
+        self.status_value.setText(f"Status: {self.vector_curation_t2p[selected_cell_index]}")        
         #it removes the underline of the previsouly selected cell even if the tab is not visible (not the current tab)
         for i in range(self.tabs.count()): 
             tab_widget = self.tabs.widget(i)
             cell_object = tab_widget.findChild(CellPlotWidget)
             cell_object.remove_previous_underline()
-
         current_tab_index = self.tabs.currentIndex()
         current_tab_widget = self.tabs.widget(current_tab_index)
         cell_plot = current_tab_widget.findChild(CellPlotWidget)
         if cell_plot:
             cell_plot.underline_cell(selected_cell_index)
+        if self.fluorescence_plot is None:
+            self.fluorescence_plot = FluorescencePlotWidget(all_f_t2p=self.all_f_t2p,
+                                                           all_ops=self.all_ops,
+                                                          colors=self.colors)
+            self.bottom_layout_right.addWidget(self.fluorescence_plot)
+        if self.roi_plot is None:
+            self.roi_plot = ZoomPlotWidget(all_ops=self.all_ops,
+                                            all_stat_t2p=self.all_stat_t2p,
+                                            colors=self.colors,
+                                            all_iscell_t2p=self.all_iscell_t2p,
+                                            t2p_match_mat_allday=self.t2p_match_mat_allday,track_ops=self.track_ops)
+            self.bottom_layout.addWidget(self.roi_plot)
+        self.fluorescence_plot.display_all_f_t2p(selected_cell_index)
+        self.roi_plot.display_zooms(selected_cell_index)
+            
     
     def generate_vibrant_colors(self, num_colors):
         vibrant_colors = []
@@ -287,3 +449,6 @@ class MainWindow(QWidget):
             vibrant_colors.append(color)
 
         return vibrant_colors
+    
+
+         
