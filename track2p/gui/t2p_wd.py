@@ -123,7 +123,12 @@ class NewWindow(QWidget):
             self.save_track2p_path= self.savedirectory
             self.stored_all_ds_path = []
             for i in range(self.paths_list.count()):
-                self.stored_all_ds_path.append(self.paths_list.item(i).data(Qt.UserRole))
+                item=self.paths_list.item(i).data(Qt.UserRole)
+                print(item)
+                item_universel=item.replace("\\", "/")
+                print(item_universel)
+                #self.stored_all_ds_path.append(self.paths_list.item(i).data(Qt.UserRole))
+                self.stored_all_ds_path.append(item_universel)
             print("All parameters have been recorded ! The track2p algorithm is running...")
            # self.track_ops = DefaultTrackOps() #Initializes the self.track_ops object with the default parameters
             self.track_ops.all_ds_path= self.stored_all_ds_path
@@ -178,14 +183,14 @@ class NewWindow(QWidget):
             for item in selectedItems:
                 self.computer_file_list.takeItem(self.computer_file_list.row(item))
                 self.paths_list.addItem(item)
-       
+     
 
         def moveFileToComputer(self):
             selectedItems = self.paths_list.selectedItems()
             for item in selectedItems:
                 self.paths_list.takeItem(self.paths_list.row(item))
                 self.computer_file_list.addItem(item)
-                
+    
 
 class ComboBoxDialog(QDialog):
     def __init__(self, parent=None):

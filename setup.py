@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='track2p',
-    version='0.5.0',
+    version='0.5.1',
     packages=find_packages(),
     install_requires=[
         'numpy==1.23.5',
@@ -16,7 +16,8 @@ setup(
         'qtpy==2.4.1',
         'tqdm==4.66.2',
         'scikit-learn==1.4.0',
-        'openTSNE==1.0.1'
+        'openTSNE==1.0.1',
+        'pandas==1.5.3',
         ],
     long_description=long_description,
     long_description_content_type='text/markdown'
