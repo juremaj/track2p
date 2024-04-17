@@ -42,7 +42,9 @@ class DefaultTrackOps:
         
     def init_save_paths(self):
         self.save_path = os.path.join(self.save_path, 'track2p/')
+        self.save_path=self.save_path.replace("\\", "/")
         self.save_path_fig = os.path.join(self.save_path, 'fig/')
+        self.save_path_fig=self.save_path_fig.replace("\\", "/")
         make_dir(self.save_path)
         make_dir(self.save_path_fig)
 
