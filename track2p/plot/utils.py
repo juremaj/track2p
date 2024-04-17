@@ -3,6 +3,7 @@ from skimage.exposure import match_histograms
 
 
 def match_hist_all(all_ds_avg_ch):
+    print("starting macth hist all function")
     ref = all_ds_avg_ch[0][0]
     all_ds_avg_ch_matched = []
     for ds_avg_ch in all_ds_avg_ch:
