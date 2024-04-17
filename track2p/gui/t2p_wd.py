@@ -133,7 +133,7 @@ class NewWindow(QWidget):
            # self.track_ops = DefaultTrackOps() #Initializes the self.track_ops object with the default parameters
             self.track_ops.all_ds_path= self.stored_all_ds_path
             #print(f'self.track_ops.all_ds_path : {self.track_ops.all_ds_path}')
-            print(self.save_path)
+            #print(self.save_path)
             save_path=self.save_track2p_path
             save_path=save_path.replace("\\", "/")
             #self.track_ops.save_path = self.save_track2p_path
