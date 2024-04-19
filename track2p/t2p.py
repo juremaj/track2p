@@ -32,6 +32,9 @@ def run_t2p(track_ops):
     # 4) do the actual registration based on chosen channel
     all_ds_ref_img, all_ds_mov_img = get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops)
     print("get_all_ds_img_for_reg done")
+    
+    #HERE 
+    
     all_ds_mov_img_reg, all_ds_reg_params = run_reg_loop(all_ds_ref_img, all_ds_mov_img, track_ops) # TODO: save basic parameters for each registration as feedback (e. g. ammoung of shift, rotation, etc.) for later plotting
     print("run_reg_loop done")
     plot_reg_img_output(track_ops)
