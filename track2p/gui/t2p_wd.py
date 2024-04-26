@@ -124,9 +124,7 @@ class NewWindow(QWidget):
             self.stored_all_ds_path = []
             for i in range(self.paths_list.count()):
                 item=self.paths_list.item(i).data(Qt.UserRole)
-                print(item)
                 item_universel=item.replace("\\", "/")
-                print(item_universel)
                 #self.stored_all_ds_path.append(self.paths_list.item(i).data(Qt.UserRole))
                 self.stored_all_ds_path.append(item_universel)
             print("All parameters have been recorded ! The track2p algorithm is running...")
@@ -153,12 +151,10 @@ class NewWindow(QWidget):
             reply = QMessageBox.question(self, "", "Run completed successfully!\nDo you want to launch the gui?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                dialog = ComboBoxDialog(self)
-                if dialog.exec_():
-                    plane, comboBoxResult = dialog.getResults()
-                    self.storedPlane = int(plane)
-                    comboBoxResult = int(comboBoxResult)
-                    self.main_window.loadFiles(self.save_track2p_path, plane=self.storedPlane, combobox_value=comboBoxResult)
+                text, ok = QInputDialog.getText(self, '', 'Enter your plane:')
+                if ok:
+                    self.storedPlane=int(text)
+                    self.main_window.loadFiles(self.save_track2p_path, plane=self.storedPlane)
                     self.close()
             if reply == QMessageBox.No:
                 pass

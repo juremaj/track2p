@@ -32,7 +32,6 @@ class DefaultTrackOps:
         
         self.colors = None # save color after curation
         self.vector_curation=None #save the status of the ROIs after curation
-        self.init_colors=None #save the initial colors of the ROIs (before curation)
         self.curated_cells=None #save the index of the curated cells
         
         

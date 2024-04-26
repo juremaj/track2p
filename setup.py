@@ -5,14 +5,13 @@ with open('README.md', 'r') as f:
 
 setup(
     name='track2p',
-    version='0.5.1.6',
+    version='0.5.2',
     packages=find_packages(),
     install_requires=[
         'numpy==1.23.5',
         'matplotlib==3.5.3',
         'scikit-image==0.20.0',
-        ['itk-elastix==0.19.1', '--no-deps'],
-        'itk=5.4rc2',
+        'itk==5.4rc2',
         'PyQt5==5.15.10',
         'qtpy==2.4.1',
         'tqdm==4.66.2',

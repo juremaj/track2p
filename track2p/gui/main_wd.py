@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt
 import os
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QTabWidget, QVBoxLayout, QWidget, QSplitter, QHBoxLayout, QFrame, QFrame,  QMenuBar,QToolBar,QMainWindow,QMenu,QAction,QToolButton,QSpinBox,QPushButton,QLabel
+from PyQt5.QtWidgets import QApplication, QTabWidget, QVBoxLayout, QWidget, QSplitter, QHBoxLayout, QFrame, QFrame,  QMenuBar,QToolBar,QMainWindow,QMenu,QAction,QToolButton,QSpinBox,QPushButton,QLabel,QLineEdit,QSizePolicy,QSpacerItem
 from PyQt5.QtCore import Qt
 import matplotlib.colors as mcolors
 import random
@@ -142,24 +142,44 @@ class MainWindow(QMainWindow):
         self.spin_box.valueChanged.connect(self.spin_box_changed)
         
         self.status=QLabel("status: ")
+        self.status.setFixedWidth(50)
         self.status_value=QLabel()
+        self.status_value.setFixedWidth(30)
       
         cross_button =QPushButton('✖️')
+        cross_button.setFixedSize(20,20)
         cross_button.clicked.connect(self.cross_button_clicked)
         #cross_button.clicked.connect(self.cross_button_clicked)
         
         validate_button = QPushButton('✓')
+        validate_button.setFixedSize(20,20)
         validate_button.clicked.connect(self.validate_button_clicked)
         
-        save_t2p_color=QPushButton('Save curation')
-        save_t2p_color.clicked.connect(self.save_t2p_color)
+        self.grey_cells_label=QLabel("Select the minimum number of days the cell must be present :")
+        self.grey_cells_value=QLineEdit()
+        self.grey_cells_value.setFixedWidth(50)
+        self.grey_cells_value.returnPressed.connect(self.underline_cell_according_manually_curation)
         
+        reset=QPushButton('Reset')
+        reset.setFixedSize(50,20)
+        reset.clicked.connect(self.init_plot_cell)
+        
+        #save_t2p_parameter=QPushButton('Save curation')
+        #save_t2p_parameter.clicked.connect(self.save_t2p_parameter)
+        spacer = QSpacerItem(1200, 20, QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+
         layout.addWidget(self.spin_box)
         layout.addWidget(self.status)
         layout.addWidget(self.status_value)
         layout.addWidget(cross_button)
         layout.addWidget(validate_button)
-        layout.addWidget(save_t2p_color)
+        layout.addItem(spacer)
+        layout.addWidget(self.grey_cells_label)
+        layout.addWidget(self.grey_cells_value)
+        layout.addWidget(reset)
+        
+        #layout.addWidget(save_t2p_parameter)
         
         status_widget.setLayout(layout)
         statusBar.addWidget(status_widget)
@@ -169,20 +189,32 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("track2p GUI")
         self.show()
         
-    def save_t2p_color(self):
+    def save_t2p_parameter(self):
         track_ops_dict = np.load(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), allow_pickle=True).item() #load track2p dict
-        track_ops_dict['colors'] = self.new_colors #update and save track2p.colors for cells that were curated manually 
         track_ops_dict['vector_curation']=self.vector_curation_t2p #update and save track2p.vector_curation for cells that were curated manually 
         track_ops_dict['curated_cells']=self.curated_cells #update and save track2p.curated_cells for cells that were curated manually
         np.save(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) #save track2p dict 
         
-            # Create a table with cell number and status
-        data = {'Cell Number': list(self.vector_curation_t2p.keys()), 'Status': list(self.vector_curation_t2p.values())}
-        df = pd.DataFrame(data)
-        print(df)
+        status_suite2p = [f'{value} / {len(self.t2p_match_mat_allday[1])}' for value in self.num_ones.values()]
+        data = {'cell_number': list(self.vector_curation_t2p.keys()), 'status_t2p': list(self.vector_curation_t2p.values()), 'status_s2p': status_suite2p}
+        self.df = pd.DataFrame(data)
+
+        nb_cells= f'number of cells present on all days : {len(self.t2p_match_mat_allday)}'  
+        is_cell_prob=f'probability used in track2p algorithm : {self.iscell_thr}'
+        num_zeros_t2p = f'number of cells deleted in track2p : {len([value for value in self.vector_curation_t2p.values() if value == 0])}'
         
-        df.to_csv(os.path.join(self.t2p_folder_path, "track2p",'cell_status.csv'), index=False, sep=';')
+        info_string = ""
+        for day in range(len(self.all_iscell_t2p) + 1):
+            num_values_equal_to_day = len([value for value in self.num_ones.values() if value == day])
+            info_string += f"Number of cells present {day} day out of {len(self.all_iscell_t2p)}: {num_values_equal_to_day}\n"
+            keys_for_day = [key for key, value in self.num_ones.items() if value == day]
+            info_string += f'Indexes: {keys_for_day}\n\n'
+    
+
+        with open(os.path.join(self.t2p_folder_path, "track2p",'info.txt'), 'w') as f:
+            f.write(nb_cells + "\n" + is_cell_prob + "\n\n" +info_string +"\n\n" + num_zeros_t2p +"\n\n" + self.df.to_string(index=False) + "\n")
         
+
     def spin_box_changed(self):
         current_value = self.spin_box.value() #selected ROI 
         value=self.vector_curation_t2p[current_value] #status of ROI 
@@ -190,52 +222,39 @@ class MainWindow(QMainWindow):
         self.update_selection(current_value) #update 
     
     def cross_button_clicked(self):
-        if self.vector_curation_t2p[self.spin_box.value()] in [1, 2, 3]:
-            self.vector_curation_t2p[self.spin_box.value()]= 4
+        if self.vector_curation_t2p[self.spin_box.value()] ==1:
+            self.vector_curation_t2p[self.spin_box.value()]= 0
+            self.colors[self.spin_box.value()] =(0.78, 0.78, 0.78)
         self.curated_cells.append(self.spin_box.value()) #add the cells to curated cells list
-           
-            
-        #if self.vector_curation_t2p[self.spin_box.value()]==0:
-          #  self.vector_curation_t2p[self.spin_box.value()]= 4
-            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}") 
-       # if self.vector_curation_t2p[self.spin_box.value()]==1:
-        #    self.vector_curation_t2p[self.spin_box.value()]= 4
-            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
-        self.update_remix(self.spin_box.value())
+        for i in range(self.tabs.count()): 
+            tab_widget = self.tabs.widget(i)
+            cell_object = tab_widget.findChild(CellPlotWidget)
+            cell_object.colors= self.colors
+            cell_object.plot_cells()
+        self.save_t2p_parameter()
+        self.update_selection(self.spin_box.value())
     
     def validate_button_clicked(self):
-        if self.vector_curation_t2p[self.spin_box.value()] in [2, 3, 4]:
+        if self.vector_curation_t2p[self.spin_box.value()] ==0:
             self.vector_curation_t2p[self.spin_box.value()]= 1
+            self.colors[self.spin_box.value()] =self.colors_copy[self.spin_box.value()]
         self.curated_cells.append(self.spin_box.value())
-            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
-            
-        #if self.vector_curation_t2p[self.spin_box.value()]==0:
-            #self.new_vector_curation[self.spin_box.value()]=1 !!!!!!!!!!!!!!!!!!!!!!
-           # self.vector_curation_t2p[self.spin_box.value()]= 1 
-            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
-        #if self.vector_curation_t2p[self.spin_box.value()]== 2:
-         #   self.vector_curation_t2p[self.spin_box.value()]= 1 
-            #self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}")
-        self.update_remix(self.spin_box.value())
+        for i in range(self.tabs.count()): 
+            tab_widget = self.tabs.widget(i)
+            cell_object = tab_widget.findChild(CellPlotWidget)
+            cell_object.colors= self.colors
+            cell_object.plot_cells()
+        self.save_t2p_parameter()
+        self.update_selection(self.spin_box.value())
         
     def update_remix(self,index):
-        #update and save the changes for track2p (new_colors is used for track2p.colors in save_t2p_color)
-        self.status_value.setText(f"Status: {self.vector_curation_t2p[index]}") 
-        if self.vector_curation_t2p[index]==2:
-            #self.new_colors[index]=(0.4, 0.4, 0.4)#grey
-            self.new_colors[index]=(0.78, 0.78, 0.78) #white
-        if self.vector_curation_t2p[index] in [3,4]:
-            self.new_colors[index]=(0.4, 0.4, 0.4)
-            #self.new_colors[index]=(0,0,0)
-        if self.vector_curation_t2p[index]==1: 
-            self.new_colors[index]=self.init_colors[index]
+        #update and save the changes for track2p (new_colors is used for track2p.colors in save_t2p_parameter)
+        self.status_value.setText(f"{self.vector_curation_t2p[index]}") 
         current_tab_index = self.tabs.currentIndex()
         current_tab_widget = self.tabs.widget(current_tab_index)
-        cell_plot = current_tab_widget.findChild(CellPlotWidget)
-        
-             
+        cell_plot = current_tab_widget.findChild(CellPlotWidget)         
         if cell_plot:
-            cell_plot.underline_cell_remix(index,vector_curation=self.vector_curation_t2p)
+            cell_plot.underline_cell(index)
             
                
     def init_cell(self,index):
@@ -259,10 +278,10 @@ class MainWindow(QMainWindow):
             self.bottom_layout.addWidget(self.roi_plot)
         self.fluorescence_plot.display_all_f_t2p(index)
         self.roi_plot.display_zooms(index)
-        self.status_value.setText(f"Status: {self.vector_curation_t2p[self.spin_box.value()]}") #once files are loaded 
+        self.status_value.setText(f"{self.vector_curation_t2p[self.spin_box.value()]}") #once files are loaded 
 
     
-    def loadFiles(self, t2p_folder_path, plane, combobox_value):
+    def loadFiles(self, t2p_folder_path, plane):
         self.t2p_folder_path = t2p_folder_path
         if self.fluorescence_plot is not None:
             self.clearData()
@@ -272,6 +291,10 @@ class MainWindow(QMainWindow):
         track_ops_dict = np.load(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), allow_pickle=True).item()
         track_ops = SimpleNamespace(**track_ops_dict)
         self.track_ops = track_ops
+        self.iscell_thr=track_ops.iscell_thr
+        
+        
+        
         # process suite2p files 
         for (i, ds_path) in enumerate(track_ops.all_ds_path):
             ops = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'ops.npy'), allow_pickle=True).item()
@@ -291,47 +314,46 @@ class MainWindow(QMainWindow):
             self.all_stat_t2p.append(stat_t2p)
             self.all_f_t2p.append(f_t2p)
             self.all_ops.append(ops)
-            self.all_iscell_t2p.append(iscell)            
+            self.all_iscell_t2p.append(iscell)
+                        
         # initializes or retrieve track2p dictionary parameters
         
         if track_ops.curated_cells is None:
-            self.curated_cells=[]
+            self.curated_cells=[] #initialize the list of curated cells
         else:
-            self.curated_cells=track_ops.curated_cells
+            self.curated_cells=track_ops.curated_cells 
             
         if track_ops.vector_curation is None:
             self.vector_curation_keys=np.arange(self.t2p_match_mat_allday.shape[0]) #number of cells (rows in matrix)
             self.vector_curation_values = np.ones_like(self.vector_curation_keys)
             self.vector_curation_t2p = dict(zip(self.vector_curation_keys, self.vector_curation_values))
 
-            #self.new_vector_curation=self.vector_curation_t2p.copy()
         else:
-            print('vector_curation is not None')
             self.vector_curation_t2p=track_ops.vector_curation
-            #self.new_vector_curation=track_ops.vector_curation.copy()
+
                     
         if track_ops.colors is None:
-            self.colors=self.generate_vibrant_colors(len(self.all_stat_t2p[0])) 
-            self.new_colors=self.colors.copy()
-        else:
-            print('colors is not None')
-            self.colors= track_ops.colors #affected by the choice of the user (grey cells) 
-            self.new_colors=track_ops.colors.copy() #will be use only to save the change of cells curated manually in the UI 
-
-        if track_ops.init_colors is None: # the first time that the colors are generated (track2p opens with UI)
-            self.init_colors=self.colors.copy()
-            track_ops_dict['init_colors'] = self.init_colors
+            self.colors=self.generate_vibrant_colors(len(self.all_stat_t2p[0]))
+            track_ops_dict['colors'] = self.colors
             np.save(os.path.join(self.t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) 
-        else:   
-            self.init_colors=track_ops.init_colors
+            self.track_ops = track_ops
+            
+        else:
+            self.colors= track_ops.colors #affected by the choice of the user (grey cells) 
+            self.colors_copy=track_ops.colors.copy()#not affected by the choice of the user (grey cells)
+            
+
                 
         self.spin_box.setSuffix(f'/{len(self.t2p_match_mat_allday)-1}')
         self.spin_box.setMinimum(0)
         self.spin_box.setMaximum(len(self.t2p_match_mat_allday)-1) 
-            
+        
+        self.num_ones = {}  # Initialize as dictionary
+        
         for i, line in enumerate(self.t2p_match_mat_allday): #i= number of cells 
         
                 all_iscell_value=[]
+                
                 for j,index_match in enumerate(line): #j=number of days 
     
                     if track_ops.iscell_thr is None: #Manually curated 
@@ -340,34 +362,54 @@ class MainWindow(QMainWindow):
                         true_index=indices_lignes_1[index_match] # take the "true index" 
                         iscell_value=iscell[true_index,0] 
                         all_iscell_value.append(iscell_value)
-                    else: 
+                    else: #CHECK THIS PART
                         iscell=self.all_iscell_t2p[j]
                         indices_lignes_1= np.where(iscell[:,1]>track_ops.iscell_thr)[0] # take the indices where the ROIs have a probability greater than trackops.is_cell_thr
                         true_index=indices_lignes_1[index_match] # take the "true index" 
                         iscell_value=iscell[true_index,0] 
                         all_iscell_value.append(iscell_value)
-                if i not in self.curated_cells:      
-                    if all(value == 1.0 for value in all_iscell_value):
-                        self.colors[i]=self.colors[i] #colors
-                        self.vector_curation_t2p[i]=1      
-                    if all_iscell_value.count(0.0) != 0 and all_iscell_value.count(0.0) <= int(combobox_value):
-                        #self.colors[i]=(0.4, 0.4, 0.4) #grey
-                        self.colors[i]=(0.78, 0.78, 0.78) #white
-                        self.vector_curation_t2p[i]=2 
-                    if all_iscell_value.count(0.0) > int(combobox_value):
-                        self.colors[i]=(0.4, 0.4, 0.4)
-                        #self.colors[i]=(0.0, 0.0, 0.0) #noir
-                        self.vector_curation_t2p[i]= 3 
-                            
-        self.save_t2p_color()
+                        
+                self.num_ones[i] = all_iscell_value.count(1)
+   
+        self.save_t2p_parameter()
+        for i, line in enumerate(self.t2p_match_mat_allday): #i= number of cells 
+            if self.df.iloc[i, 1]==0:
+                self.colors[i] =(0.78, 0.78, 0.78)
         self.meanimage()
         self.init_cell(0)
+        
+  
+        
+    def init_plot_cell(self):
+        self.colors= self.colors_copy.copy()
+        for i, line in enumerate(self.t2p_match_mat_allday): #i= number of cells 
+            if self.df.iloc[i, 1]==0:
+                self.colors[i] =(0.78, 0.78, 0.78)
+        for i in range(self.tabs.count()): 
+            tab_widget = self.tabs.widget(i)
+            cell_object = tab_widget.findChild(CellPlotWidget)
+            cell_object.colors= self.colors
+            cell_object.plot_cells()
+            
+        
+    def underline_cell_according_manually_curation(self):
+        match_mal_all_day_copie=self.t2p_match_mat_allday.copy()
+        all_keys=[]
+        for key,value in self.num_ones.items():
+            if value < int(self.grey_cells_value.text()):
+                match_mal_all_day_copie[key, :]=np.nan
+                all_keys.append(key)
+        match_mal_all_day_copie = match_mal_all_day_copie.astype(float)
+        # Now you can count the number of rows with at least one np.nan
+        num_rows_with_nan = np.any(np.isnan(match_mal_all_day_copie), axis=1).sum()
+        for i in range(self.tabs.count()): 
+            tab_widget = self.tabs.widget(i)
+            cell_object = tab_widget.findChild(CellPlotWidget)
+            cell_object.colors= self.colors
+            cell_object.plot_cells_remix(keys=all_keys)
+            
+            
 
- 
-        
-        
-    
-    
     def clearData(self):
         self.all_f_t2p= []
         self.all_ops = []
@@ -414,7 +456,7 @@ class MainWindow(QMainWindow):
     def update_selection(self, selected_cell_index):
         self.selected_cell_index = selected_cell_index
         self.spin_box.setValue(selected_cell_index) 
-        self.status_value.setText(f"Status: {self.vector_curation_t2p[selected_cell_index]}")        
+        self.status_value.setText(f"{self.vector_curation_t2p[selected_cell_index]}")        
         #it removes the underline of the previsouly selected cell even if the tab is not visible (not the current tab)
         for i in range(self.tabs.count()): 
             tab_widget = self.tabs.widget(i)

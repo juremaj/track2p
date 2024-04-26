@@ -39,44 +39,49 @@ class CellPlotWidget(FigureCanvas):
         l_mean_img=self.all_ops[-1]['meanImg']
         match_mean_img=skimage.exposure.match_histograms(self.ops['meanImg'], l_mean_img, channel_axis=None)
         self.ax_image.imshow(match_mean_img, cmap='gray')
-        
+        cell_count = 0
         for cell in range(self.nb_cells):
             bin_mask = np.zeros_like(self.ops['meanImg']) #create a binary mask with the same shape as the mean image of the recording
             bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
             color_cell=self.colors[cell]
-           
             self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1) 
+            cell_count += 1
         self.ax_image.axis('off')
         print(f'time for plotting cells on mean image for recording : {time.time()-start}')
+        print(f'Total cells plotted: {cell_count}')
         self.draw()
         
+    def plot_cells_remix(self,keys):
+        self.ax_image.clear()
+        start = time.time()
+        l_mean_img=self.all_ops[-1]['meanImg']
+        match_mean_img=skimage.exposure.match_histograms(self.ops['meanImg'], l_mean_img, channel_axis=None)
+        self.ax_image.imshow(match_mean_img, cmap='gray')
+        cell_count = 0
+        for cell in range(self.nb_cells):
+            if cell in keys:
+                continue
+            bin_mask = np.zeros_like(self.ops['meanImg']) #create a binary mask with the same shape as the mean image of the recording
+            bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
+            color_cell=self.colors[cell]
+            self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1) 
+            cell_count += 1
+        self.ax_image.axis('off')
+        print(f'time for plotting cells on mean image for recording : {time.time()-start}')
+        print(f'Total cells plotted: {cell_count}')
+        self.draw()
+        
+        
            
-    def underline_cell_remix(self,selected_cell_index,vector_curation):
+    def underline_cell_remix(self,colors):
         
         for cell in range(self.nb_cells):
-            if cell == selected_cell_index:
-                bin_mask = np.zeros_like(self.ops['meanImg'])
-                if vector_curation[selected_cell_index] in [3,4]:
-                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
-                    color_cell = (0.4, 0.4, 0.4)
-                    self.colors[cell]=(0.4, 0.4, 0.4)
-                   # color_cell = (0.0, 0.0, 0.0)
-                   # self.colors[cell]=(0.0, 0.0, 0.0) #update colors of plor and fluo  
-                    
-                if vector_curation[selected_cell_index]==2:
-                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
-                    color_cell =(0.78, 0.78, 0.78)
-                    self.colors[cell]=(0.78, 0.78, 0.78)
-                   # color_cell = (0.4, 0.4, 0.4)
-                   # self.colors[cell]=(0.4, 0.4, 0.4) #update colors of plor and fluo 
-                if vector_curation[selected_cell_index]==1: 
-                    bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
-                    color_cell=self.initial_colors[cell]
-                    self.colors[cell]=self.initial_colors[cell] #update colors of plor and fluo  
-                self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1)
-                self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=3) #update mean image 
-        self.draw() 
-    
+            bin_mask = np.zeros_like(self.ops['meanImg'])
+            bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
+            color_cell=colors[cell]
+            self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1)
+        self.draw()
+
    
         
     def underline_cell(self,selected_cell_index):
