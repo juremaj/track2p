@@ -73,10 +73,10 @@ class Suite2pWindow(QWidget):
         track_ops_dict = np.load(os.path.join(track2p_folder_path,  "track_ops.npy"), allow_pickle=True).item()
         track_ops = SimpleNamespace(**track_ops_dict)
         indexes_list = []
-        data=os.path.join(track2p_folder_path,"info.txt") #"/Users/manonmantez/Desktop/el/track2p/info.txt"
+        data=os.path.join(track2p_folder_path,f'plane{plane}_info.txt') #"/Users/manonmantez/Desktop/el/track2p/info.txt"
     
         track2p_save_path=track_ops.save_path
-        t2p_match_mat = np.load(os.path.join(track2p_save_path,"plane0_match_mat.npy"), allow_pickle=True)
+        t2p_match_mat = np.load(os.path.join(track2p_save_path,f'plane{plane}_match_mat.npy'), allow_pickle=True)
         filtered_t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
         iscell_thr = track_ops.iscell_thr
 
@@ -92,8 +92,8 @@ class Suite2pWindow(QWidget):
                 all_indexes.append(indices)
         flat_list = [item for sublist in all_indexes for item in sublist]
         filtered_t2p_match_mat_allday = filtered_t2p_match_mat_allday[flat_list, :]
-        np.save(os.path.join(track2p_folder_path, f"match_{user_choice}.npy"), filtered_t2p_match_mat_allday)
-
+        np.save(os.path.join(track2p_folder_path, f"plane{plane}_match_mat_minday{user_choice}.npy"), filtered_t2p_match_mat_allday)
+     
         all_f_t2p= []
         all_ops = []
         all_stat_t2p = []
@@ -164,7 +164,7 @@ class Suite2pWindow(QWidget):
 
 # Define the output folder path
     #output_folderpath = "/Users/manonmantez/Desktop/el/fake_suite2p"
-        output_folderpath=os.path.join(track2p_folder_path, f'fake_suite2p_{user_choice}')
+        output_folderpath=os.path.join(track2p_folder_path, f'fake_suite2p_plane{plane}_minday{user_choice}')
         last_elements = [os.path.basename(path) for path in track_ops.all_ds_path]
 # Save each element of each list to a .npy file
         for i, (stat_t2p, f_t2p, ops, iscell_t2p, fneu_t2p, spks_t2p) in enumerate(zip(all_stat_t2p, all_f_t2p, all_ops, all_iscell_t2p, fneu_iscell_t2p, spks_iscell_t2p)):

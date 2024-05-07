@@ -219,7 +219,7 @@ class MainWindow(QMainWindow):
 
        # print(indexes_per_day)
 
-        with open(os.path.join(self.t2p_folder_path, "track2p",'info.txt'), 'w') as f:
+        with open(os.path.join(self.t2p_folder_path, "track2p",f'plane{self.plane}_info.txt'), 'w') as f:
             f.write(nb_cells + "\n" + is_cell_prob + "\n\n" +info_string +"\n\n" + num_zeros_t2p +"\n\n" + self.df.to_string(index=False) + "\n")
         
 
@@ -290,6 +290,7 @@ class MainWindow(QMainWindow):
 
     
     def loadFiles(self, t2p_folder_path, plane):
+        self.plane=plane
         self.t2p_folder_path = t2p_folder_path
         if self.fluorescence_plot is not None:
             self.clearData()
