@@ -33,7 +33,7 @@ class DefaultTrackOps:
         self.colors = None # save color after curation
         self.vector_curation=None #save the status of the ROIs after curation
         self.curated_cells=None #save the index of the curated cells
-        
+        #self.indexes_per_day=None #save the indexes of the cells per day
         
         self.save_in_s2p_format = False # save the output in suite2p format (this is useful for downstream analysis with suite2p)
 

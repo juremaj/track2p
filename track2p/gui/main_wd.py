@@ -12,6 +12,7 @@ from track2p.gui.roi_plot import ZoomPlotWidget
 from track2p.gui.t2p_wd import NewWindow
 from track2p.gui.import_wd import ImportWindow
 from track2p.gui.raster_wd import RasterWindow
+from track2p.gui.s2p_wd import Suite2pWindow
 import pandas as pd 
 
 
@@ -64,6 +65,11 @@ class MainWindow(QMainWindow):
         load_data_action.setShortcut("Ctrl+L")
         load_data_action.triggered.connect(self.runProcessedData)
         file_menu.addAction(load_data_action)
+        
+        suite2p_action = QAction("Generate the outputs in suite2p format (⌘S or Ctrl+S)", self)
+        suite2p_action.setShortcut("Ctrl+S")
+        suite2p_action.triggered.connect(self.save_in_s2p_format)
+        file_menu.addAction(suite2p_action)
         
         run_track_action = QAction("Run track2p alogorithm (⌘R or Ctrl+)", self)
         run_track_action.setShortcut("Ctrl+R")
@@ -203,13 +209,15 @@ class MainWindow(QMainWindow):
         is_cell_prob=f'probability used in track2p algorithm : {self.iscell_thr}'
         num_zeros_t2p = f'number of cells deleted in track2p : {len([value for value in self.vector_curation_t2p.values() if value == 0])}'
         
+        #indexes_per_day = []
         info_string = ""
         for day in range(len(self.all_iscell_t2p) + 1):
             num_values_equal_to_day = len([value for value in self.num_ones.values() if value == day])
             info_string += f"Number of cells present {day} day out of {len(self.all_iscell_t2p)}: {num_values_equal_to_day}\n"
             keys_for_day = [key for key, value in self.num_ones.items() if value == day]
             info_string += f'Indexes: {keys_for_day}\n\n'
-    
+
+       # print(indexes_per_day)
 
         with open(os.path.join(self.t2p_folder_path, "track2p",'info.txt'), 'w') as f:
             f.write(nb_cells + "\n" + is_cell_prob + "\n\n" +info_string +"\n\n" + num_zeros_t2p +"\n\n" + self.df.to_string(index=False) + "\n")
@@ -440,6 +448,10 @@ class MainWindow(QMainWindow):
         self.rasterWindow=RasterWindow(self)
         self.rasterWindow.show()
         
+        
+    def save_in_s2p_format(self):
+        self.s2p_window=Suite2pWindow(self)
+        self.s2p_window.show()
         
     def meanimage(self): 
         for i, (ops, stat_t2p) in enumerate(zip(self.all_ops, self.all_stat_t2p)):

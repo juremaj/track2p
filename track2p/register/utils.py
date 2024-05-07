@@ -1,7 +1,6 @@
 import numpy as np
 
 def get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops): # chooses which channel to use for registration and returns all_ref_img and all_mov_img (shifted by one day to always register to previous day)
-    print("starting get_all_ds_img_for_reg ")
     if track_ops.reg_chan==0:
         all_ds_avg = all_ds_avg_ch1
     elif track_ops.reg_chan==1:
