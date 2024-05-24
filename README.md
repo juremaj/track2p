@@ -42,6 +42,17 @@ This opens a GUI allowing the user to launch the algorithm and visualise the res
 
 Note: For common installation issues see [documentation](https://github.com/juremaj/track2p/blob/main/docs/installation.md).
 
+## Reinstall
+
+To reinstall, open anaconda and remove the environment with:
+
+```
+conda env remove -n track2p
+```
+
+Then follow the 'Installing via pip' instructions above :)
+
+
 # Usage
 
 ## Run through GUI
