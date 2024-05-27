@@ -1,13 +1,12 @@
+import time 
 from qtpy.QtCore import Signal
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import numpy as np
-import time 
 import skimage
 
 class CellPlotWidget(FigureCanvas):
-    '''This class is used to view and interact with the mean image of each recording (day). There is one instance of this class per recording. The instance of this class is created in the MainWindow class.
-    It also allows to select a cell and display its fluorescence and zooms across days. The cell selected signal is emitted when a cell is selected.'''
+    '''This class is used to view and interact with the mean image of each recording (day)'''
     cell_selected = Signal(int)
 
     def __init__(self, tab=None, ops=None, stat_t2p=None, f_t2p=None, colors=None, update_selection_callback=None,

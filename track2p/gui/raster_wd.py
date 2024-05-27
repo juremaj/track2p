@@ -16,7 +16,7 @@ import copy
 
 class RasterWindow(QWidget):
         #QWidget is the parent class
-        def __init__(self, mainWindow):
+        def __init__(self, mainWindow ):
             super(RasterWindow,self).__init__()
             self.main_window = mainWindow
             self.all_f_t2p=None 
@@ -27,6 +27,7 @@ class RasterWindow(QWidget):
             self.all_f_t2p_preproc=None
             self.vmin_value=None
             self.vmax_value=None
+           
          
             
             #Create the right-hand side of the window
@@ -119,7 +120,7 @@ class RasterWindow(QWidget):
             main_layout.addWidget(splitter)
             
             self.setLayout(main_layout)
-           
+          
 ############################################################################################################################################################################
         def display_advanced_options(self,state):
             if state == Qt.Checked:
@@ -133,6 +134,7 @@ class RasterWindow(QWidget):
                 self.vmin.setVisible(False)
                 self.vmax.setVisible(False)
                 
+                
         def load_directory_contents(self):
             self.load_directory= QFileDialog.getExistingDirectory(self, "Select Directory")
             if self.load_directory:
@@ -140,12 +142,12 @@ class RasterWindow(QWidget):
                 self.field_imp_path.setText(f'{self.load_directory}')
             #self.storedPlane = int(self.fieldPlane.text())
             plane=int(self.field_plane.text())
-            value=1
-            self.main_window.loadFiles(self.load_directory,plane,value)
-            self.all_f_t2p= self.main_window.all_f_t2p
-            self.all_stat_t2p= self.main_window.all_stat_t2p
+            self.main_window.central_widget.data_management.import_files(self.load_directory,plane)
+            self.all_f_t2p= self.main_window.central_widget.data_management.all_f_t2p
+            self.all_stat_t2p= self.main_window.central_widget.data_management.all_stat_t2p
             for i in range(len(self.all_stat_t2p)):
                 self.day_choice.addItem(str(i + 1))
+    
         
         def get_output_save_path(self):
             #save_path= QFileDialog.getExistingDirectory(self, "Select Directory")
@@ -163,7 +165,7 @@ class RasterWindow(QWidget):
             print(vmax)
             if self.checkbox1.isChecked():
                 self.raster_type='without_sorting'
-                self.plot_track2p_rasters(self.all_f_t2p_preproc, fs=30/self.bin_size, vmin=vmin, vmax=vmax)
+                self.plot_track2p_rasters(self.all_f_t2p_preproc, bin_size=self.bin_size, vmin=vmin, vmax=vmax)
             if self.checkbox2.isChecked():
                 self.raster_type='sorting_by_PCA'
                 all_pca_emb_1d = []
@@ -177,7 +179,7 @@ class RasterWindow(QWidget):
                     sort_inds = np.argsort(np.array(all_pca_emb_1d[i]).squeeze())
                     f_sorted = f[sort_inds, :].squeeze()
                     all_f_t2p_sorted.append(f_sorted)
-                self.plot_track2p_rasters(all_f_t2p_sorted, fs=3, vmin=vmin, vmax=vmax) # plot the rasters
+                self.plot_track2p_rasters(all_f_t2p_sorted, bin_size=self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
             if self.checkbox3.isChecked():
                 self.raster_type='sorting_by_PCA_and_by_day_' + str(self.day_choice.currentText())
                 all_pca_emb_1d = []
@@ -192,7 +194,7 @@ class RasterWindow(QWidget):
                     sort_inds = np.argsort(np.array(all_pca_emb_1d[user_i]).squeeze())
                     f_sorted = f[sort_inds, :].squeeze()
                     all_f_t2p_sorted.append(f_sorted)
-                self.plot_track2p_rasters(all_f_t2p_sorted, fs=30/self.bin_size, vmin=vmin, vmax=vmax)
+                self.plot_track2p_rasters(all_f_t2p_sorted, bin_size=self.bin_size, vmin=vmin, vmax=vmax)
             if self.checkbox4.isChecked():
                 self.raster_type='sorting_by_tSNE'
                 all_tsne_emb_1d = []
@@ -205,7 +207,7 @@ class RasterWindow(QWidget):
                     sort_inds = np.argsort(np.array(all_tsne_emb_1d[i]).squeeze())
                     f_sorted = f[sort_inds, :].squeeze()
                     all_f_t2p_sorted.append(f_sorted)
-                self.plot_track2p_rasters(all_f_t2p_sorted, fs=30/self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
+                self.plot_track2p_rasters(all_f_t2p_sorted, bin_size=self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
             if self.checkbox5.isChecked():
                 self.raster_type='sorting_tSNE_and_by_day_' + str(self.day_choice.currentText())
                 all_tsne_emb_1d = []
@@ -219,7 +221,7 @@ class RasterWindow(QWidget):
                     sort_inds = np.argsort(np.array(all_tsne_emb_1d[user_i]).squeeze())
                     f_sorted = f[sort_inds, :].squeeze()
                     all_f_t2p_sorted.append(f_sorted)
-                self.plot_track2p_rasters(all_f_t2p_sorted, fs=30/self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
+                self.plot_track2p_rasters(all_f_t2p_sorted, bin_size=self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
        
                     
         
@@ -266,7 +268,7 @@ class RasterWindow(QWidget):
             return (x - np.min(x)) / (np.max(x) - np.min(x))
         
                 
-        def plot_track2p_rasters(self, all_f_t2p, fs=30, vmin=None, vmax=None):
+        def plot_track2p_rasters(self, all_f_t2p, bin_size=1, vmin=None, vmax=None):
                 
             fig, ax = plt.subplots(len(all_f_t2p), 1, figsize=(6, len(all_f_t2p)*1), dpi=150) #(rows, columns, size, resolution)
 
@@ -282,7 +284,7 @@ class RasterWindow(QWidget):
                 if i == len(all_f_t2p)-1:
                     ax[i].set_xlabel('Time (min)')
                     ax[i].set_xticks([0, f.shape[1]/2, f.shape[1]-1])
-                    ax[i].set_xticklabels([0, int(f.shape[1]/fs/(2*60)), int(f.shape[1]/fs/60)])
+                    ax[i].set_xticklabels([0, int((f.shape[1]*bin_size)/2), int(f.shape[1]*bin_size)])
             
                 else:
                     ax[i].set_xticks([])

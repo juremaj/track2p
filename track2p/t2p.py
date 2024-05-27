@@ -32,9 +32,6 @@ def run_t2p(track_ops):
     # 4) do the actual registration based on chosen channel
     all_ds_ref_img, all_ds_mov_img = get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops)
 
-    
-    #HERE 
-    
     all_ds_mov_img_reg, all_ds_reg_params = run_reg_loop(all_ds_ref_img, all_ds_mov_img, track_ops) # TODO: save basic parameters for each registration as feedback (e. g. ammoung of shift, rotation, etc.) for later plotting
 
     plot_reg_img_output(track_ops)
@@ -93,19 +90,14 @@ def run_t2p(track_ops):
 
 def save_in_s2p_format(track_ops):
     
-
     for ds_path in track_ops.all_ds_path:
         # check how many subfolders starting with plane* in suite2p folder
         n_planes = len([name for name in os.listdir(ds_path + '/suite2p') if name.startswith('plane')])
         print(f'Found {n_planes} planes in {ds_path}')
 
-    #folderpath="/Users/manonmantez/Desktop/el"
     folderpath=track_ops.save_path
-    
-
     track_ops_dict = np.load(os.path.join(folderpath,  "track_ops.npy"), allow_pickle=True).item()
     track_ops = SimpleNamespace(**track_ops_dict)
-    track_ops = track_ops
     iscell_thr = track_ops.iscell_thr
 
     all_f_t2p= []
@@ -129,9 +121,6 @@ def save_in_s2p_format(track_ops):
                     f = np.load(os.path.join(ds_path, 'suite2p', f'plane{str(j)}', 'F.npy'), allow_pickle=True)
                     fneu= np.load(os.path.join(ds_path, 'suite2p', f'plane{str(j)}', 'Fneu.npy'), allow_pickle=True)
                     spks= np.load(os.path.join(ds_path, 'suite2p', f'plane{str(j)}', 'spks.npy'), allow_pickle=True)
-                    #print(f.shape)
-                    #print(fneu.shape)
-                    #print(spks.shape)
                     iscell = np.load(os.path.join(ds_path, 'suite2p', f'plane{str(j)}', 'iscell.npy'), allow_pickle=True)
                     if track_ops.nchannels==2:
                         f_chan2=np.load(os.path.join(ds_path, 'suite2p', f'plane{str(j)}', 'F_chan2.npy'), allow_pickle=True)
@@ -158,8 +147,6 @@ def save_in_s2p_format(track_ops):
                             f_chan2_iscell = f_chan2[iscell[:, 1] > track_ops.iscell_thr, :]
                             fneu_chan2_iscell = fneu_chan2[iscell[:, 1] > track_ops.iscell_thr, :]
                             redcell_iscell = redcell[iscell[:, 1] > track_ops.iscell_thr]
-                        
-                        
                     
                     stat_t2p = stat_iscell[t2p_match_mat_allday[:, i].astype(int)]
                     f_t2p = f_iscell[t2p_match_mat_allday[:, i].astype(int), :]
@@ -183,28 +170,32 @@ def save_in_s2p_format(track_ops):
                         redcell_iscell_t2p.append(redcell_t2p)  
         
 
-
-    # Define the output folder path
-        #output_folderpath = "/Users/manonmantez/Desktop/el/fake_suite2p"
-        output_folderpath=os.path.join(folderpath, f'fake_suite2p_plane{j}')
+        output_folderpath=os.path.join(folderpath, 'matched_suite2p')
         last_elements = [os.path.basename(path) for path in track_ops.all_ds_path]
         print(last_elements)
-    # Save each element of each list to a .npy file
+        
+        # Save each element of each list to a .npy file
         for i in range(len(track_ops.all_ds_path)):
             stat_t2p, f_t2p, ops, iscell_t2p, fneu_t2p, spks_t2p = all_stat_t2p[i], all_f_t2p[i], all_ops[i], all_iscell_t2p[i], fneu_iscell_t2p[i], spks_iscell_t2p[i]
             subfolder_path = os.path.join(output_folderpath, last_elements[i])
             if not os.path.exists(subfolder_path):
                 os.makedirs(subfolder_path)
+            inner_folderpath = os.path.join(subfolder_path, 'suite2p')
+            if not os.path.exists(inner_folderpath):
+                os.makedirs(inner_folderpath)
+            plane_folderpath = os.path.join(inner_folderpath, f'plane{j}')
+            if not os.path.exists(plane_folderpath):
+                os.makedirs(plane_folderpath)
+            
 
-        
-            np.save(os.path.join(subfolder_path, f"stat.npy"), stat_t2p)
-            np.save(os.path.join(subfolder_path, f"F.npy"), f_t2p)
-            np.save(os.path.join(subfolder_path, f"ops.npy"), ops)
-            np.save(os.path.join(subfolder_path, f"iscell.npy"), iscell_t2p)
-            np.save(os.path.join(subfolder_path, f"Fneu.npy"), fneu_t2p)
-            np.save(os.path.join(subfolder_path, f"spks.npy"), spks_t2p)
+            np.save(os.path.join(plane_folderpath,f"stat.npy"), stat_t2p)
+            np.save(os.path.join(plane_folderpath,  f"F.npy"), f_t2p)
+            np.save(os.path.join(plane_folderpath, f"ops.npy"), ops)
+            np.save(os.path.join(plane_folderpath, f"iscell.npy"), iscell_t2p)
+            np.save(os.path.join(plane_folderpath, f"Fneu.npy"), fneu_t2p)
+            np.save(os.path.join(plane_folderpath,f"spks.npy"), spks_t2p)
             if track_ops.nchannels==2:
                 for i, (redcell_t2p, f_chan2_t2p, fneu_chan2_t2p) in enumerate(zip(redcell_iscell_t2p, f_chan2_iscell_t2p, fneu_chan2_iscell_t2p)):
-                    np.save(os.path.join(subfolder_path, f"F_chan2.npy"), f_chan2_t2p)
-                    np.save(os.path.join(subfolder_path, f"Fneu_chan2.npy"), fneu_chan2_t2p)
-                    np.save(os.path.join(subfolder_path, f"redcell.npy"), redcell_t2p)
+                    np.save(os.path.join(plane_folderpath,  f"F_chan2.npy"), f_chan2_t2p)
+                    np.save(os.path.join(plane_folderpath,  f"Fneu_chan2.npy"), fneu_chan2_t2p)
+                    np.save(os.path.join(plane_folderpath, f"redcell.npy"), redcell_t2p)

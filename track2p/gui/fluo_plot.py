@@ -113,14 +113,16 @@ class FluorescencePlotWidget(FigureCanvas):
                     color = colorsys.hls_to_rgb(h, adjusted_luminosity, s)
                 ops=self.all_ops[i]
                 fs = ops['fs']
-                tstamps = np.arange(0,self.all_f_t2p[i].shape[1])/fs
+                tstamps = np.arange(len(y_values))
+                
                 if len(tstamps) != len(y_values):
                     raise ValueError(f"tstamps and y_values must have the same length, but have lengths {len(tstamps)} and {len(y_values)}")
                 self.ax_fluorescence.plot(tstamps,y_values, label=f'Curve {i + 1}', color= color)
             
+            self.ax_fluorescence.set_xticks([0, int(len(tstamps)/2), len(tstamps)])
             self.ax_fluorescence.set_yticklabels([])
             self.ax_fluorescence.get_yaxis().set_visible(False)
-            self.ax_fluorescence.set_xlabel('Seconds')
+            self.ax_fluorescence.set_xlabel('Frames')
             self.initial_xlim=self.ax_fluorescence.get_xlim()
             self.initial_ylim=self.ax_fluorescence.get_ylim()
             self.fig.tight_layout() 
