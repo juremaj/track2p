@@ -30,10 +30,11 @@ class DefaultTrackOps:
         self.win_size = 48 # window size for visualising matched ROIs across days (crop of mean image)
         self.sat_perc = 99.9 # percentile to saturate image at (only affects visualisation not the registration/matching)
         
+        
         self.colors = None 
      
-        self.vector_curation_plane_0 = None
-        self.vector_curation_plane_1 = None
+        #self.vector_curation_plane_0 = None
+        #self.vector_curation_plane_1 = None
         
         self.save_in_s2p_format = False # save the output in suite2p format (this is useful for downstream analysis with suite2p)
 

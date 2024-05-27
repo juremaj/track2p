@@ -42,6 +42,7 @@ class DataManagement:
         self.t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
         track_ops_dict = np.load(os.path.join(t2p_folder_path, "track2p", "track_ops.npy"), allow_pickle=True).item()
         track_ops = SimpleNamespace(**track_ops_dict)
+      
         
         # process suite2p files 
         for (i, ds_path) in enumerate(track_ops.all_ds_path):
@@ -63,11 +64,13 @@ class DataManagement:
             self.all_f_t2p.append(f_t2p)
             self.all_ops.append(ops)
             self.all_iscell.append(iscell)
-            
-       # if track_ops.vector_curation is None:
+        
+        
         attr_name = 'vector_curation_plane_' + str(plane)
-        if getattr(track_ops, attr_name, None) is None:
-        #if 'vector_curation_plane' + str(plane) not in track_ops.__dict__:
+        if hasattr(track_ops, attr_name):
+            key = 'vector_curation_plane_' + str(plane)
+            self.vector_curation_t2p=track_ops_dict[key] 
+        else:
             vector_curation_keys=np.arange(self.t2p_match_mat_allday.shape[0]) 
             vector_curation_values = np.ones_like(vector_curation_keys)
             self.vector_curation_t2p_dict = dict(zip(vector_curation_keys, vector_curation_values))
@@ -76,20 +79,15 @@ class DataManagement:
             key = 'vector_curation_plane_' + str(plane)
             track_ops_dict[key] = self.vector_curation_t2p 
             np.save(os.path.join(t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) 
-            print('new vector_curation_plane created')
-            print(key)
-        else:
-            key = 'vector_curation_plane_' + str(plane)
-            print(key)
-            self.vector_curation_t2p=track_ops_dict[key] 
-        
 
-        if track_ops.colors is None:
-            self.colors=self.generate_vibrant_colors(len(self.all_stat_t2p[0]))
-            track_ops_dict['colors'] = self.colors
-            np.save(os.path.join(t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) 
+  
+        attr_name_color = 'colors_plane_' + str(plane)
+        if hasattr(track_ops, attr_name_color):
+            self.colors= track_ops_dict[attr_name_color]
         else:
-            self.colors= track_ops.colors 
+            self.colors=self.generate_vibrant_colors(len(self.all_stat_t2p[0]))
+            track_ops_dict[attr_name_color] = self.colors
+            np.save(os.path.join(t2p_folder_path, "track2p", "track_ops.npy"), track_ops_dict) 
            
             
         self.track_ops = track_ops

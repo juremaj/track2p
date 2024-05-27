@@ -80,5 +80,6 @@ class StatusBar(QStatusBar):
             self.central_widget.track_ops_dict[key] = self.vector_curation_t2p
             np.save(os.path.join(self.central_widget.data_management.track_ops.save_path, "track_ops.npy"), self.central_widget.track_ops_dict)
 
+
     
     

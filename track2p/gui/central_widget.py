@@ -61,14 +61,17 @@ class CentralWidget(QWidget):
             self.tabs.addTab(tab, f"Day {i + 1}")
             self.cell_plot.cell_selected.connect(self.update_selection)
             
+    
     def create_mean_img_from_curation(self):
-        import_window=self.main_window.window_manager.import_window
-        t2p_window=self.main_window.window_manager.t2p_window
-        if import_window.plane is not None:
+        import_window = self.main_window.window_manager.import_window
+        t2p_window = self.main_window.window_manager.t2p_window
+
+        if import_window is not None and import_window.plane is not None:
             self.data_management.import_files(import_window.path_to_t2p, import_window.plane)
-        if t2p_window.saved_directory is not None:
+        elif t2p_window is not None and t2p_window.saved_directory is not None:
             self.data_management.import_files(t2p_window.saved_directory, t2p_window.plane)
-        
+        else:
+            print("Both import_window and t2p_window are None or not properly initialized.")
         
     def clear(self):
         self.data_management.reset_attributes()
