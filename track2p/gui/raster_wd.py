@@ -282,7 +282,7 @@ class RasterWindow(QWidget):
         
                 # only first and last xticks on y axis in minutes
                 if i == len(all_f_t2p)-1:
-                    ax[i].set_xlabel('Time (min)')
+                    ax[i].set_xlabel('Frames')
                     ax[i].set_xticks([0, f.shape[1]/2, f.shape[1]-1])
                     ax[i].set_xticklabels([0, int((f.shape[1]*bin_size)/2), int(f.shape[1]*bin_size)])
             

@@ -100,18 +100,21 @@ def save_in_s2p_format(track_ops):
     track_ops = SimpleNamespace(**track_ops_dict)
     iscell_thr = track_ops.iscell_thr
 
-    all_f_t2p= []
-    all_ops = []
-    all_stat_t2p = []
-    all_iscell_t2p = []
-    fneu_iscell_t2p= []
-    spks_iscell_t2p= []
-    
-    fneu_chan2_iscell_t2p = []
-    f_chan2_iscell_t2p = []
-    redcell_iscell_t2p = []
 
     for j in range(track_ops.nplanes):
+        
+        all_f_t2p= []
+        all_ops = []
+        all_stat_t2p = []
+        all_iscell_t2p = []
+        fneu_iscell_t2p= []
+        spks_iscell_t2p= []
+        
+        fneu_chan2_iscell_t2p = []
+        f_chan2_iscell_t2p = []
+        redcell_iscell_t2p = []
+            
+        
         print(f'nplanes{j}')
         t2p_match_mat = np.load(os.path.join(folderpath,f'plane{str(j)}_match_mat.npy'), allow_pickle=True)
         t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :]
