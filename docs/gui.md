@@ -1,6 +1,11 @@
 # Run track2P through gui 
 
-After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters (see an example below). 
+After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters.
+
+## Suite2p dataset organization
+
+Suite2p datasets must be structured in a specific way to be compatible with our algorithm. You need to create a folder for each day a mouse is registered. Within this folder, a folder named 'suite2p' must be present, containing one sub-folder per plan. Finally, Suite2p outputs for each plan should be placed in the respective subfolder. Below is an example of a mouse imagined over 7 days on two different planes. 
+
 
 ![ex_popup_runtrack2p.png](media/plots/ex_popup_runt2p.png) 
 
