@@ -57,7 +57,7 @@ Then follow the 'Installing via pip' instructions above :)
 
 ## Run through GUI
 
-After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. Once these have been set the user can click on 'Run', which will launch the track2p algorithm, with the progress being printed in the window below.
+After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. Once these have been set the user can click on 'Run', which will launch the track2p algorithm, with the progress being printed in the terminal.
 
 When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI.
 
