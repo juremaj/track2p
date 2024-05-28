@@ -67,7 +67,7 @@ For more details on how to run the algorithm through the GUI see [documentation]
 
 The interface lets you view and interact with the agorithm's results. You can download the results of any previous analysis by clicking on 'File' tab on the top left and select 'Load processed data'. Then, you have to provide the path to the track2p folder (which is created at the end of the algorithm) and the plane you want to open. 
 
-![gui_mainwindow.png](docs/media/plots/gui_mainwindow.png)
+
 
 IN PROGRESS
 
