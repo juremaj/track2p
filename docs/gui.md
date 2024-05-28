@@ -4,29 +4,26 @@ After activating the GUI through `python -m track2p` the user should navigate to
 
 ## Suite2p dataset organization
 
-Suite2p datasets must be structured in a specific way to be compatible with our algorithm. You need to create a folder for each day a mouse is registered. Within this folder, a folder named 'suite2p' must be present, containing one sub-folder per plan. Finally, Suite2p outputs for each plan should be placed in the respective subfolder. Below is an example of a mouse imagined over 7 days on two different planes. 
+Suite2p datasets must be structured in a specific way to be compatible with our algorithm. You need to create a folder for each day a mouse is registered. Within this folder, a folder named 'suite2p' must be present, containing one sub-folder per plane. Then, Suite2p outputs for each plane should be placed in the respective subfolder. **Please note, when you give the suite2p datasets to the algorithm, you have to give them from the first day of recording to the last day**. In this way, the first day of registration will correspond to day 1 in the interface. 
+
+Below is an example of a mouse imagined over 7 days on two different planes. 
+
+IMAGE
+
+## Run track2P 
+
+The algorithm launch window is structured like a form and instructions are provided next to each parameter to be entered.
+
+IMAGE
+
+You can choose between 'manually curated' and 'iscell threshold'. Choosing 'manually curated' means that manual adjustments made by the user in the Suite2p interface will be taken into account. As a reminder, Suite2p detects regions of interest (ROIs) on the average image generated from a series of microscopy images. After this automatic detection, users can annotate each ROI by manually classifying them as “cell” or “not cell”. By selecting the 'manually curated' option, our algorithm will only test ROIs classified as “cell” for matching with other days of recordings. When selecting 'iscell_thr', the user must define a threshold. Only regions of interest (ROIs) detected in Suite2p with a threshold greater than this will be retained for tracking by our algorithm. As a reminder, in Suite2p, users can set a threshold for detecting regions of interest (ROIs). This threshold controls the sensitivity of detection relative to the image background.
+
+You can tick the option 'Save the outputs in suite2p format (containing cells tracked on all days)'. In this case, it will produce a version of the Suite2p datasets (stat.npy, iscell.npy, F.npy..) containing only the cells tracked on all days. Consequently, if you open the stats.npy files for different days in Suite2p and examine cell 0 for each day, you'll see that this cell corresponds to the same neural entity detected as being the same on these different days by our algorithm. 
 
 
-![ex_popup_runtrack2p.png](media/plots/ex_popup_runt2p.png) 
+#IN PROGRESS
 
-- Iscell_thr input textbox: the user must enter the threshold used to filter suite2p outputs (based on suite2p classifier probability in iscell.npy). The default value is 0.5.
-  
-- Reg_chan input textbox : the user must enter which channel to use for day-to-day registration (0-> functional 1-> anatomical (if available)). The default value is 0.
-  
-- Import directory button : the user has to import the directory containing subfolders of different recordings for the same mouse (each subfolder contains a ‘suite2p’ folder in default suite2p output format (see the example of a subfolder below)).
 
-![ex_subfolder.png](media/plots/ex_subfolder.png) 
-
-Once imported, the directory path will be displayed (Imported directory: directory path) and all subfolders in the directory are displayed in the left-hand box (in alphabetical order). Next, the user must press -> to add the file to the list of paths to use for track2p in the right-hand box (the user can import subfolders from different directories).
-
-***Warning: to avoid mismatch between ordered recording days and days that are displayed in the gui, the user should list the subfolders from oldest to most recent recording day in the right-hand box, so that the first day of recording (oldest day) correspond to the first day in the gui and so on.***
-
-  
-- Save path button : the user must import the parent folder in which they desire to put a track2p subfolder containing outputs of the algorithm.
-  
-- Run button: it allows the user to launch the track2p algorithm and initiates the terminal that displays messages informing about the algorithm's progress.
-
-When the algorithm is finished, another pop-up window will appear, asking the user if they want to visualise the outputs in the GUI. If the user click on yes, all vizualizations will be displayed (see visualisations section). 
 
 # Load track2p processed data through gui
 
