@@ -10,7 +10,7 @@ Below is an example of a mouse imagined over 7 days on two different planes.
 
 IMAGE
 
-## Run track2P 
+## Run track2p
 
 The algorithm launch window is structured like a form and instructions are provided next to each parameter to be entered.
 
