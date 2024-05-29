@@ -65,7 +65,7 @@ For more details on how to run the algorithm through the GUI see [run](https://g
 
 ## Using the GUI
 
-Here we assume that each of the recording is **same imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee). 
+_ _Here we assume that each of the recording is **same imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee)_ _
 
 The interface lets the user view and interact with the agorithm's results. You can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data'. Then, the user have to provide the path to the track2p folder (containing the results of the algorithm and the plane you want to open. 
 
