@@ -22,9 +22,9 @@ You can choose between `manually curated` and `iscell threshold`. Choosing 'manu
 
 You can tick the option `Save the outputs in suite2p format (containing cells tracked on all days)`. In this case, it will produce a version of the Suite2p datasets (stat.npy, iscell.npy, F.npy..) containing only the cells tracked on all days. Consequently, if you open the stats.npy files for different days in Suite2p and examine cell 0 for each day, you'll see that this cell corresponds to the same neural entity detected as being the same on these different days by the algorithm. These files will be located in a  `matched_suite2p` folder inside the track2p folder, and will be organized in the same way as the originals.
 
-# Gui and visualisations
+# GUI usage
 
-## central window
+## Visualisations
 
 It offers several visualizations: 
 
@@ -42,7 +42,7 @@ IMAGE
 
 IMAGE
 
-## status bar
+## Status bar
 
 
 The status bar is divided into several parts:
