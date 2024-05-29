@@ -58,6 +58,7 @@ Then follow the 'Installing via pip' instructions above :)
 ## Run track2p through the GUI
 
 After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. After configuring these settings, the user can click 'Run' to run the track2p algorithm, and the progress will be displayed in the terminal.
+
 Then, once the algorithm completes its tasks, a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results (of a specific plane) within the interface.
 
 For more details on how to run the algorithm through the GUI see [run](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
