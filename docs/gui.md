@@ -72,7 +72,7 @@ After activating the GUI through python -m track2p the user should navigate to t
 
 IMAGE 
 
-The user can use !![highlight]PCA (Principal Component Analysis) and t-SNE (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
+The user can use ![highlight](https://img.shields.io/badge/Important-Note-red)PCA (Principal Component Analysis) and t-SNE (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
 
 
 
