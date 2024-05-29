@@ -57,23 +57,20 @@ Then follow the 'Installing via pip' instructions above :)
 
 ## Run track2p through the interface
 
-After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. Once these have been set the user can click on 'Run', which will launch the track2p algorithm, with the progress being printed in the terminal.
+After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu. This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. After configuring these settings, the user can click 'Run' to run the track2p algorithm, and the progress will be displayed in the terminal.
+Then, once the algorithm completes its tasks, a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results (of a specific plane) within the interface.
 
-Once the algorithm completes its tasks, a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results (of a specific plane) within the interface.
-
-For more details on how to run the algorithm through the GUI see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of paramters see documentation [here](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
+For more details on how to run the algorithm through the GUI see [run](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
 
 ## Using the interface
 
-The interface lets you view and interact with the agorithm's results. You can download the results of any previous analysis by clicking on 'File' tab on the top left and select 'Load processed data'. Then, you have to provide the path to the track2p folder (which is created at the end of the algorithm) and the plane you want to open. 
+The interface lets the user view and interact with the agorithm's results. You can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data'. Then, the user have to provide the path to the track2p folder (containing the results of the algorithm (see [outputs](https://github.com/juremaj/track2p/blob/main/docs/outputs.md)) and the plane you want to open. 
+
+Briefly, the window is divided into three parts, in the upper left, the 'mean images' produced by suite2p for each day are displayed, showing the cells detected by our algorithm on every day. These images are interactive, allowing the user to click on a cell, which will display the fluorescence traces of each day at the bottom of the window (from the first day to the last). In addition, a zoom on the cell in each day is shown in the top right, with its index in the dataset 'suite2p’ of the corresponding day and the probability that it has assigned suite2p (iscell.npy). Finally, the user can browse all the cells detected by our algorithm using the bar at the bottom or enter a specific number. A correction section is also available, allowing to interfere with the results of the algorithm (see curation). 
+
+Below is an example of a mouse imagined over 7 days on two different planes.
 
 
-
-IN PROGRESS
-
-Briefly the GUI allows to visualise the mean field of view on all days, with the ROIs of all matched cells visualised. The user can then interactively select a cell by clicking on the ROI on the mean image. This will display a zoomed-in view of this cell across all days on the right, and the extracted fluorescence time series below.
-
-For more details on how to use the GUI for visualising track2p results see [documentation](https://github.com/juremaj/track2p/blob/main/docs/gui.md).
 
 ## Run via script
 
