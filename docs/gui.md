@@ -74,6 +74,6 @@ IMAGE
 
 The user can use <span style="background-color: yellow;">PCA</span> PCA (Principal Component Analysis) and t-SNE (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
 
-
+<span style="background-color: lightblue;">avec différentes couleurs</span>
 
 
