@@ -66,7 +66,7 @@ For more details on how to run the algorithm through the GUI see [run](https://g
 
 Here we assume that each of the recording is **same imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee). 
 
-*** Warning: to avoid an error, don't delete or rename suite2p data after running track2p. This is because the interface uses the paths to the suite2p datasets saved in `track_ops.npy`.***
+***Warning: to avoid an error, don't delete or rename suite2p data after running track2p. This is because the interface uses the paths to the suite2p datasets saved in `track_ops.npy`***
 
 
 The interface lets the user view and interact with the agorithm's results. You can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data'. Then, the user have to provide the path to the track2p folder (containing the results of the algorithm (see [outputs](https://github.com/juremaj/track2p/blob/main/docs/outputs.md)) and the plane you want to open. 
