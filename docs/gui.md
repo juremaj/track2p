@@ -28,9 +28,9 @@ You can tick the option `Save the outputs in suite2p format (containing cells tr
 
 The user has three buttons on the toolbar:
 
-`Run`: launches the algorithm.
-`File`: downloads data already processed by the algorithm.
-`Visualisation`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time. (for more details, see the section 'Raster plot' below).
+- `Run`: launches the algorithm.
+- `File`: downloads data already processed by the algorithm.
+- `Visualisation`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time. (for more details, see the section 'Raster plot' below).
 
 ## Main window
 
