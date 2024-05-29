@@ -24,7 +24,15 @@ You can tick the option `Save the outputs in suite2p format (containing cells tr
 
 # GUI usage
 
-## Visualisations
+## Toolbar
+
+The user has three buttons on the toolbar:
+
+`Run`: launches the algorithm.
+`File`: downloads data already processed by the algorithm.
+`Visualisation`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time. (for more details, see the section 'Raster plot' below).
+
+## Main window
 
 It offers several visualizations: 
 
@@ -49,5 +57,16 @@ The status bar is divided into several parts:
 
 - A text box with an up-down control: the user can browse all cells detected by the algorithm as present every day, and all central window information will be updated
 
---
+The interface allows the user to correct the results of the algorithm's multi-day cell tracking. On initialization, all cells detected as being correctly tracked each day by our algorithm have a status of 1. This information is stored in `track_ops.vector_curation`. Each plane has its own vector. 
+
+However, the user can assess the quality of cell tracking and activity by inspecting cell outlines or by closely examining fluorescence traces. Subsequently, adjustments can be made to the status of a cell within track_ops.vector_curation through the interface.
+
+- `State of ROI`: informs the user of the cell status stored in track_ops.npy
+- ✅: is used to set the cell state to 0 in track_ops.vector_curation
+- ❌: is used to set the cell state to 1 in track_ops.vector_curation
+- `Apply curation`: is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**. 
+
+
+## Raster plot 
+
 
