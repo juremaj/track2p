@@ -51,7 +51,7 @@ The bottom bar is divided into several parts:
 
 - A text box with an up-down control: the user can browse all cells detected by the algorithm as present every day, and all central window information will be updated
 
-The interface allows the user to correct the results of the algorithm's multi-day cell tracking. On initialization, all cells detected as being correctly tracked each day by our algorithm have a status of 1. This information is stored in `track_ops.vector_curation`. Each plane has its own vector.
+The interface allows the user to correct the results of the algorithm's multi-day cell tracking. On initialization, all cells detected as being correctly tracked each day by our algorithm have a status of 1. This information is stored in `track_ops.vector_curation` (see [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md))
 
 However, the user can assess the quality of cell tracking and activity by inspecting cell outlines or by closely examining fluorescence traces. Subsequently, adjustments can be made to the status of a cell within track_ops.vector_curation through the interface.
 
