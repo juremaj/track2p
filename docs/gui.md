@@ -30,7 +30,7 @@ The user has three buttons on the toolbar:
 
 - `Run`: launches the algorithm.
 - `File`: downloads data already processed by the algorithm.
-- `Visualisation`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
+- `Visualization`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
 
 ## Main window
 
@@ -52,7 +52,6 @@ IMAGE
 
 ## Status bar
 
-
 The status bar is divided into several parts:
 
 - A text box with an up-down control: the user can browse all cells detected by the algorithm as present every day, and all central window information will be updated
@@ -61,12 +60,20 @@ The interface allows the user to correct the results of the algorithm's multi-da
 
 However, the user can assess the quality of cell tracking and activity by inspecting cell outlines or by closely examining fluorescence traces. Subsequently, adjustments can be made to the status of a cell within track_ops.vector_curation through the interface.
 
-- `State of ROI`: informs the user of the cell status stored in track_ops.npy
+- State of ROI: informs the user of the cell status stored in track_ops.npy
 - ✅: is used to set the cell state to 0 in track_ops.vector_curation
 - ❌: is used to set the cell state to 1 in track_ops.vector_curation
 - `Apply curation`: is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**. 
 
 
 ## Raster plot 
+
+After activating the GUI through python -m track2p the user should navigate to the 'Visualization' tab on the top of the window and select 'Generate raster plot' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to track2p folder and to set several parameters.The pop-up window is structured like a form and instructions are provided next to each parameter to be entered.
+
+IMAGE 
+
+The user can use !![highlight]PCA (Principal Component Analysis) and t-SNE (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
+
+
 
 
