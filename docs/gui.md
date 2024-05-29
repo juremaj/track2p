@@ -6,6 +6,8 @@ After activating the GUI through `python -m track2p` the user should navigate to
 
 ## Suite2p dataset organization
 
+_ _Warning: to avoid an error, don't delete or rename suite2p data after running track2p. This is because the interface uses the paths to the suite2p datasets saved in `track_ops.npy` ('track_ops.all_ds_path')_ _
+
 Suite2p datasets must be structured in a specific way to be compatible with the algorithm. You need to create a folder for each day a mouse is registered. Within this folder, a folder named 'suite2p' must be present, containing one sub-folder per plane. Then, Suite2p outputs for each plane should be placed in the respective subfolder. **Please note, when you give the suite2p datasets to the algorithm, you have to give them from the first day of recording to the last day**. In this way, the first day of recording will correspond to day 1 in the interface. 
 
 Below is an example of a mouse imagined over 7 days on two different planes. 
