@@ -12,7 +12,7 @@ A vector is created per plane `colors_plane_x`
 - `track_ops.save_in_s2p_format` :  allows to generate the suite2p files containing only the cells present on every day (See [matched_suite2p](https://github.com/juremaj/track2p/blob/main/docs/gui.md#run-track2p))
 - `track_ops.vector_curation` : It is a vector of the length of the number of cells found every day by our algorithm. It represents the state of each cell, varying between 0 and 1, where 0 means that it is considered "not cell" by the user, and 1 means that it is recognized as a "cell". It is appallingly updated by the user’s choice. 
 A vector is created per plane `vector_curation_plane_x`
-(See [curation]([https://github.com/juremaj/track2p/blob/main/docs/gui.md](https://github.com/juremaj/track2p/blob/main/docs/gui.md#bottom-bar)))
+(See [curation](https://github.com/juremaj/track2p/blob/main/docs/gui.md](https://github.com/juremaj/track2p/blob/main/docs/gui.md#bottom-bar))
 
 
 (for basic documentation see comments in `track2p/ops/default.py`, more documentation will be added soon).
