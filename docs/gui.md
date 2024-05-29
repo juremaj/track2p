@@ -32,7 +32,7 @@ The user has three buttons on the toolbar:
 - `File` : downloads data already processed by the algorithm.
 - `Visualization` : allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
 
-## Central Window
+## Central window
 
 The central area of the interface presents various visualizations.
 
@@ -43,7 +43,7 @@ Once a cell is selected, a zoomed-in view of the surrounding area for each day (
 At the bottom , users can view the fluorescence trace of the selected cell for each record. The tracks are organized chronologically, with the track at the top corresponding to the first day of recording, followed by the following days. To further analyze these traces, users can zoom in by drawing a rectangle from the bottom left corner to the top right corner of the trace. After drawing the rectangle, they can zoom in by pressing 'enter' and zoom out by pressing 'r'.
 
 
-## Bottom Bar
+## Bottom bar
 
 The bottom bar is divided into several parts:
 
