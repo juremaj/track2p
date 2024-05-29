@@ -71,7 +71,9 @@ The interface lets the user view and interact with the agorithm's results.
 
 The user can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data'. Then, the user have to provide the path to the track2p folder (containing the results of the algorithm) and the plane he wants to open. 
 
-Briefly, the window is divided into three parts, in the upper left, the 'mean image' produced by suite2p for each day are displayed, showing the cells detected by our algorithm on every day. These images are interactive, allowing the user to click on a cell, which will display the fluorescence traces of each day at the bottom of the window (from the first day to the last). In addition, a zoom on the cell in each day is shown in the top right, with its index in the 'suite2p’ dataset of the corresponding day and the probability that it has assigned suite2p (iscell.npy). Finally, the user can browse all the cells detected by our algorithm using the bar at the bottom or enter a specific number. A correction section is also available, allowing to interfere with the results of the algorithm (see curation). 
+Once completed, the interface showcases multiple visualizations.
+
+In the upper left, the 'mean image' produced by suite2p for each day are displayed, showing the cells detected by the algorithm on every day. These images are interactive, allowing the user to click on a cell, which will display the fluorescence traces of each day at the bottom of the window (from the first day to the last). In addition, a zoom on the cell in each day is shown in the top right, with its index in the 'suite2p’ dataset of the corresponding day and the probability that it has assigned suite2p (iscell.npy). Finally, the user can browse all the cells detected by our algorithm using the bar at the bottom or enter a specific number (see [gui](https://github.com/juremaj/track2p/blob/main/docs/gui.md)). 
 
 Below is an example of a mouse imagined over 7 days on two different planes.
 
