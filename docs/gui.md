@@ -28,25 +28,25 @@ You can tick the option `Save the outputs in suite2p format (containing cells tr
 
 The user has three buttons on the toolbar:
 
-- `Run`: launches the algorithm.
-- `File`: downloads data already processed by the algorithm.
-- `Visualization`: allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
+- `Run` : launches the algorithm.
+- `File` : downloads data already processed by the algorithm.
+- `Visualization` : allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
 
 ## Main window
 
 It offers several visualizations: 
 
-- In the top left-hand corner, the mean image for each recording is displayed in a tab named according to the recording day number (day1, day2 ...). The user can navigate through these tabs by clicking on them. Moreover, the user can zoom in on specific regions of the image and then click on a cell to highlight it.
+In the top left-hand corner, the mean image for each recording is displayed in a tab named according to the recording day number (day1, day2 ...). The user can navigate through these tabs by clicking on them. Moreover, the user can zoom in on specific regions of the image and then click on a cell to highlight it.
 
 IMAGE
 
 Once a cell is clicked: 
 
-- In the top right-hand corner a zoom (window of 40 pixels around the cell) from each mean image is displayed.
+In the top right-hand corner a zoom (window of 40 pixels around the cell) from each mean image is displayed.
 
 IMAGE
   
-- At the bottom, the cell's fluorescence trace for each recording (per frame) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of recording and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `enter` to zoom in and `r` to zoom out.
+At the bottom, the cell's fluorescence trace for each recording (per frame) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of recording and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `enter` to zoom in and `r` to zoom out.
 
 IMAGE
 
@@ -60,10 +60,10 @@ The interface allows the user to correct the results of the algorithm's multi-da
 
 However, the user can assess the quality of cell tracking and activity by inspecting cell outlines or by closely examining fluorescence traces. Subsequently, adjustments can be made to the status of a cell within track_ops.vector_curation through the interface.
 
-- State of ROI: informs the user of the cell status stored in track_ops.npy
-- ✅: is used to set the cell state to 0 in track_ops.vector_curation
-- ❌: is used to set the cell state to 1 in track_ops.vector_curation
-- `Apply curation`: is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**. 
+- State of ROI : informs the user of the cell status stored in track_ops.npy
+- ✅ : is used to set the cell state to 0 in track_ops.vector_curation
+- ❌ : is used to set the cell state to 1 in track_ops.vector_curation
+- Apply curation : is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**. 
 
 
 ## Raster plot 
@@ -72,10 +72,10 @@ After activating the GUI through python -m track2p the user should navigate to t
 
 IMAGE 
 
-The user can use **PCA** (Principal Component Analysis) and **t-SNE** (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
+The user can use `PCA`(Principal Component Analysis) and `t-SNE` (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
 
 The user can also enter advanced settings:
 
-- Averaging bin size: to smooth the plot raster data through events over defined time intervals.
+- Averaging bin size : to smooth the plot raster data through events over defined time intervals.
 - vmin and vmax parameters allow to adjust the contrast
   
