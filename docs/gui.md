@@ -32,27 +32,20 @@ The user has three buttons on the toolbar:
 - `File` : downloads data already processed by the algorithm.
 - `Visualization` : allows results to be visualized using raster plots, providing a precise graphical representation of neuronal activity over time (for more details, see section 'Raster plot' below).
 
-## Main window
+## Central Window
 
-It offers several visualizations: 
+The central area of the interface presents various visualizations.
 
-In the top left-hand corner, the mean image for each recording is displayed in a tab named according to the recording day number (day1, day2 ...). The user can navigate through these tabs by clicking on them. Moreover, the user can zoom in on specific regions of the image and then click on a cell to highlight it.
+In the top left-hand corner, users can find a mean image displayed for each recording, labeled with the corresponding day number (e.g., day1, day2, etc.). They can navigate through these images by clicking on the tabs representing each day. Additionally, users have the option to zoom into specific regions of the image and click on individual cells to highlight them.
 
-IMAGE
+Once a cell is selected, a zoomed-in view of the surrounding area for each day (a window of 40 pixels around the cell) is displayed in the top right-hand corner.
 
-Once a cell is clicked: 
+At the bottom , users can view the fluorescence trace of the selected cell for each record. The tracks are organized chronologically, with the track at the top corresponding to the first day of recording, followed by the following days. To further analyze these traces, users can zoom in by drawing a rectangle from the bottom left corner to the top right corner of the trace. After drawing the rectangle, they can zoom in by pressing 'enter' and zoom out by pressing 'r'.
 
-In the top right-hand corner a zoom (window of 40 pixels around the cell) from each mean image is displayed.
 
-IMAGE
-  
-At the bottom, the cell's fluorescence trace for each recording (per frame) are displayed. The fluorescence trace at the top of the plot corresponds to the first day of recording and so on. The user can zoom in by drawing a rectangle *from the bottom left corner to the top right corner* as many times as desired. Once the rectangle has been drawn, the user must issue the following command: `enter` to zoom in and `r` to zoom out.
+## Bottom Bar
 
-IMAGE
-
-## Status bar
-
-The status bar is divided into several parts:
+The bottom bar is divided into several parts:
 
 - A text box with an up-down control: the user can browse all cells detected by the algorithm as present every day, and all central window information will be updated
 
