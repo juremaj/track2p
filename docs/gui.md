@@ -21,8 +21,6 @@ You can choose between 'manually curated' and 'iscell threshold'. Choosing 'manu
 You can tick the option 'Save the outputs in suite2p format (containing cells tracked on all days)'. In this case, it will produce a version of the Suite2p datasets (stat.npy, iscell.npy, F.npy..) containing only the cells tracked on all days. Consequently, if you open the stats.npy files for different days in Suite2p and examine cell 0 for each day, you'll see that this cell corresponds to the same neural entity detected as being the same on these different days by our algorithm. 
 
 
-![ex_t2p_processed_data.png](media/plots/ex_t2p_processed_data.png) 
-
 
 # Visualisations
 
