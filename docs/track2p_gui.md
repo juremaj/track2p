@@ -20,6 +20,10 @@ The algorithm launch window is structured like a form and instructions are provi
 
 IMAGE
 
+### Options
+
 You can choose between `manually curated` and `iscell threshold`. Choosing 'manually curated' means that manual adjustments made by the user in the Suite2p interface will be taken into account. As a reminder, Suite2p detects regions of interest (ROIs) on the average image generated from a series of microscopy images. After this automatic detection, users can annotate each ROI by manually classifying them as “cell” or “not cell”. By selecting the 'manually curated' option, the algorithm will only test ROIs classified as “cell” for matching with other days of recordings. When selecting 'iscell_thr', the user must define a threshold. Only regions of interest (ROIs) detected in Suite2p with a threshold greater than this will be retained for tracking by the algorithm. As a reminder, in Suite2p, users can set a threshold for detecting regions of interest (ROIs). This threshold controls the sensitivity of detection relative to the image background.
 
 You can tick the option `Save the outputs in suite2p format (containing cells tracked on all days)`. In this case, it will produce a version of the Suite2p datasets (stat.npy, iscell.npy, F.npy..) containing only the cells tracked on all days. Consequently, if you open the stats.npy files for different days in Suite2p and examine cell 0 for each day, you'll see that this cell corresponds to the same neural entity detected as being the same on these different days by the algorithm. These files will be located in a  `matched_suite2p` folder inside the track2p folder, and will be organized in the same way as the originals.
+
+
