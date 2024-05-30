@@ -61,13 +61,13 @@ After activating the GUI through `python -m track2p` the user should navigate to
 
 Then, once the algorithm completes its tasks, a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results (of a specific plane) within the interface.
 
-For more details on how to run the algorithm through the GUI see [run](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
+For more details on how to run the algorithm through the GUI see [run track2p](https://github.com/juremaj/track2p/blob/main/docs/gui.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
 
 ## Using the GUI
 
 _ _Here we assume that each of the recording is **same imaging frequency**, **number of planes** and **number of channels** (otherwise might not work, or we cant guarantee)_ _
 
-The user can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to the track2p folder (containing the results of the algorithm) and the plane he wants to open. 
+After activating the GUI through python -m track2p the user can download the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to the track2p folder (containing the results of the algorithm) and the plane he wants to open. 
 
 Once completed, the interface showcases multiple visualizations.
 In the upper left, the 'mean image' produced by suite2p for each day are displayed, showing the cells detected by track2p on every day. These images are interactive, allowing the user to click on a cell, which will display the fluorescence traces of each day at the bottom of the window (from the first day to the last). In addition, a zoom on the cell in each day is shown in the top right, with its index in the 'suite2p’ dataset of the corresponding day and the probability that it has assigned suite2p (iscell.npy). Finally, the user can browse all the cells detected by our algorithm using the bar at the bottom or enter a specific number. Finally, the user can evaluate the quality of the tracking for each cell, and annotate the results according to its correction. 
