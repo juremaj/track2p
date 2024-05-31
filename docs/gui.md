@@ -32,14 +32,17 @@ However, the user can assess the quality of cell tracking and activity by inspec
 - State of ROI : informs the user of the cell status stored in track_ops.npy
 - ✅ : is used to set the cell state to 0 in track_ops.vector_curation
 - ❌ : is used to set the cell state to 1 in track_ops.vector_curation
-- Apply curation : is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**. 
+- Apply curation : is used to apply the evaluation made by the user. When the user clicks on this button, all cells with a status of 0 will be **white**, while those with a status of 1 will be **colored**.
 
+Below an example of a cell considered 'not cell' by the user (neuronal recording of a mouse for 7 days)
+
+![ex_curation.png](media/plots/ex_curation.png)
 
 ## Raster plot 
 
 After activating the GUI through python -m track2p the user should navigate to the 'Visualization' tab on the top of the window and select 'Generate raster plot' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to track2p folder and to set several parameters.The pop-up window is structured like a form and instructions are provided next to each parameter to be entered.
 
-IMAGE 
+IMAGE
 
 The user can use `PCA`(Principal Component Analysis) and `t-SNE` (t-distributed Stochastic Neighbor Embedding) techniques to reduce data dimensionality and visualize cell clusters in a more intuitive way.  In addition, it can classify cells according to their activity for a specific day, which makes it possible to analyze variations in cell activity from day to day.
 
@@ -48,5 +51,7 @@ The user can also enter advanced settings:
 - Averaging bin size : to smooth the plot raster data through events over defined time intervals.
 - vmin and vmax parameters allow to adjust the contrast
 
-IMAGE
+Below  an example of a raster plot generated with the t-sne algorithm, sorted on last day and 10 averaged
+
+![ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.pdf](media/plots/ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.pdf)
   
