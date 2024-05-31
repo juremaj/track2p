@@ -53,5 +53,5 @@ The user can also enter advanced settings:
 
 Below  an example of a raster plot generated with the t-sne algorithm, sorted on last day and 10 averaged
 
-![ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.pdf](media/plots/ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.pdf)
+![ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.png](media/plots/ex_rasterplot_sorting_tSNE_and_by_day_7_plane0.png)
   
