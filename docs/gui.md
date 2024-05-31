@@ -18,6 +18,9 @@ Once a cell is selected, a zoomed-in view of the surrounding area for each day (
 
 At the bottom , users can view the fluorescence trace of the selected cell for each record. The tracks are organized chronologically, with the track at the top corresponding to the first day of recording, followed by the following days. To further analyze these traces, users can zoom in by drawing a rectangle from the bottom left corner to the top right corner of the trace. After drawing the rectangle, they can zoom in by pressing 'enter' and zoom out by pressing 'r'.
 
+Here, the user has zommed on a specific cell as well as on the fluorescence of the two first days (neuronal recording of a mouse for 7 days)
+
+![ex_all_vizualizations_zoomed.png](media/plots/ex_all_vizualizations_zoomed.png)
 
 ## Bottom bar
 
@@ -51,7 +54,7 @@ The user can also enter advanced settings:
 - Averaging bin size : to smooth the plot raster data through events over defined time intervals.
 - vmin and vmax parameters allow to adjust the contrast
 
-Below  an example of a raster plot generated with the t-sne algorithm, sorted on last day and 10 averaged
+Below  an example of a raster plot generated with the t-sne algorithm, sorted on last day and 10 averaged (neuronal recording of a mouse for 7 days)
 
 ![ex_raster.png](media/plots/ex_raster.png)
   
