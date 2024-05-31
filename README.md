@@ -74,7 +74,9 @@ In the upper left, the 'mean image' produced by suite2p for each day are display
 
 For more details on how to use the GUI see [GUI usage](https://github.com/juremaj/track2p/blob/main/docs/gui.md)
 
-Below is an example of a mouse imagined over 7 days on two different planes.
+Below is an example of a mouse imagined over 7 days (P-P) on one plane (with `track_ops.iscell_thr=0.25` and `track_ops.reg_chan = 1`)
+
+![](media/plots/ex_all_vizualizations.png)
 
 
 
