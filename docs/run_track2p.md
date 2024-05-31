@@ -10,9 +10,10 @@ _ _Warning: to avoid an error, don't delete or rename suite2p data after running
 
 Suite2p datasets must be structured in a specific way to be compatible with the algorithm. You need to create a folder for each day a mouse is registered. Within this folder, a folder named 'suite2p' must be present, containing one sub-folder per plane. Then, Suite2p outputs for each plane should be placed in the respective subfolder. **Please note, when you give the suite2p datasets to the algorithm, you have to give them from the first day of recording to the last day**. In this way, the first day of recording will correspond to day 1 in the interface. 
 
-Below is an example of a mouse imagined over 7 days on two different planes. 
+Below is an example of a mouse imagined over 7 days one plane. 
 
-IMAGE
+![ex_suite2p_dataset.png](docs/media/plots/ex_suite2p_dataset.png)
+
 
 ## Run track2p
 
