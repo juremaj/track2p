@@ -19,7 +19,8 @@ Below is an example of a mouse imagined over 7 days one plane.
 
 The algorithm launch window is structured like a form and instructions are provided next to each parameter to be entered.
 
-IMAGE
+![ex_t2p_window.png](media/plots/ex_t2p_window.png)
+
 
 ### Options
 
