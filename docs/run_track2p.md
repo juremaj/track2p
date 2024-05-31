@@ -12,7 +12,7 @@ Suite2p datasets must be structured in a specific way to be compatible with the 
 
 Below is an example of a mouse imagined over 7 days one plane. 
 
-![ex_suite2p_datasets.png](media/plots/ex_suite2p_datasets.png)
+![ex_suite2p_dt.png](media/plots/ex_suite2p_dt.png)
 
 
 ## Run track2p
