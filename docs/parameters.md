@@ -6,7 +6,7 @@
 - `track_ops.save_path`: where the outputs will be saved (a `track2p` folder will be generated here)
 - `track_ops.reg_chan` : channel to use for registration (0=functional, 1=anatomical) 
 
-## supplementary `track.ops` parameters (GUI)
+## Supplementary `track.ops` parameters (GUI)
 
 -  `track_ops.colors`: It's a color vector assigning a specific color to each cell. When the user opens a track2Pp dataset, each cell retains the same color at each opening.
 A vector is created per plane `colors_plane_x`
