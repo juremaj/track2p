@@ -76,7 +76,7 @@ For more details on how to use the GUI see [GUI usage](https://github.com/jurema
 
 Below is an example of a mouse imagined over 7 days (P-P) on one plane (with `track_ops.iscell_thr=0.25` and `track_ops.reg_chan = 1`)
 
-![](media/plots/ex_all_vizualizations.png)
+![]([media/plots/ex_all_vizualizations.png](https://github.com/juremaj/track2p/blob/main/docs/media/plots/ex_all_vizualizations.png))
 
 
 
