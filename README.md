@@ -75,7 +75,7 @@ python -m run_track2p
 ```
 
 
-## Visualising track2p outputs withing the GUI
+## Visualising track2p outputs within the GUI
 
 _ _ Note: For we assume that each of the to-be-matched recordings is done at the **same imaging frequency**, for the same **imaging time**, contains the same **number of planes** and **number of imaging channels** (otherwise we can not guarantee track2p will work)_ _
 
