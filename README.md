@@ -91,7 +91,7 @@ In the upper left, the GUI visualises the mean image of the motion-corrected fun
 
 In addition, a zoomed-in image of the cell for each day is shown in the top right. Underneath each zoomed-in image the GUI displays this cell's index in the corresponding 'suite2p’ dataset and the 'iscell' probability suite2p has assigned to it on that day.
 
-Finally, the user can browse all the putative matches detected by the algorithm using the bar at the bottom to toggle through matches, or alternatively they can enter the index of a specific number to display it within the GUI. This bar is also used for manual curation, where we allow the user to evaluate the quality of the tracking for each individual match cell, and annotate the results according to its correction. 
+Finally, the user can browse all the putative matches detected by the algorithm using the bar at the bottom to toggle through matches, or alternatively they can enter the index of a specific number to display it within the GUI. This bar is also used for manual curation, where we allow the user to evaluate the quality of the tracking for each individual match.
 
 For more details on how to use the GUI see [GUI usage](https://github.com/juremaj/track2p/blob/main/docs/gui.md)
 
