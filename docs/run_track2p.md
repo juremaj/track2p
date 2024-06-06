@@ -20,7 +20,7 @@ Below is an example of file organisation for a mouse imaged over 7 days (single 
 
 ## Run track2p
 
-The algorithm launch window is structured like a form and instructions are provided next to each parameter to be entered.
+The algorithm launch window is shown below, providing instructions next to each parameter to be entered by the user:
 
 ![ex_t2p_window.png](media/plots/ex_t2p_window.png)
 
