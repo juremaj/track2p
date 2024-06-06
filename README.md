@@ -57,9 +57,7 @@ Then follow the 'Installing via pip' instructions above :)
 
 ## Run track2p through the GUI
 
-After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu:
-
-<img width="399" alt="image" src="https://github.com/juremaj/track2p/assets/53050061/0f88cdc9-7170-4894-a8d7-1a09fae82b69">
+After activating the GUI through `python -m track2p` the user should navigate to the 'Run' tab on the top left of the window and select 'Run track2p algorithm' from the dropdown menu.
 
 This will open a pop-up window that will allow the user to set the paths to suite2p datasets and to set the algorithm parameters. After configuring these settings, the user can click 'Run' to run the track2p algorithm, and the progress will be displayed in the terminal.
 
@@ -67,22 +65,7 @@ Once the algorithm finishes a subsequent pop-up window will prompt the user to d
 
 For more details on how to run the algorithm through the GUI see [run track2p](https://github.com/juremaj/track2p/blob/main/docs/run_track2p.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
 
-## Visualising track2p outputs withing the GUI
-
-_ _ Note: For we assume that each of the recording is done at the **same imaging frequency**, for the same **number of frames**, contains the same **number of planes** and **number of channels** (otherwise we can not guarantee track2p will work)_ _
-
-After activating the GUI through python -m track2p the user can import the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to the track2p folder (containing the results of the algorithm) and the plane he wants to open. 
-
-Once completed, the interface showcases multiple visualizations.
-In the upper left, the 'mean image' produced by suite2p for each day are displayed, showing the cells detected by track2p on every day. These images are interactive, allowing the user to click on a cell, which will display the fluorescence traces of each day at the bottom of the window (from the first day to the last). In addition, a zoom on the cell in each day is shown in the top right, with its index in the 'suite2p’ dataset of the corresponding day and the probability that it has assigned suite2p (iscell.npy). Finally, the user can browse all the cells detected by our algorithm using the bar at the bottom or enter a specific number. Finally, the user can evaluate the quality of the tracking for each cell, and annotate the results according to its correction. 
-
-Below is an example of a mouse imagined over 7 days (P-P) on one plane (with `track_ops.iscell_thr=0.25` and `track_ops.reg_chan = 1`)
-
-![ex_all_vizualizations.png](docs/media/plots/ex_all_vizualizations.png)
-
-For more details on how to use the GUI see [GUI usage](https://github.com/juremaj/track2p/blob/main/docs/gui.md)
-
-## Run via script
+## Run track2p via script
 
 To run via script you can use the `run_track2p.py` script in the root of this repo as a template. It is exactly the same as running thrugh the gui, only that the paths and the parameters are defined within the script (for more on parameters etc. see documentation). When running make sure you are running it within the track2p environment, for example:
 
@@ -90,6 +73,28 @@ To run via script you can use the `run_track2p.py` script in the root of this re
 conda activate track2p
 python -m run_track2p
 ```
+
+
+## Visualising track2p outputs withing the GUI
+
+_ _ Note: For we assume that each of the to-be-matched recordings is done at the **same imaging frequency**, for the same **imaging time**, contains the same **number of planes** and **number of imaging channels** (otherwise we can not guarantee track2p will work)_ _
+
+After activating the GUI through python -m track2p the user can import the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to the track2p folder (containing the results of the algorithm) and the plane they want to open. 
+
+Once completed, the interface showcases multiple visualizations:
+
+![ex_all_vizualizations.png](docs/media/plots/ex_all_vizualizations.png)
+
+In this example we are using the track2p GUI to visualise the outputs for an experiment containing 7 consecutive daily recordings in mouse barrel cortex (between P8 and P14).
+
+In the upper left, the GUI visualises the mean image of the motion-corrected functional channel (usually green / GCaMP). The image is overlayed with ROIs of the cells detected by track2p across all days, with the color of a particular cell matching across days. These images are interactive, allowing the user to click on a cell, which displays the fluorescence traces on each day at the bottom of the window (sorted from the first day to the last). 
+
+In addition, a zoomed-in image of the cell for each day is shown in the top right. Underneath each zoomed-in image the GUI displays this cell's index in the corresponding 'suite2p’ dataset and the 'iscell' probability suite2p has assigned to it on that day.
+
+Finally, the user can browse all the putative matches detected by the algorithm using the bar at the bottom to toggle through matches, or alternatively they can enter the index of a specific number to display it within the GUI. This bar is also used for manual curation, where we allow the user to evaluate the quality of the tracking for each individual match cell, and annotate the results according to its correction. 
+
+For more details on how to use the GUI see [GUI usage](https://github.com/juremaj/track2p/blob/main/docs/gui.md)
+
 
 # Outputs
 
