@@ -8,7 +8,7 @@ Cell tracking for longitudinal calcium imaging recordings.
 
 For more detailed information on installation and use visit:
 
-https://track2p.github.io/
+https://track2p.github.io/ <br/>
 
 ___
 Note: We are actively developing the software for the next couple of months, so we would greatly appreciate any feedback! You can raise it as an [issue](https://github.com/juremaj/track2p/issues) on GitHub or contact us directly. Thanks!
