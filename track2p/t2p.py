@@ -8,7 +8,7 @@ from track2p.register.loop import run_reg_loop, reg_all_ds_all_roi
 from track2p.register.utils import get_all_ds_img_for_reg, get_all_ref_nonref_inters
 
 from track2p.plot.progress import plot_all_planes
-from track2p.plot.output import plot_reg_img_output, plot_thr_met_hist, plot_roi_reg_output, plot_roi_match_multiplane, plot_allroi_match_multiplane
+from track2p.plot.output import plot_reg_img_output, plot_thr_met_hist, plot_n_matched_roi, plot_roi_reg_output, plot_roi_match_multiplane, plot_allroi_match_multiplane
 
 from track2p.match.loop import get_all_ds_assign, get_all_pl_match_mat 
 import numpy as np
@@ -27,7 +27,7 @@ def run_t2p(track_ops):
     # 3) Plot available planes for registration
     plot_all_planes(all_ds_avg_ch1, track_ops)
     if track_ops.nchannels==2:
-        plot_all_planes(all_ds_avg_ch2, track_ops)
+        plot_all_planes(all_ds_avg_ch2, track_ops, ch='anatomical')
 
     # 4) do the actual registration based on chosen channel
     all_ds_ref_img, all_ds_mov_img = get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops)
@@ -58,6 +58,7 @@ def run_t2p(track_ops):
     # 7) get optimal assignments for all pairs of recordings (first to last)
     all_ds_assign, all_ds_assign_thr, all_ds_thr_met, all_ds_thr = get_all_ds_assign(track_ops, all_ds_all_roi_ref, all_ds_all_roi_reg)
     plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops)
+    plot_n_matched_roi(all_ds_thr_met, all_ds_thr, track_ops)
 
 
     # 8) get match matrices for all pairs of recordings (first to last)
@@ -84,6 +85,8 @@ def run_t2p(track_ops):
 
     plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size) # TODO: match histogram to the first roi of first batch (not first roi of each batch)
     plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops)
+
+
     
     print('\n\n\nDone!\n\n\n')
     

@@ -200,6 +200,41 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
     plt.close(fig)
 
 
+
+def plot_n_matched_roi(all_ds_thr_met, all_ds_thr, track_ops):
+    
+    fig, axs = plt.subplots(track_ops.nplanes, 2, figsize=(8, 4*track_ops.nplanes), sharey='col', sharex=True)
+                            
+    for i in range(track_ops.nplanes):
+        all_n_reg_roi = [len(all_ds_thr_met[j][i]) for j in range(len(all_ds_thr_met))]
+        all_n_abovethr_roi = [np.sum(all_ds_thr_met[j][i]>all_ds_thr[j][i]) for j in range(len(all_ds_thr_met))]
+        all_prop_abovethr = [n_abovethr_roi/n_reg_roi for n_abovethr_roi, n_reg_roi in zip(all_n_abovethr_roi, all_n_reg_roi)]
+
+        ax0 = axs[i, 0] if track_ops.nplanes>1 else axs[0]
+        
+        ax0.bar(np.arange(len(all_n_reg_roi)), all_n_reg_roi, color='grey', label='total')
+        ax0.bar(np.arange(len(all_n_abovethr_roi)), all_n_abovethr_roi, color='C0', label='above threshold')
+
+        ax0.set_ylabel(f'ROI count (plane {i})')
+        ax0.set_xticks(np.arange(len(all_n_reg_roi)))
+        ax0.set_xticklabels([f'r{i}-{i+1}' for i in range(len(all_n_reg_roi))])
+        ax0.legend(loc='lower right')
+        ax0.spines['top'].set_visible(False)
+        ax0.spines['right'].set_visible(False)
+
+        ax1 = axs[i, 1] if track_ops.nplanes>1 else axs[1]
+
+        ax1.plot(np.arange(len(all_n_reg_roi)), all_prop_abovethr, color='C0', marker='o')
+        ax1.set_ylabel(f'ROI prop. (plane {i})')
+        ax1.set_xticks(np.arange(len(all_n_reg_roi)))
+        ax1.set_xticklabels([f'r{i}-{i+1}' for i in range(len(all_n_reg_roi))])
+        ax1.set_ylim(0, 1)
+        ax1.spines['top'].set_visible(False)
+        ax1.spines['right'].set_visible(False)
+
+        fig.savefig(os.path.join(track_ops.save_path_fig, 'n_prop_matched_roi.png'), dpi=200, bbox_inches='tight')
+        plt.close(fig)
+
 def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64, k=0, n=None):
 
     if n is None:

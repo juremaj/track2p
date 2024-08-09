@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from track2p.plot.utils import match_hist_all
 
-def plot_all_planes(all_ds_avg_ch, track_ops, sat_perc=99):
+def plot_all_planes(all_ds_avg_ch, track_ops, sat_perc=99, ch='funcional'):
     nplanes = track_ops.nplanes
     fig, axs = plt.subplots(nplanes, len(track_ops.all_ds_path), figsize=(3 * len(track_ops.all_ds_path), 3 * nplanes), dpi=300)
     # add dummy dimension to axs if only one plane
@@ -20,6 +20,9 @@ def plot_all_planes(all_ds_avg_ch, track_ops, sat_perc=99):
             axs[i, j].imshow(img, cmap='gray', vmin=0, vmax=np.percentile(img, sat_perc))
             axs[i, j].set_title('Plane ' + str(i) + ' in dataset ' + str(j))
             axs[i, j].axis('off')
+
+    fig.savefig(track_ops.save_path_fig + f'mean_fov_{ch}.png', bbox_inches='tight', dpi=200)     
+
     plt.close(fig)
 
     
