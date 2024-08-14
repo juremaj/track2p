@@ -235,7 +235,7 @@ def plot_n_matched_roi(all_ds_thr_met, all_ds_thr, track_ops):
         fig.savefig(os.path.join(track_ops.save_path_fig, 'n_prop_matched_roi.png'), dpi=200, bbox_inches='tight')
         plt.close(fig)
 
-def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64, k=0, n=None):
+def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=0, win_size=64, k=0, n=None, ch=1):
 
     if n is None:
         n = len(neuron_ids)
@@ -275,10 +275,13 @@ def plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_i
         ax.set_yticks([])
 
     plt.tight_layout()
-    plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png'), dpi=50)
+    if ch == 1:
+        plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png'), dpi=50)
+    elif ch == 2:
+        plt.savefig(os.path.join(track_ops.save_path_fig, f'roi_match_chan2_plane{plane_idx}_idx{k}-{k+len(neuron_ids)}.png'), dpi=50)
     plt.close(fig)
 
-def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48):
+def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=48, ch=1):
 
     for i in range(track_ops.nplanes):
         pl_neuron_ids = np.arange(all_pl_match_mat[i].shape[0])
@@ -286,14 +289,14 @@ def plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_ma
             neuron_ids = pl_neuron_ids[~np.any(all_pl_match_mat[i]==None, axis=1)]
 
         if len(neuron_ids) < 100:
-            plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=i, win_size=win_size)
+            plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids, track_ops, plane_idx=i, win_size=win_size, ch=ch)
         else:
             # plot in batches of 100
             for k in range(0, len(neuron_ids), 100):
-                plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids[k:k+100], track_ops, plane_idx=i, win_size=win_size, k=k, n=len(neuron_ids))
+                plot_roi_match(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, neuron_ids[k:k+100], track_ops, plane_idx=i, win_size=win_size, k=k, n=len(neuron_ids), ch=ch)
 
 
-def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
+def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops, ch=1):
     
 
     fig, axs = plt.subplots(track_ops.nplanes, len(track_ops.all_ds_path), figsize=(4*len(track_ops.all_ds_path), 4*track_ops.nplanes), dpi=300)
@@ -344,5 +347,8 @@ def plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops):
         ax.set_yticklabels([])
 
     plt.tight_layout()
-    plt.savefig(os.path.join(track_ops.save_path_fig, f'all_roi_match.png'), dpi=300)
+    if ch == 1:
+        plt.savefig(os.path.join(track_ops.save_path_fig, f'all_roi_match.png'), dpi=300)
+    else:
+        plt.savefig(os.path.join(track_ops.save_path_fig, f'all_roi_match_chan2.png'), dpi=300)
     plt.close(fig)

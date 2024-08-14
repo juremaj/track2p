@@ -87,13 +87,14 @@ def load_all_ds_ops(track_ops):
     
     return all_ds_ops
 
-def load_all_ds_mean_img(track_ops):
+def load_all_ds_mean_img(track_ops, ch=1):
     all_ds_ops = load_all_ds_ops(track_ops)
     all_ds_mean_img = [] 
     for ds_ops in all_ds_ops:
         ds_mean_img = []
         for ops in ds_ops:
-            ds_mean_img.append(ops['meanImg'])
+            mean_img = ops['meanImg'] if ch==1 else ops['meanImg_chan2']
+            ds_mean_img.append(mean_img)
         all_ds_mean_img.append(ds_mean_img)
         
     return all_ds_mean_img
