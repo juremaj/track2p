@@ -82,9 +82,15 @@ def run_t2p(track_ops):
     all_ds_stat_iscell = load_all_ds_stat_iscell(track_ops)
     all_ds_centroids = load_all_ds_centroids(all_ds_stat_iscell, track_ops)
     all_ds_mean_img = load_all_ds_mean_img(track_ops)
+    if track_ops.nchannels==2:
+        all_ds_mean_img_ch2 = load_all_ds_mean_img(track_ops, ch=2)
+
 
     plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size) # TODO: match histogram to the first roi of first batch (not first roi of each batch)
     plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops)
+    if track_ops.nchannels==2:
+        plot_roi_match_multiplane(all_ds_mean_img_ch2, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size, ch=2) # TODO: match histogram to the first roi of first batch (not first roi of each batch)
+        plot_allroi_match_multiplane(all_ds_mean_img_ch2, all_pl_match_mat, track_ops, ch=2)
 
 
     
