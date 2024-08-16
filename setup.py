@@ -18,7 +18,11 @@ setup(
         'scikit-learn==1.4.0',
         'openTSNE==1.0.1',
         'pandas==1.5.3',
-        ],
+    ],
     long_description=long_description,
-    long_description_content_type='text/markdown'
-    )
+    long_description_content_type='text/markdown',
+    include_package_data=True,
+    package_data={
+        '': ['resources/logo.png'],
+    },
+)

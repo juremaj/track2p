@@ -6,12 +6,12 @@ from scipy.stats import zscore
 from PyQt5.QtCore import Qt
 import matplotlib.patches as patches
 from PyQt5 import QtCore
-
+from scipy.ndimage import maximum_filter1d, minimum_filter1d, gaussian_filter
 
 
 class FluorescencePlotWidget(FigureCanvas):
     """this class is used to display the fluorescence of the selected cell across days. It also allows to select a region of interest (ROI) on the fluorescence plot and zoom in on the selected ROI"""
-    def __init__(self, all_f_t2p=None, all_ops=None, colors=None, all_stat_t2p=None):
+    def __init__(self, all_f_t2p=None, all_ops=None, colors=None, all_stat_t2p=None, all_fneu=None):
         self.fig, self.ax_fluorescence = plt.subplots(1, 1)
         super().__init__(self.fig)
         self.all_f_t2p = all_f_t2p
@@ -19,6 +19,7 @@ class FluorescencePlotWidget(FigureCanvas):
         self.fig.set_facecolor('black')
         self.colors = colors
         self.all_stat_t2p= all_stat_t2p
+        self.all_fneu=all_fneu
         
         self.rect = patches.Rectangle((0,0), 1, 1, color='white', linewidth=2) 
         
@@ -83,7 +84,7 @@ class FluorescencePlotWidget(FigureCanvas):
             self.fig.canvas.draw()
 
 
-    def display_all_f_t2p(self, selected_cell_index):
+    def display_all_f_t2p(self, selected_cell_index,trace_type):
         """it plots the fluroescence of the selected cell across days where each curve being a different day (the curve at the top of the plot is the first day)"""
         
         if self.all_f_t2p is not None and selected_cell_index is not None:
@@ -97,6 +98,10 @@ class FluorescencePlotWidget(FigureCanvas):
         
             
             for i, fluorescence_data in list(enumerate(reversed(self.all_f_t2p))):
+                print(i)
+                print(self.all_ops[i]['fs'])
+                if trace_type == 'dF/F0':
+                    fluorescence_data = self.F_processing(F=fluorescence_data,Fneu= self.all_fneu[i], fs=self.all_ops[i]['fs'])
                 fluorescence_zscore = zscore(fluorescence_data, axis=1, ddof=1) #zscore is used to normalize the fluorescence data
                 offset = i * 12 #
                 y_values = fluorescence_zscore[selected_cell_index, :] + offset 
@@ -111,6 +116,7 @@ class FluorescencePlotWidget(FigureCanvas):
                     
                     adjusted_luminosity = l + (l_add *i) 
                     color = colorsys.hls_to_rgb(h, adjusted_luminosity, s)
+
                 ops=self.all_ops[i]
                 fs = ops['fs']
                 tstamps = np.arange(len(y_values))
@@ -130,3 +136,33 @@ class FluorescencePlotWidget(FigureCanvas):
             
          
         pass
+
+    def F_processing(self,F, Fneu, fs, neucoeff=0.0, baseline='maximin', sig_baseline=10.0, win_baseline=60.0, prctile_baseline: float = 8):
+    
+        print(F.shape)
+        print(Fneu.shape)
+    #neuropil substraction 
+        Fc = F - neucoeff * Fneu
+
+        print(Fc.shape)
+
+    # baseline operation  
+        win = int(win_baseline * fs)
+        if baseline == "maximin":
+            Flow = gaussian_filter(Fc, [0., sig_baseline])
+            Flow = minimum_filter1d(Flow, win)
+            Flow = maximum_filter1d(Flow, win)
+        elif baseline == "constant":
+            Flow = gaussian_filter(Fc, [0., sig_baseline])
+            Flow = np.amin(Flow)
+        elif baseline == "constant_prctile":
+            Flow = np.percentile(Fc, prctile_baseline, axis=1)
+            Flow = np.expand_dims(Flow, axis=1)
+        else:
+            Flow = 0.
+
+        F = Fc - Flow
+        print(F.shape)
+
+        return F
+      

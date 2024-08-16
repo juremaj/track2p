@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import  QWidget, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout
+from PyQt5.QtWidgets import  QWidget, QPushButton, QFileDialog, QLineEdit, QLabel, QFormLayout,QComboBox
 
 class ImportWindow(QWidget):
         
@@ -23,7 +23,13 @@ class ImportWindow(QWidget):
             self.textbox = QLineEdit(self)
             self.textbox.setFixedWidth(50) 
             self.textbox.setText('0')
+            trace_label=QLabel("Choose trace type:")
+            self.trace_choice=QComboBox()
+            self.trace_choice.addItem("F")
+            self.trace_choice.addItem("dF/F0")
+            self.trace_choice.addItem("spks")
             layout.addRow(plane_label,self.textbox)
+            layout.addRow(trace_label,self.trace_choice)
             label_run= QLabel("Run the analysis:")
             self.run_button = QPushButton("Run", self)
             self.run_button.clicked.connect(self.run)
@@ -40,5 +46,6 @@ class ImportWindow(QWidget):
                 
         def run(self):
             self.plane = int(self.textbox.text())
-            self.main_window.central_widget.data_management.import_files(self.path_to_t2p, plane=self.plane)
+            self.trace_type=self.trace_choice.currentText()
+            self.main_window.central_widget.data_management.import_files(self.path_to_t2p, plane=self.plane, trace_type=self.trace_type)
                 

@@ -5,6 +5,7 @@ from track2p.gui.statusbar import StatusBar
 from track2p.gui.data_management import DataManagement
 from track2p.gui.central_widget import CentralWidget
 from PyQt5.QtWidgets import QApplication,QMainWindow
+from PyQt5.QtGui import QIcon
 
 class MainWindow(QMainWindow):
     
@@ -16,6 +17,7 @@ class MainWindow(QMainWindow):
         self.central_widget = CentralWidget(self)
         self.toolbar = Toolbar(self)
         self.status_bar = StatusBar(self)
+   
         
         
         self.initUI()
@@ -45,7 +47,7 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.toolbar)
         self.setStatusBar(self.status_bar)
         QApplication.setStyle('Cleanlooks')
-        self.show()
+        self.showMaximized()
         
 
 

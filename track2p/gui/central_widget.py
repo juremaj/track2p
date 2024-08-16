@@ -113,11 +113,11 @@ class CentralWidget(QWidget):
                                             all_iscell_t2p=self.data_management.all_iscell,
                                             t2p_match_mat_allday=self.data_management.t2p_match_mat_allday,track_ops=self.track_ops)
             self.top_layout.addWidget(self.rois_plotting)
-        self.fluorescences_plotting.display_all_f_t2p(selected_cell_index)
+        self.fluorescences_plotting.display_all_f_t2p(selected_cell_index,trace_type=self.data_management.trace_type)
         self.rois_plotting.display_zooms(selected_cell_index)
             
                    
-    def display_first_ROI(self,index):
+    def display_first_ROI(self,index,trace_type):
         """it displays the first cell of the t2p_match_mat_allday and its fluorescence and zooms across days. It is called when the application is opened.
         An instance of FluorescencePlotWidget and an instance of ZoomPlotWidget are created and added to attributes of the MainWindow class. """
         tab_widget = self.tabs.widget(0)
@@ -127,7 +127,7 @@ class CentralWidget(QWidget):
         if self.fluorescences_plotting is None:
             self.fluorescences_plotting = FluorescencePlotWidget(all_f_t2p=self.data_management.all_f_t2p,
                                                            all_ops=self.data_management.all_ops,
-                                                           colors=self.data_management.colors, all_stat_t2p=self.data_management.all_stat_t2p)
+                                                           colors=self.data_management.colors, all_stat_t2p=self.data_management.all_stat_t2p,all_fneu=self.data_management.all_fneu)
             self.top_layout_right.addWidget(self.fluorescences_plotting)
         if self.rois_plotting is None:
             self.rois_plotting = ZoomPlotWidget(all_ops=self.data_management.all_ops,
@@ -136,6 +136,6 @@ class CentralWidget(QWidget):
                                             all_iscell_t2p=self.data_management.all_iscell,
                                             t2p_match_mat_allday=self.data_management.t2p_match_mat_allday,track_ops=self.data_management.track_ops)
             self.top_layout.addWidget(self.rois_plotting)
-        self.fluorescences_plotting.display_all_f_t2p(index)
+        self.fluorescences_plotting.display_all_f_t2p(index,trace_type)
         self.rois_plotting.display_zooms(index)
         self.main_window.status_bar.roi_state_value.setText(f"{self.vector_curation_t2p[self.main_window.status_bar.spin_box.value()]}") #
