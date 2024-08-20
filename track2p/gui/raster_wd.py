@@ -19,35 +19,34 @@ class RasterWindow(QWidget):
         def __init__(self, mainWindow ):
             super(RasterWindow,self).__init__()
             self.main_window = mainWindow
-            self.all_f_t2p=None 
-            self.all_stat_t2p=None
             self.raster_type=None
             self.bin_size = None
             self.filename=None
             self.all_f_t2p_preproc=None
             self.vmin_value=None
             self.vmax_value=None
-           
-         
+   
+            
             
             #Create the right-hand side of the window
             layout = QFormLayout()
             
-            label_imp= QLabel("Import the directory containing the 'track2p' folder:")
-            field_imp=QPushButton("Import")
-            field_imp.clicked.connect(self.load_directory_contents)
-            layout.addRow(label_imp,field_imp)
+            #label_imp= QLabel("Import the directory containing the 'track2p' folder:")
+            #field_imp=QPushButton("Import")
+            #field_imp.clicked.connect(self.load_directory_contents)
+            #layout.addRow(label_imp,field_imp)
             
-            label_imp_path= QLabel("Here is the path of the imported directory:")
-            self.field_imp_path=QLabel()
-            layout.addRow(label_imp_path,self.field_imp_path)
+            #label_imp_path= QLabel("Here is the path of the imported directory:")
+            #self.field_imp_path=QLabel()
+           # layout.addRow(label_imp_path,self.field_imp_path)
             
-            label_plane= QLabel("Choose the plane to analyze:")
-            self.field_plane=QLineEdit()
-            self.field_plane.setText('0')
-            self.field_plane.setFixedWidth(50)
-            layout.addRow(label_plane,self.field_plane)
+            #label_plane= QLabel("Choose the plane to analyze:")
+            #self.field_plane=QLineEdit()
+            #self.field_plane.setText('0')
+            #self.field_plane.setFixedWidth(50)
+            #layout.addRow(label_plane,self.field_plane)
             
+            self.checkboxes=[]
             label_checkbox= QLabel("Choose the sorting method:")
             field_checkbox= QVBoxLayout()
             self.checkbox1 = QCheckBox('without sorting', self)
@@ -55,6 +54,15 @@ class RasterWindow(QWidget):
             self.checkbox3 = QCheckBox('sorting by PCA on given day', self)
             self.checkbox4 = QCheckBox('sorting by tSNE', self)
             self.checkbox5 = QCheckBox('sorting by tSNE on given day', self)
+            self.checkboxes.append(self.checkbox1)
+            self.checkboxes.append(self.checkbox2)
+            self.checkboxes.append(self.checkbox3)
+            self.checkboxes.append(self.checkbox4)
+            self.checkboxes.append(self.checkbox5)
+
+            self.checkbox3.stateChanged.connect(self.update_day_choice)
+            self.checkbox5.stateChanged.connect(self.update_day_choice)
+
             self.day_choice= QComboBox(self)
             self.day_choice.addItem('Choose recording index (for sorting on given day)')
             field_checkbox.addWidget(self.checkbox1)
@@ -64,7 +72,14 @@ class RasterWindow(QWidget):
             field_checkbox.addWidget(self.checkbox5)
             field_checkbox.addWidget(self.day_choice)
             layout.addRow(label_checkbox,field_checkbox)
-            
+
+            for checkbox in self.checkboxes:
+                checkbox.stateChanged.connect(self.handle_checkbox_state)
+      
+            self.combined_checkbox=QCheckBox('Combined (put neurons of all planes together) ', self)
+            self.combined_checkbox.stateChanged.connect(self.concatenate_rasters)
+            layout.addRow(" ",self.combined_checkbox)
+
             label_check=QLabel("Advanced options:")
             self.check=QCheckBox(self)
             self.check.stateChanged.connect(self.display_advanced_options)
@@ -96,7 +111,7 @@ class RasterWindow(QWidget):
             
             label_run= QLabel("Run the analysis:")
             field_run=QPushButton("Run")
-            field_run.clicked.connect(self.generate_raster_plt)
+            field_run.clicked.connect(self.run)
             layout.addRow(label_run,field_run)
             
             label_save= QLabel("Save the figure:")
@@ -122,6 +137,34 @@ class RasterWindow(QWidget):
             self.setLayout(main_layout)
           
 ############################################################################################################################################################################
+
+        def update_day_choice(self):
+            if self.day_choice.count() ==1:
+                self.all_stat_t2p=self.main_window.central_widget.data_management.all_stat_t2p
+                if self.checkbox3.isChecked() or self.checkbox5.isChecked():
+                    print(self.day_choice.count())
+                    self.day_choice.clear()
+                    for i in range(len(self.all_stat_t2p)):
+                        self.day_choice.addItem(str(i + 1))
+                print('ComboBox updated')
+
+        def handle_checkbox_state(self):
+            sender = self.sender()
+            if sender.isChecked():
+                for checkbox in self.checkboxes:
+                    if checkbox != sender:
+                        checkbox.setChecked(False)
+
+        def run(self):
+            if self.combined_checkbox.isChecked():
+                self.all_f_t2p= self.concatenate_rasters()
+            else: 
+                self.all_f_t2p=self.main_window.central_widget.data_management.all_f_t2p
+            self.plane=self.main_window.central_widget.data_management.plane
+            self.preprocessing()
+            self.get_checkbox_choice()
+
+
         def display_advanced_options(self,state):
             if state == Qt.Checked:
                 self.advanced_options_group.setVisible(True)
@@ -133,25 +176,30 @@ class RasterWindow(QWidget):
                 self.bin.setVisible(False)
                 self.vmin.setVisible(False)
                 self.vmax.setVisible(False)
-                
-                
-        def load_directory_contents(self):
-            self.load_directory= QFileDialog.getExistingDirectory(self, "Select Directory")
-            if self.load_directory:
-                #self.savedirectory=savedirectory
-                self.field_imp_path.setText(f'{self.load_directory}')
-            #self.storedPlane = int(self.fieldPlane.text())
-            plane=int(self.field_plane.text())
-            self.main_window.central_widget.data_management.import_files(self.load_directory,plane)
-            self.all_f_t2p= self.main_window.central_widget.data_management.all_f_t2p
-            self.all_stat_t2p= self.main_window.central_widget.data_management.all_stat_t2p
-            for i in range(len(self.all_stat_t2p)):
-                self.day_choice.addItem(str(i + 1))
-    
+
+        def fit_pca_1d(self,data):
+            print('fitting 1d-PCA...')
+            pca=PCA(n_components=1)
+            pca.fit(data)
+            embedding = pca.components_.T
+            return embedding
+
+        def fit_tsne_1d(self,data):
+            print('fitting 1d-tSNE...')
+            tsne = TSNE(
+            n_components=1,
+            perplexity=30,
+            initialization="pca",
+            metric="euclidean",
+            n_jobs=8,
+            random_state=3
+            )
+
+            tsne_emb = tsne.fit(data.T)
+            return tsne_emb
+
         
         def get_output_save_path(self):
-            #save_path= QFileDialog.getExistingDirectory(self, "Select Directory")
-            #if save_path:
             raster_folder = os.path.join(self.load_directory,'track2p', 'raster')
             os.makedirs(raster_folder, exist_ok=True)
             self.field_output_path.setText(f'{raster_folder}')
@@ -161,8 +209,6 @@ class RasterWindow(QWidget):
         def get_checkbox_choice(self):
             vmin=float(self.vmin.text())
             vmax=float(self.vmax.text())
-            print(vmin)
-            print(vmax)
             if self.checkbox1.isChecked():
                 self.raster_type='without_sorting'
                 self.plot_track2p_rasters(self.all_f_t2p_preproc, bin_size=self.bin_size, vmin=vmin, vmax=vmax)
@@ -222,55 +268,36 @@ class RasterWindow(QWidget):
                     f_sorted = f[sort_inds, :].squeeze()
                     all_f_t2p_sorted.append(f_sorted)
                 self.plot_track2p_rasters(all_f_t2p_sorted, bin_size=self.bin_size, vmin=vmin, vmax=vmax) # plot the rasters
-       
-                    
-        
-        def generate_raster_plt(self):
-            self.set_initial_parameters()
-            self.get_checkbox_choice()
-        
-        
-############################################################################################################################################################################      
-        def set_initial_parameters(self):
-         
-            bin_data = True
-            self.bin_size = int(self.bin.text()) #numer of frames to average, 1 means no averging 
-            print(self.bin_size)
-            rem_zero_rows = True
 
+       
+        def preprocessing(self):
+            bin_data = True
+            self.bin_size = int(self.bin.text()) #number of frames to average (1 = no averging)
+            print(f'bin_size: {self.bin_size}')
+            rem_zero_rows = True
             if bin_data:
-                # f is a matrix of shape (neurons, frames) i want to average each 10 frames
                 all_f_t2p_original = copy.deepcopy(self.all_f_t2p)
                 self.all_f_t2p_preproc = [np.mean(f.reshape(f.shape[0], -1, self.bin_size), axis=2) for f in all_f_t2p_original]
-                for f in self.all_f_t2p.copy():
-                    print(f.shape)
                 # renormalize
                 self.all_f_t2p_preproc =self.zscore_all_f_t2p(self.all_f_t2p_preproc)
-                #self.all_f_t2p = all_f_t2p_preproc
             if rem_zero_rows:
                 # get zero rows in any of the datasets
                 zero_rows = np.any([np.sum(np.isnan(f), axis=1) for f in self.all_f_t2p_preproc], axis=0)
                 print(f'Number of zero rows: {np.sum(zero_rows)}') 
                 self.all_f_t2p_preproc= [f[~zero_rows, :] for f in self.all_f_t2p_preproc]
-                #self.all_stat_t2p = [stat[~zero_rows] for stat in self.all_stat_t2p]
+
                 
-                
-                
-        def zscore(self, f, axis=1): #axis=1 means that we are normalizing each neuron's activity (each line of the matrix f)
+        def zscore(self, f, axis=1): 
             '''this method calculates the z-score for each element in the input array f along the specified axis, ignoring NaN values.'''
             return (f - np.nanmean(f, axis=axis, keepdims=True)) / np.nanstd(f, axis=axis, keepdims=True)
 
         def zscore_all_f_t2p(self, all_f_t2p):
-            return [zscore(f, axis=1) for f in all_f_t2p]
-        
-        def norm_minmax(self, x):
-            """(x - np.min(x)) / (np.max(x) - np.min(x)) This line performs the Min-Max normalization. For each element in x, it subtracts the minimum value of x and then divides by the range of x (maximum value - minimum value). The result is an array where all values are in the range [0, 1]."""
-            return (x - np.min(x)) / (np.max(x) - np.min(x))
+            return [zscore(f, axis=1) for f in all_f_t2p] #axis=1 means that we are normalizing each neuron's activity (each line of the matrix f)
         
                 
         def plot_track2p_rasters(self, all_f_t2p, bin_size=1, vmin=None, vmax=None):
                 
-            fig, ax = plt.subplots(len(all_f_t2p), 1, figsize=(6, len(all_f_t2p)*1), dpi=150) #(rows, columns, size, resolution)
+            fig, ax = plt.subplots(len(all_f_t2p), 1, figsize=(6, len(all_f_t2p)*1), dpi=150) #rows, columns, size, resolution
 
             for i, f in enumerate(all_f_t2p):
                 ax[i].imshow(zscore(f, axis=1), aspect='auto', cmap='Greys', vmin=vmin, vmax=vmax)
@@ -299,32 +326,100 @@ class RasterWindow(QWidget):
             scene=QGraphicsScene()
             scene.addPixmap(pixmap)
             self.view.setScene(scene)
+            print('Done')
                 
             
-        def fit_pca_1d(self,data):
-            print('fitting 1d-PCA...')
-            pca=PCA(n_components=1)
-            pca.fit(data)
-            embedding = pca.components_.T
-            return embedding
-
-        def fit_tsne_1d(self,data):
-            print('fitting 1d-tSNE...')
-            # default openTSNE params
-            tsne = TSNE(
-            n_components=1,
-            perplexity=30,
-            initialization="pca",
-            metric="euclidean",
-            n_jobs=8,
-            random_state=3
-            )
-
-            tsne_emb = tsne.fit(data.T)
-            return tsne_emb
-
-
 
             
-            
-        
+        def concatenate_rasters(self):
+
+                track_ops=self.main_window.central_widget.data_management.track_ops
+                t2p_folder_path= os.path.dirname(track_ops.all_ds_path[0])
+                print(t2p_folder_path)
+                if track_ops.nplanes > 1:
+                    self.results_by_plane = {}
+                    print(track_ops.nplanes)
+                    for plane in range (track_ops.nplanes):
+                        print(plane)
+                        if plane == self.main_window.central_widget.data_management.plane:
+                            print('plane is equal to the current plane, skipping to the next plane')
+                            self.results_by_plane[plane]={
+                            'all_ft2p': self.main_window.central_widget.data_management.all_f_t2p,
+                            'all_fneu2p': self.main_window.central_widget.data_management.all_fneu
+                                        }
+                            continue
+                        print('plane is not equal to the current plane')
+                        t2p_match_mat = np.load(os.path.join(t2p_folder_path,"track2p" ,f"plane{plane}_match_mat.npy"), allow_pickle=True)
+                        t2p_match_mat_allday = t2p_match_mat[~np.any(t2p_match_mat == None, axis=1), :] 
+                        trace_type=self.main_window.central_widget.data_management.trace_type #common to all planes
+                        print(f"Processing plane {plane}")
+                        self.process_plane(plane,track_ops,t2p_match_mat_allday,trace_type)
+                    for plane, data in self.results_by_plane .items():
+                            print(f"Plane {plane}:")
+                            print(f"  all_ft2p: {len(data['all_ft2p'])}")
+                            print(f"  {len(data['all_ft2p'][0])}")
+                   
+                    # Initialiser une liste pour stocker les éléments concaténés
+                    concatenated_elements = []
+                    num_elements = len(self.results_by_plane[0]['all_ft2p'])
+                    print(f"Number of elements: {num_elements}")
+                    # Itérer sur les indices des éléments
+                    for i in range(num_elements):
+                        elements_to_concatenate = []
+                        for plane in range(track_ops.nplanes):
+                            if 'all_ft2p' in self.results_by_plane[plane] and isinstance(self.results_by_plane[plane]['all_ft2p'], list):
+                            # Récupérer l'élément i de 'all_ft2p' pour le plan actuel
+                                element = self.results_by_plane[plane]['all_ft2p'][i]
+                                elements_to_concatenate.append(element)
+                            else:
+                                print("La clé 'all_ft2p' n'existe pas ou n'est pas une liste.")
+                        if elements_to_concatenate:
+                            concatenated_element = np.vstack(elements_to_concatenate)
+                            concatenated_elements.append(concatenated_element)
+
+                    # Afficher les éléments concaténés
+                    for idx, concatenated_element in enumerate(concatenated_elements):
+                        print(f"Concatenated element {idx}:")
+                        #print(concatenated_element)
+                        print(concatenated_element.shape)
+                    
+                    return concatenated_elements
+
+
+
+        def process_plane(self, plane, track_ops, t2p_match_mat_allday, trace_type):
+            all_ft2p=[]
+            all_fneu2p=None
+            for (i, ds_path) in enumerate(track_ops.all_ds_path):
+                iscell = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'iscell.npy'), allow_pickle=True)
+                if trace_type == 'F' :
+                    print('F trace')
+                    f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'F.npy'), allow_pickle=True)
+                if trace_type == 'spks':
+                    print('spks trace')
+                    f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'spks.npy'), allow_pickle=True)
+                if trace_type == 'dF/F0':
+                    print('dF/F0 trace')
+                    if all_fneu2p is None:
+                        all_fneu2p= []
+                    f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'F.npy'), allow_pickle=True)
+                    fneu = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'Fneu.npy'), allow_pickle=True)
+                    if track_ops.iscell_thr is None:
+                        fneu_iscell = fneu[iscell[:, 0] == 1, :]
+                    else:
+                        fneu_iscell = fneu[iscell[:, 1] > track_ops.iscell_thr, :]
+                    fneu_t2p= fneu_iscell[t2p_match_mat_allday[:, i].astype(int), :]
+                    all_fneu2p.append(fneu_t2p)
+                if track_ops.iscell_thr is None:
+                    f_iscell = f[iscell[:, 0] == 1, :]
+                else:
+                    f_iscell = f[iscell[:, 1] > track_ops.iscell_thr, :] 
+                
+                f_t2p = f_iscell[t2p_match_mat_allday[:, i].astype(int), :]
+                all_ft2p.append(f_t2p)
+
+            self.results_by_plane[plane]={
+                    'all_ft2p': all_ft2p,
+                    'all_fneu2p': all_fneu2p
+                                        }
+                

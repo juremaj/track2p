@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.colors as mcolors
 import random
 from types import SimpleNamespace
+from scipy.ndimage import maximum_filter1d, minimum_filter1d, gaussian_filter
 
 class DataManagement:
     def __init__(self, central_widget):
@@ -70,11 +71,9 @@ class DataManagement:
                     fneu_iscell = fneu[iscell[:, 1] > track_ops.iscell_thr, :]
                 fneu_t2p= fneu_iscell[self.t2p_match_mat_allday[:, i].astype(int), :]
                 self.all_fneu.append(fneu_t2p)
-                print(len(self.all_fneu))
             if track_ops.iscell_thr is None:
                     stat_iscell = stat[iscell[:, 0] == 1]
                     f_iscell = f[iscell[:, 0] == 1, :]
-               
             else:
                     stat_iscell = stat[iscell[:, 1] > track_ops.iscell_thr]
                     f_iscell = f[iscell[:, 1] > track_ops.iscell_thr, :] 
@@ -87,7 +86,11 @@ class DataManagement:
             self.all_ops.append(ops)
             self.all_iscell.append(iscell)
 
-                
+        if trace_type == 'dF/F0':
+            for i in range(len(self.all_f_t2p)):
+                f_prc=self.F_processing(F=self.all_f_t2p[i], Fneu=self.all_fneu[i], fs=self.all_ops[i]['fs'])
+                self.all_f_t2p[i]=f_prc
+
        
         attr_name = 'vector_curation_plane_' + str(plane)
         if hasattr(track_ops, attr_name):
@@ -165,7 +168,7 @@ class DataManagement:
       
         self.central_widget.create_mean_img()
         self.central_widget.vector_curation_t2p = self.vector_curation_t2p
-        self.central_widget.display_first_ROI(0,trace_type)
+        self.central_widget.display_first_ROI(0)
 
         
         
@@ -179,3 +182,29 @@ class DataManagement:
         return vibrant_colors
     
     
+    def F_processing(self,F, Fneu, fs, neucoeff=0.0, baseline='maximin', sig_baseline=10.0, win_baseline=60.0, prctile_baseline: float = 8):
+    
+    #neuropil substraction 
+        Fc = F - neucoeff * Fneu
+
+    # baseline operation  
+        win = int(win_baseline * fs)
+        if baseline == "maximin":
+            Flow = gaussian_filter(Fc, [0., sig_baseline])
+            Flow = minimum_filter1d(Flow, win)
+            Flow = maximum_filter1d(Flow, win)
+        elif baseline == "constant":
+            Flow = gaussian_filter(Fc, [0., sig_baseline])
+            Flow = np.amin(Flow)
+        elif baseline == "constant_prctile":
+            Flow = np.percentile(Fc, prctile_baseline, axis=1)
+            Flow = np.expand_dims(Flow, axis=1)
+        else:
+            Flow = 0.
+
+        F = Fc - Flow
+        
+        print('DONE')
+
+        return F
+      
