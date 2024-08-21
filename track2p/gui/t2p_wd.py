@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QWidget,  QHBoxLayout, QPushButton, QFi
 from PyQt5.QtCore import Qt
 from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
-
+from track2p.gui.custom_wd import CustomDialog
 class Track2pWindow(QWidget):
         """it is used to set the parameters of the track2p algorithm"""
         def __init__(self, main_wd):
@@ -15,6 +15,7 @@ class Track2pWindow(QWidget):
             self.track_ops = DefaultTrackOps()
             self.saved_directory=None
             self.plane=None
+           
        
             instruction1=QLabel(" Import the directory containing subfolders of different recordings for the same subject:")
             self.import_recording_button = QPushButton("Import", self)
@@ -69,7 +70,26 @@ class Track2pWindow(QWidget):
             self.reg_chan.setFixedWidth(50)
             self.reg_chan.setText('0')
             layout.addRow(instruction5,self.reg_chan)
-            
+
+            trsfrm_type=QLabel("Choose the type of transformation to use for day-to-day registration:")
+            self.trsfrm_type=QComboBox()
+            self.trsfrm_type.addItem("affine")
+            self.trsfrm_type.addItem("rigid")
+            self.trsfrm_type.setCurrentIndex(0)
+            layout.addRow(trsfrm_type,self.trsfrm_type)
+
+            compute_iou=QLabel("iou_dist_thr:")
+            self.compute_iou= QLineEdit()
+            self.compute_iou.setFixedWidth(50)
+            self.compute_iou.setText('16')
+            layout.addRow(compute_iou,self.compute_iou)
+
+            thr_method=QLabel("Thresholding method for IoU histogram:")
+            self.thr_method=QComboBox()
+            self.thr_method.addItem("min")
+            self.thr_method.addItem("otsu")
+            self.thr_method.setCurrentIndex(0)
+            layout.addRow(thr_method,self.thr_method)
             
             instruction6=QLabel("Import the directory where the outputs will be saved (a 'track2p' sub-folder will be created here):")
             self.t2p_path_button = QPushButton("Import", self)
@@ -108,18 +128,24 @@ class Track2pWindow(QWidget):
                 item=self.paths_list.item(i).data(Qt.UserRole)
                 item_universel=item.replace("\\", "/")
                 stored_all_ds_path.append(item_universel)
-            print("All parameters have been recorded ! The track2p algorithm is running...")
             self.track_ops.all_ds_path= stored_all_ds_path
             save_path=self.saved_directory
             save_path=save_path.replace("\\", "/")
             self.track_ops.save_path = save_path
             self.track_ops.reg_chan=int(self.reg_chan.text())
+            self.track_ops.transform_type=self.trsfrm_type.currentText()
+            self.track_ops.iou_dist_thr=int(self.compute_iou.text())
+            self.track_ops.thr_method=self.thr_method.currentText()
+            print("transformation type:", self.track_ops.transform_type)
+            print("iou_dist_thr:", self.track_ops.iou_dist_thr)
+            print("thr_method:", self.track_ops.thr_method)
             if self.checkbox1.isChecked():
                 self.track_ops.iscell_thr=None
             if self.checkbox2.isChecked():
                 self.track_ops.iscell_thr=float(self.is_cell_thr.text())
             if self.checkbox3.isChecked():
                 self.track_ops.save_in_s2p_format=True
+            print("All parameters have been recorded ! The track2p algorithm is running...")
             run_t2p(self.track_ops)
             self.open_track2p_in_gui()
 
@@ -128,11 +154,9 @@ class Track2pWindow(QWidget):
             reply = QMessageBox.question(self, "", "Run completed successfully!\nDo you want to launch the gui?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if reply == QMessageBox.Yes:
-                text, ok = QInputDialog.getText(self, '', 'Enter your plane:')
-                if ok:
-                    self.plane=int(text)
-                    self.main_window.central_widget.data_management.import_files(self.saved_directory, plane=self.plane)
-                    self.close()
+                #print("Opening GUI...")
+                dialog = CustomDialog(self.main_window, self.saved_directory)
+                dialog.exec_()
             if reply == QMessageBox.No:
                 pass
         
@@ -170,5 +194,3 @@ class Track2pWindow(QWidget):
     
 
 
-        
-          

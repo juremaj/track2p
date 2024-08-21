@@ -14,7 +14,7 @@ class DataManagement:
         self.all_ops = []
         self.all_stat_t2p = []
         self.all_iscell = []
-        self.all_fneu= None
+        self.all_fneu= []
         self.colors = None
         self.t2p_match_mat_allday = None
         self.track_ops = None
@@ -29,6 +29,7 @@ class DataManagement:
         self.all_ops = []
         self.all_stat_t2p = []
         self.all_iscell = []
+        self.all_fneu= []
         self.colors = None
         self.t2p_match_mat_allday = None
         self.track_ops = None
@@ -60,8 +61,6 @@ class DataManagement:
                 print('spks trace')
                 f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'spks.npy'), allow_pickle=True)
             if trace_type == 'dF/F0':
-                if self.all_fneu is None:
-                    self.all_fneu = []
                 print('dF/F0 trace')
                 f = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'F.npy'), allow_pickle=True)
                 fneu = np.load(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'Fneu.npy'), allow_pickle=True)
@@ -184,6 +183,8 @@ class DataManagement:
     
     def F_processing(self,F, Fneu, fs, neucoeff=0.0, baseline='maximin', sig_baseline=10.0, win_baseline=60.0, prctile_baseline: float = 8):
     
+        print(F.shape)
+        print(Fneu.shape)
     #neuropil substraction 
         Fc = F - neucoeff * Fneu
 
