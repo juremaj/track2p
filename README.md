@@ -1,5 +1,6 @@
-# track2p
 <img align="right" src="track2p/resources/logo.png" width="256">
+
+# track2p
 Cell tracking for longitudinal calcium imaging recordings.
 
 [![PyPI version](https://img.shields.io/pypi/v/track2p)](https://pypi.org/project/track2p/)
