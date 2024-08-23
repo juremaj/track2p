@@ -35,7 +35,7 @@ class DataManagement:
         self.track_ops = None
         self.vector_curation_t2p = None
         
-    def import_files(self, t2p_folder_path, plane, trace_type):
+    def import_files(self, t2p_folder_path, plane, trace_type, channel):
         
         self.plane=plane
         self.trace_type=trace_type
@@ -165,7 +165,7 @@ class DataManagement:
                 print(f'ROI {i} has been considered as "not cell"')  
         
       
-        self.central_widget.create_mean_img()
+        self.central_widget.create_mean_img(channel)
         self.central_widget.vector_curation_t2p = self.vector_curation_t2p
         self.central_widget.display_first_ROI(0)
 

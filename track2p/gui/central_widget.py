@@ -49,12 +49,12 @@ class CentralWidget(QWidget):
         self.setLayout(central_layout)
         
         
-    def create_mean_img(self):
+    def create_mean_img(self,channel):
         for i, (ops, stat_t2p) in enumerate(zip(self.data_management.all_ops, self.data_management.all_stat_t2p)):
             tab = QWidget()
             self.cell_plot = CellPlotWidget(tab, ops=ops, stat_t2p=stat_t2p, f_t2p=self.data_management.all_f_t2p[i],
                                        colors=self.data_management.colors, update_selection_callback=self.update_selection,
-                                       all_f_t2p=self.data_management.all_f_t2p, all_ops=self.data_management.all_ops)
+                                       all_f_t2p=self.data_management.all_f_t2p, all_ops=self.data_management.all_ops, channel=channel)
             layout = QVBoxLayout(tab)
             layout.addWidget(self.cell_plot)
             tab.setLayout(layout)

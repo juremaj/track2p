@@ -10,7 +10,7 @@ class CellPlotWidget(FigureCanvas):
     cell_selected = Signal(int)
 
     def __init__(self, tab=None, ops=None, stat_t2p=None, f_t2p=None, colors=None, update_selection_callback=None,
-                 all_f_t2p=None, all_stat_t2p=None, all_ops=None, initial_colors=None):
+                 all_f_t2p=None, all_stat_t2p=None, all_ops=None, initial_colors=None, channel=None):
         """It initializes the class attributes and connects certain events to their respective handlers. It also creates the figure and the axes to display the mean image of the recording."""
         self.fig, self.ax_image = plt.subplots(1, 1) 
         self.fig.set_facecolor('black')
@@ -23,24 +23,82 @@ class CellPlotWidget(FigureCanvas):
         self.all_ops=all_ops
         self.colors = colors
         self.initial_colors=initial_colors
+        self.channel = channel
+        self.all_img, self.img= self.load_all_imgs()
         self.selected_cell_index = None
         self.mpl_connect('button_press_event', self.on_mouse_press)
         self.update_selection_callback = update_selection_callback
         self.nb_cells= len(self.stat_t2p)
         self.plot_cells()
         self.initialize_interactions()
+
+    def load_all_imgs(self):
+        print('loading all images')
+        print('channel img:', self.channel)
+        all_img = []
+        img= None 
+        if self.channel == 'max_proj':
+            print('max_proj')
+            img= self.ops['max_proj']
+            Ly = self.ops['Ly'] # number of pixels in y (512)
+            Lx = self.ops['Lx'] # number of pixels in x (512)
+            yr = self.ops['yrange'] # first and last pixel of crop in y
+            xr = self.ops['xrange'] # first and last pixel of crop in x
+            range_img = np.zeros((Ly, Lx))
+            range_img[yr[0]:yr[1], xr[0]:xr[1]] = img
+            img= range_img
+            for ops in self.all_ops:
+                img_ops= ops['max_proj']
+                Ly = ops['Ly']
+                Lx = ops['Lx']
+                yr = ops['yrange']
+                xr = ops['xrange']
+                range_img = np.zeros((Ly, Lx))
+                range_img[yr[0]:yr[1], xr[0]:xr[1]] = img_ops
+                img_ops= range_img
+                all_img.append(img_ops)
+        if self.channel == 'Vcorr':
+            print('Vcorr')
+            img= self.ops['max_proj']
+            Ly = self.ops['Ly'] # number of pixels in y (512)
+            Lx = self.ops['Lx'] # number of pixels in x (512)
+            yr = self.ops['yrange'] # first and last pixel of crop in y
+            xr = self.ops['xrange'] # first and last pixel of crop in x
+            range_img = np.zeros((Ly, Lx))
+            range_img[yr[0]:yr[1], xr[0]:xr[1]] = img
+            img= range_img
+            for ops in self.all_ops:
+                img_ops= ops['max_proj']
+                Ly = ops['Ly']
+                Lx = ops['Lx']
+                yr = ops['yrange']
+                xr = ops['xrange']
+                range_img = np.zeros((Ly, Lx))
+                range_img[yr[0]:yr[1], xr[0]:xr[1]] = img_ops
+                img_ops= range_img
+                all_img.append(img_ops)            
+        if self.channel == '0':
+            #print('0')
+            all_img = [ops['meanImg'] for ops in self.all_ops]
+            img= self.ops['meanImg']
+        if self.channel == '1':
+            #print('1')
+            all_img = [ops['meanImg_chan2'] for ops in self.all_ops]
+            img= self.ops['meanImg_chan2']
+
+        return all_img, img
         
     def plot_cells(self):
         """It plots the mean image of the recording and the contours of the cells. It also sets the axis to be invisible and the title of the plot. It uses the colors attribute to color the contours of the cells. 
         the match_histograms function of the skimage library is used to match the histograms of the mean image of the recording and the last mean image of the recordings. . This is done to make the mean images of the recordings more comparable."""
         self.ax_image.clear()
         start = time.time()
-        l_mean_img=self.all_ops[-1]['meanImg']
-        match_mean_img=skimage.exposure.match_histograms(self.ops['meanImg'], l_mean_img, channel_axis=None)
+        match_mean_img=skimage.exposure.match_histograms(self.img,self.all_img[-1], channel_axis=None)
         self.ax_image.imshow(match_mean_img, cmap='gray')
         cell_count = 0
         for cell in range(self.nb_cells):
-            bin_mask = np.zeros_like(self.ops['meanImg']) #create a binary mask with the same shape as the mean image of the recording
+           # print(cell)
+            bin_mask = np.zeros_like(self.img) #create a binary mask with the same shape as the mean image of the recording
             bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
             color_cell=self.colors[cell]
             self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1) 
@@ -53,14 +111,13 @@ class CellPlotWidget(FigureCanvas):
     def plot_cells_remix(self,keys):
         self.ax_image.clear()
         start = time.time()
-        l_mean_img=self.all_ops[-1]['meanImg']
-        match_mean_img=skimage.exposure.match_histograms(self.ops['meanImg'], l_mean_img, channel_axis=None)
+        match_mean_img=skimage.exposure.match_histograms(self.img,self.all_img[-1], channel_axis=None)
         self.ax_image.imshow(match_mean_img, cmap='gray')
         cell_count = 0
         for cell in range(self.nb_cells):
             if cell in keys:
                 continue
-            bin_mask = np.zeros_like(self.ops['meanImg']) #create a binary mask with the same shape as the mean image of the recording
+            bin_mask = np.zeros_like(self.img) #create a binary mask with the same shape as the mean image of the recording
             bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
             color_cell=self.colors[cell]
             self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1) 
@@ -75,7 +132,7 @@ class CellPlotWidget(FigureCanvas):
     def underline_cell_remix(self,colors):
         
         for cell in range(self.nb_cells):
-            bin_mask = np.zeros_like(self.ops['meanImg'])
+            bin_mask = np.zeros_like(self.img)
             bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1
             color_cell=colors[cell]
             self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=1)
@@ -87,7 +144,7 @@ class CellPlotWidget(FigureCanvas):
         """It underlines the selected cell by increasing the linewidth of the contour of the cell"""
         for cell in range(self.nb_cells):
             if cell == selected_cell_index:
-                bin_mask = np.zeros_like(self.ops['meanImg']) 
+                bin_mask = np.zeros_like(self.img) 
                 bin_mask[self.stat_t2p[cell]['ypix'], self.stat_t2p[cell]['xpix']] = 1 
                 color_cell=self.colors[cell]
                 self.ax_image.contour(bin_mask, levels=[0.5], colors=[color_cell], linewidths=3)
