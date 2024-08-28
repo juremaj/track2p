@@ -135,7 +135,7 @@ class CentralWidget(QWidget):
                                             all_stat_t2p=self.data_management.all_stat_t2p,
                                             colors=self.data_management.colors,
                                             all_iscell_t2p=self.data_management.all_iscell,
-                                            t2p_match_mat_allday=self.data_management.t2p_match_mat_allday,track_ops=self.data_management.track_ops)
+                                            t2p_match_mat_allday=self.data_management.t2p_match_mat_allday,track_ops=self.data_management.track_ops, imgs= self.cell_plot.all_img)
             self.top_layout.addWidget(self.rois_plotting)
         self.fluorescences_plotting.display_all_f_t2p(index)
         self.rois_plotting.display_zooms(index)

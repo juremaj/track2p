@@ -133,32 +133,4 @@ class FluorescencePlotWidget(FigureCanvas):
          
         pass
 
-    def F_processing(self,F, Fneu, fs, neucoeff=0.0, baseline='maximin', sig_baseline=10.0, win_baseline=60.0, prctile_baseline: float = 8):
     
-        print(F.shape)
-        print(Fneu.shape)
-    #neuropil substraction 
-        Fc = F - neucoeff * Fneu
-
-        print(Fc.shape)
-
-    # baseline operation  
-        win = int(win_baseline * fs)
-        if baseline == "maximin":
-            Flow = gaussian_filter(Fc, [0., sig_baseline])
-            Flow = minimum_filter1d(Flow, win)
-            Flow = maximum_filter1d(Flow, win)
-        elif baseline == "constant":
-            Flow = gaussian_filter(Fc, [0., sig_baseline])
-            Flow = np.amin(Flow)
-        elif baseline == "constant_prctile":
-            Flow = np.percentile(Fc, prctile_baseline, axis=1)
-            Flow = np.expand_dims(Flow, axis=1)
-        else:
-            Flow = 0.
-
-        F = Fc - Flow
-        print(F.shape)
-
-        return F
-      
