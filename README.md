@@ -130,5 +130,7 @@ You can also see the YouTube recording of the talk for a reference use-case in n
 ___
 
 By Cossart Lab (Jure Majnik & Manon Mantez) 
+
 Logo by Eleonora Ambrad Giovannetti 
+
 © Copyright 2024. 
