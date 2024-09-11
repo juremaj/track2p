@@ -128,10 +128,10 @@ For now if you use the algorithm please reference the Cosyne abstract:
 You can also see the YouTube recording of the talk for a reference use-case in neocortical development: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
 
 ___
-<span style="font-size:0.5em;">
+
 
 By Cossart Lab (Jure Majnik & Manon Mantez) 
 
 Logo by Eleonora Ambrad Giovannetti 
 
-© Copyright 2024. </span>
+© Copyright 2024.
