@@ -67,9 +67,9 @@ class CentralWidget(QWidget):
         t2p_window = self.main_window.window_manager.t2p_window
 
         if import_window is not None and import_window.plane is not None:
-            self.data_management.import_files(import_window.path_to_t2p, import_window.plane)
+            self.data_management.import_files(import_window.path_to_t2p, import_window.plane, import_window.trace_type, import_window.channel)
         elif t2p_window is not None and t2p_window.saved_directory is not None:
-            self.data_management.import_files(t2p_window.saved_directory, t2p_window.plane)
+            self.data_management.import_files(t2p_window.saved_directory, t2p_window.plane, t2p_window.trace_type, t2p_window.reg_chan.text())
         else:
             print("Both import_window and t2p_window are None or not properly initialized.")
         

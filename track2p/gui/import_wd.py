@@ -54,5 +54,6 @@ class ImportWindow(QWidget):
         def run(self):
             self.plane = int(self.textbox.text())
             self.trace_type=self.trace_choice.currentText()
+            self.channel= self.channel_choice.currentText()
             self.main_window.central_widget.data_management.import_files(self.path_to_t2p, plane=self.plane, trace_type=self.trace_type, channel=self.channel_choice.currentText())
                 
