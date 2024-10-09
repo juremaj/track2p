@@ -155,7 +155,7 @@ class Track2pWindow(QWidget):
 
             if reply == QMessageBox.Yes:
                 #print("Opening GUI...")
-                dialog = CustomDialog(self.main_window, self.saved_directory)
+                dialog = CustomDialog(self.main_window, self.saved_directory, self.reg_chan.text())
                 dialog.exec_()
             if reply == QMessageBox.No:
                 pass

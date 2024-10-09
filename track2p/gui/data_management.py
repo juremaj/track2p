@@ -152,12 +152,13 @@ class DataManagement:
                 num_ones[cell] = all_iscell_value.count(1)
 
        
-        for day in range(len(self.t2p_match_mat_allday[1]) + 1):
+        for day in range(len(self.t2p_match_mat_allday[1])):
             count_cells_day=0
             for value in num_ones.values():
                 if value == day:
                     count_cells_day+=1
             print(f'Number of cells present over {day} day(s): {count_cells_day}')
+            print(t2p_match_mat.shape)
                 
         for i, line in enumerate(self.t2p_match_mat_allday): 
             if self.vector_curation_t2p[i]==0:

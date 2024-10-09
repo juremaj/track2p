@@ -5,10 +5,11 @@ from track2p.t2p import run_t2p
 from track2p.ops.default import DefaultTrackOps
 
 class CustomDialog(QDialog):
-    def __init__(self, main_window, save_directory):
+    def __init__(self, main_window, save_directory, channel):
         super(CustomDialog,self).__init__()
         self.main_window = main_window
         self.save_directory = save_directory
+        self.channel = channel
         self.cancel_clicked = False
 
         # Layout
@@ -37,7 +38,7 @@ class CustomDialog(QDialog):
         layout.addWidget(self.cancel_button)
 
     def get_inputs(self):
-        return self.plane_input.text(), self.trace_combo.currentText()
+        return self.plane_input.text(), self.trace_combo.currentText(), 
     
     def on_cancel_clicked(self):
         self.cancel_clicked = True
@@ -53,6 +54,6 @@ class CustomDialog(QDialog):
             self.plane = int(plane_text)
             self.trace_type = trace_type
             print(f"Converted plane: {self.plane}, Trace type: {self.trace_type}")  # Debugging print
-            self.main_window.central_widget.data_management.import_files(t2p_folder_path = self.save_directory, plane=self.plane, trace_type=self.trace_type)
+            self.main_window.central_widget.data_management.import_files(t2p_folder_path = self.save_directory, plane=self.plane, trace_type=self.trace_type, channel= self.channel)
             self.close()
 
