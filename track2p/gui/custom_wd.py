@@ -27,6 +27,12 @@ class CustomDialog(QDialog):
         self.trace_combo = QComboBox(self)
         self.trace_combo.addItems(["F", "spks", "dF/F0"])  
         layout.addWidget(self.trace_combo)
+
+        self.channel_label = QLabel("Choose the channel to show in the mean images:", self)
+        layout.addWidget(self.channel_label)
+        self.channel_combo = QComboBox(self)
+        self.channel_combo.addItems(["0", "1", "Vcorr","max_proj"])
+        layout.addWidget(self.channel_combo)
         
         # OK and Cancel buttons
         self.ok_button = QPushButton("OK", self)
@@ -38,7 +44,7 @@ class CustomDialog(QDialog):
         layout.addWidget(self.cancel_button)
 
     def get_inputs(self):
-        return self.plane_input.text(), self.trace_combo.currentText(), 
+        return self.plane_input.text(), self.trace_combo.currentText(), self.channel_combo.currentText()
     
     def on_cancel_clicked(self):
         self.cancel_clicked = True
@@ -50,9 +56,10 @@ class CustomDialog(QDialog):
             pass
         else: 
             print("Opening GUI...")
-            plane_text, trace_type = self.get_inputs()
+            plane_text, trace_type , channel = self.get_inputs()
             self.plane = int(plane_text)
             self.trace_type = trace_type
+            self.channel= channel
             print(f"Converted plane: {self.plane}, Trace type: {self.trace_type}")  # Debugging print
             self.main_window.central_widget.data_management.import_files(t2p_folder_path = self.save_directory, plane=self.plane, trace_type=self.trace_type, channel= self.channel)
             self.close()

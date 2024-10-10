@@ -26,25 +26,9 @@ class RasterWindow(QWidget):
             self.vmin_value=None
             self.vmax_value=None
    
-            
-            
+
             #Create the right-hand side of the window
             layout = QFormLayout()
-            
-            #label_imp= QLabel("Import the directory containing the 'track2p' folder:")
-            #field_imp=QPushButton("Import")
-            #field_imp.clicked.connect(self.load_directory_contents)
-            #layout.addRow(label_imp,field_imp)
-            
-            #label_imp_path= QLabel("Here is the path of the imported directory:")
-            #self.field_imp_path=QLabel()
-           # layout.addRow(label_imp_path,self.field_imp_path)
-            
-            #label_plane= QLabel("Choose the plane to analyze:")
-            #self.field_plane=QLineEdit()
-            #self.field_plane.setText('0')
-            #self.field_plane.setFixedWidth(50)
-            #layout.addRow(label_plane,self.field_plane)
             
             self.checkboxes=[]
             label_checkbox= QLabel("Choose the sorting method:")
@@ -200,11 +184,11 @@ class RasterWindow(QWidget):
 
         
         def get_output_save_path(self):
-            raster_folder = os.path.join(self.load_directory,'track2p', 'raster')
-            os.makedirs(raster_folder, exist_ok=True)
-            self.field_output_path.setText(f'{raster_folder}')
-            filename=os.path.join(raster_folder,'rasterplot_{}_plane{}.pdf'.format(self.raster_type,str(self.field_plane.text())))
-            plt.savefig(filename)
+            save_path, _ = QFileDialog.getSaveFileName(self, "Select Save Path")
+            if save_path:
+                self.save_path = save_path
+            print(f'Selected save path: {self.save_path}')
+            plt.savefig(self.save_path)
                 
         def get_checkbox_choice(self):
             vmin=float(self.vmin.text())

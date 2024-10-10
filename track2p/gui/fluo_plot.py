@@ -98,9 +98,12 @@ class FluorescencePlotWidget(FigureCanvas):
         
             
             for i, fluorescence_data in list(enumerate(reversed(self.all_f_t2p))):
+                #print(i)
+                #print(fluorescence_data[selected_cell_index, :])
                 fluorescence_zscore = zscore(fluorescence_data, axis=1, ddof=1) #zscore is used to normalize the fluorescence data
                 offset = i * 12 #
                 y_values = fluorescence_zscore[selected_cell_index, :] + offset 
+                #print(y_values)
                 color = self.colors[selected_cell_index] 
                 #create a gradient of colors for the curves (the darkest shade is for the last day and the lightest shade is for the first day)
                 if i == 0:
