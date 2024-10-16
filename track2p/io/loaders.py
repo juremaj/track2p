@@ -27,7 +27,9 @@ def load_stat_ds_plane(track_ops_path, track_ops, plane_idx=0):
 
 def get_all_roi_array_from_stat(stat, track_ops):
     n_xpix = track_ops.all_ds_avg_ch1[0][0].shape[0]
-    n_ypix = track_ops.all_ds_avg_ch1[0][0].shape[0]
+    n_ypix = track_ops.all_ds_avg_ch1[0][0].shape[1]
+    print(f'n_xpix: {n_xpix}, n_ypix: {n_ypix}')
+    
     all_roi_array = np.zeros((n_xpix, n_ypix, len(stat)), bool)
 
     for i in range(len(stat)):
