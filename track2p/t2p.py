@@ -78,7 +78,7 @@ def run_t2p(track_ops):
         save_in_s2p_format(track_ops)
         
     # 10) plot results
-    print('Generating plots (this can take some time)...')
+    print('Finished with algorithm!\n\nGenerating plots (this can take some time)...\n\n')
     all_ds_stat_iscell = load_all_ds_stat_iscell(track_ops)
     all_ds_centroids = load_all_ds_centroids(all_ds_stat_iscell, track_ops)
     all_ds_mean_img = load_all_ds_mean_img(track_ops)
