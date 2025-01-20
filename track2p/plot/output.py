@@ -177,7 +177,9 @@ def plot_thr_met_hist(all_ds_thr_met, all_ds_thr, track_ops):
     for i in range(len(all_ds_thr_met)):
         for j in range(track_ops.nplanes):
             axs = np.array([axs]) if type(axs) is not np.ndarray else axs
-            this_ax = axs[i] if track_ops.nplanes==1 else axs[j][i]
+            
+            this_ax = axs[i] if track_ops.nplanes==1 or len(track_ops.all_ds_path)==2 else axs[j][i]
+
             n_reg_roi = len(all_ds_thr_met[i][j])
             n_abovethr_roi = np.sum(all_ds_thr_met[i][j]>all_ds_thr[i][j])
             this_ax.hist(all_ds_thr_met[i][j], bins=20)

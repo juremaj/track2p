@@ -14,6 +14,29 @@ def load_alldays_f1_values(base_path, animals, conditions):
     return f1_values
 
 
+def load_alldays_ct_values(base_path, animals, conditions, ct_type='CT'):
+
+    ct_values = {animal: [] for animal in animals}
+    acc_values = {animal: [] for animal in animals}
+
+    for animal in animals:
+        for condition in conditions:
+            metrics = np.load(os.path.join(base_path, animal, condition,f'result_{ct_type}.npy'), allow_pickle=True)
+            
+            print(metrics)
+            print('-------------------')
+
+            ct = metrics[0][1:]
+            acc = metrics[1][1:]
+
+            ct_values[animal].append(np.array(ct))
+            acc_values[animal].append(np.array(acc))
+
+    return ct_values, acc_values
+
+# def load_alldays_ct_gt_values(base_path, animals, conditions):
+
+
 def load_pairwise_f1_values(base_path, animals, condition):
 
     f1_values = {animal: [] for animal in animals}
