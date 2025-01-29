@@ -19,7 +19,6 @@ def plot_alldays_f1(animals, conditions, f1_values, symbols, colors, xshift=0):
     plt.axhline(0, color='grey', linestyle='--', alpha=0.5)
 
 
-
     plt.ylabel('F1 Score')
     plt.yticks([0, 0.5, 1])
     ax = plt.gca()
@@ -33,9 +32,9 @@ def plot_pairwise_f1(animals, condition, pairwise_f1_values, symbols, colors, sh
     plt.figure(figsize=(2, 2))
     plt.title(f'{condition}')
     plt.xlabel('Days')
-    plt.ylabel('F1 Score')
+    plt.ylabel('Prop. correct')
 
-    for animal in animals:
+    for (i, animal) in enumerate(animals):
 
         if show_d0:
             y_data = np.concatenate([[1], pairwise_f1_values[animal]])
@@ -43,7 +42,10 @@ def plot_pairwise_f1(animals, condition, pairwise_f1_values, symbols, colors, sh
             y_data = pairwise_f1_values[animal]
 
         x_data = np.arange(1, len(y_data) + 1)
-        plt.plot(x_data, y_data, label=animal, marker=symbols[animal], color=colors[animal], markersize=4)  
+
+        zorder = 10 if animal == 'jm039' else i + 1
+
+        plt.plot(x_data, y_data, label=animal, marker=symbols[animal], color=colors[animal], markersize=4, zorder=zorder)  
     
     # add a dashed grey line at y=0
     plt.axhline(0, color='grey', linestyle='--', alpha=0.5)
