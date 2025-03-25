@@ -15,6 +15,8 @@ For more detailed information on installation and use visit:
 https://track2p.github.io/ 
 <br/>
 <br/>
+Or read the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367v1).
+<br/>
 <br/>
 
 ___
@@ -119,13 +121,11 @@ For more information see documentation relating to track2p [viusalisations](http
 
 # Reference
 
-For now if you use the algorithm please reference the Cosyne abstract:
+For now if you use the algorithm please reference the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367v1).:
 
-  **Majnik, J., Zangila, S., Cossart, R. & Platel, J. C. (2024). _Emergence of state modulation in a developing cortical circuit_. COSYNE Abstract.**
+  **Majnik, J., Mantez, M., Zangila, S., Bugeon S., Guignard L., Platel, J. C. & Cossart, R. (2025). _Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p_. bioaRxiv.**
 
-  
-
-You can also see the YouTube recording of the talk for a reference use-case in neocortical development: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
+You can also see a Youtube recording of a talk related to the preprint: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
 
 ___
 
@@ -134,4 +134,4 @@ By Cossart Lab (Jure Majnik & Manon Mantez)
 
 Logo by Eleonora Ambrad Giovannetti 
 
-© Copyright 2024.
+© Copyright 2025.
