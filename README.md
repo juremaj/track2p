@@ -121,9 +121,9 @@ For more information see documentation relating to track2p [viusalisations](http
 
 # Reference
 
-For now if you use the algorithm please reference the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367v1).:
+For now if you use the algorithm please reference the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367v1):
 
-  **Majnik, J., Mantez, M., Zangila, S., Bugeon S., Guignard L., Platel, J. C. & Cossart, R. (2025). _Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p_. bioaRxiv.**
+  **Majnik, J., Mantez, M., Zangila, S., Bugeon S., Guignard L., Platel, J. C. & Cossart, R. (2025). _Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p_. bioRxiv.**
 
 You can also see a Youtube recording of a talk related to the preprint: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
 
