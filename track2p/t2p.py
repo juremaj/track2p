@@ -13,6 +13,8 @@ from track2p.plot.output import plot_reg_img_output, plot_thr_met_hist, plot_n_m
 from track2p.match.loop import get_all_ds_assign, get_all_pl_match_mat 
 import numpy as np
 import os
+import scipy as spicy
+import pandas as pd
 
 
 def run_t2p(track_ops):
@@ -135,7 +137,22 @@ def generate_suite2p_indices (track_ops):
             true_indices.append(indexes)
 
         true_indices = np.array([[int(x) if x is not None else None for x in row] for row in true_indices])
+        true_indices_nan= np.array([[float(x) if x is not None else np.nan for x in row] for row in true_indices])
+
         np.save(os.path.join(track_ops.save_path, f"plane{plane}_suite2p_indices.npy"), true_indices)
+        np.save(os.path.join(track_ops.save_path, f"plane{plane}_suite2p_indices_nan.npy"), true_indices_nan)
+        spicy.io.savemat(os.path.join(track_ops.save_path, f"plane{plane}_suite2p_indices.mat"), {'data': true_indices_nan})
+
+        column_names = [os.path.basename(ds_path) for ds_path in track_ops.all_ds_path]
+        csv_path = os.path.join(track_ops.save_path, f"plane{plane}_suite2p_indices.csv")
+        df=pd.DataFrame(true_indices, columns=column_names)
+        df.to_csv(csv_path, index=False, sep=';', na_rep='NaN')
+
+        print(true_indices.dtype)
+        print(true_indices_nan.dtype)
+    
+
+
 
     
 
