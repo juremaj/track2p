@@ -71,6 +71,10 @@ def run_t2p(track_ops):
     
     save_all_pl_match_mat(all_pl_match_mat, track_ops)
 
+    print('Generating suite2p indices')
+    generate_suite2p_indices(track_ops)
+
+
 
     # 10) save in suite2p format
     if track_ops.save_in_s2p_format:
@@ -95,6 +99,44 @@ def run_t2p(track_ops):
 
     
     print('\n\n\nDone!\n\n\n')
+
+
+
+def generate_suite2p_indices (track_ops):
+
+
+    for plane in range(track_ops.nplanes):
+
+        t2p_match_mat = np.load(os.path.join(track_ops.save_path, f"plane{plane}_match_mat.npy"), allow_pickle=True)
+
+        all_iscell = []
+
+        for ds_path in track_ops.all_ds_path:
+            iscell = np.load(os.path.normpath(os.path.join(ds_path, 'suite2p', f'plane{plane}', 'iscell.npy')), allow_pickle=True)
+            all_iscell.append(iscell)
+
+        true_indices = []
+
+        for line in t2p_match_mat:
+            indexes = []
+            for day, index_match in enumerate(line):
+                if index_match is None:
+                    indexes.append(None)
+                else:
+                    iscell = all_iscell[day]
+                    if track_ops.iscell_thr is None:
+                        indices_lignes_1 = np.where(iscell[:, 0] == 1)[0]  # ROIs considérés comme cellules
+                    else:
+                        indices_lignes_1 = np.where(iscell[:, 1] > track_ops.iscell_thr)[0]  # ROIs avec proba > threshold
+
+                    true_index = indices_lignes_1[index_match] 
+                    indexes.append(true_index)
+
+            true_indices.append(indexes)
+
+        true_indices = np.array([[int(x) if x is not None else None for x in row] for row in true_indices])
+        np.save(os.path.join(track_ops.save_path, f"plane{plane}_suite2p_indices.npy"), true_indices)
+
     
 
 def save_in_s2p_format(track_ops):
