@@ -1,14 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_alldays_f1(animals, conditions, f1_values, symbols, colors, xshift=0):
+def plot_alldays_f1(animals, conditions, f1_values, symbols, colors, xshift=0, animals_names=None):
 
-    plt.figure(figsize=(4, 2))
+    plt.figure(figsize=(4, 2), dpi=300)
     for (i, animal) in enumerate(animals):
+        print(animal)
         print(f1_values[animal])
         y_data = f1_values[animal]
         x_data = np.arange(len(conditions)) + i * xshift
-        plt.plot(x_data, y_data, symbols[animal], label=animal, color=colors[animal])
+
+        label = animal if animals_names is None else animals_names[i]
+        plt.plot(x_data, y_data, symbols[animal], label=label, color=colors[animal])
         # add vertical lines to each point
         for (i, x) in enumerate(x_data):
             plt.vlines(x, 0, y_data[i], color=colors[animal], linewidth=2)
@@ -29,7 +32,7 @@ def plot_alldays_f1(animals, conditions, f1_values, symbols, colors, xshift=0):
 
 
 def plot_pairwise_f1(animals, condition, pairwise_f1_values, symbols, colors, show_d0=True, show_legend=False):
-    plt.figure(figsize=(2, 2))
+    plt.figure(figsize=(2, 2), dpi=300)
     plt.title(f'{condition}')
     plt.xlabel('Days')
     plt.ylabel('Prop. correct')
