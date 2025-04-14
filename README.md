@@ -19,11 +19,6 @@ Or read the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367
 <br/>
 <br/>
 
-___
-*Note*: We are actively developing the software for the next couple of months, so we would greatly appreciate any feedback! You can raise it as an [issue](https://github.com/juremaj/track2p/issues) on GitHub or contact us directly. Thanks!
-___
-<br/>
-
 # Installation
 
 ## Installing via pip
