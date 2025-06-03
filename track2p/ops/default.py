@@ -12,7 +12,7 @@ class DefaultTrackOps:
         ]
  
         self.save_path = 'data/ac/ac444118/track2p/'
-        # self.save_path = 'data/jm/jm032/track2p/'
+
         self.reg_chan = 0 # channel to use for registration (0=functional, 1=anatomical) (1 is not always available)
         self.transform_type = 'affine' # 'affine' or 'nonrigid'
         self.iscell_thr = 0.50 # threshold for iscell.npy (only keep ROIs with iscell > iscell_thr) (here lowering this can be good and non-detrimental -> artefacts are unlikely to be consistently present in all datasets)
@@ -21,7 +21,7 @@ class DefaultTrackOps:
         self.iou_dist_thr = 16 # distance between centroids (in pixels) above which to skip iou computation (to save time) (this is only relevant if self.matching_method=='iou')
 
         self.thr_remove_zeros = False # remove zeros from thr_met before computing automatic threshold (this is useful when there are many zeros in thr_met, which can skew the thresholding)
-        self.thr_method = 'min' # 'otsu' or 'min' (min is just local minimum of pdf of thr_met)
+        self.thr_method = 'otsu' # 'otsu' or 'min' (min is just local minimum of pdf of thr_met)
 
         # do not change these
         self.show_roi_reg_output = False # this is slow because plt.contour is slow and also very memory intensive(it can easily crash) but the visualisation is nice for presentations (for example by increasing self.iscell_thr)

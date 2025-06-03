@@ -17,20 +17,21 @@ class Track2pWindow(QWidget):
             self.plane=None
            
        
-            instruction1=QLabel(" Import the directory containing subfolders of different recordings for the same subject:")
+            instruction1=QLabel("Import the directory containing subfolders for each session of a given subject:")
             self.import_recording_button = QPushButton("Import", self)
             self.import_recording_button.clicked.connect(self.import_path_to_recordings)
             layout.addRow(instruction1,self.import_recording_button)
             
-            instruction2= QLabel("Here is the path of the imported directory:")
+            instruction2= QLabel("Imported path:")
             instruction2.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             self.path_recording=QLabel()
             self.path_recording.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             layout.addRow(instruction2,self.path_recording)
+
             
-            instruction3=QLabel("Once loaded press '->' to add to the list of paths to use for track2p (in the right order):")
+            instruction3=QLabel("Once loaded press '->' to add to the list of paths to use for track2p (in the correct order):")
             
-            instruction4= QLabel("Choose an option for selecting suite2p ROIs:")
+            instruction4= QLabel("Method for selecting suite2p ROIs:")
             field_checkbox= QVBoxLayout()
             self.checkbox1 = QCheckBox('manually curated', self)
             self.checkbox2 = QCheckBox('iscell threshold', self)
@@ -65,38 +66,38 @@ class Track2pWindow(QWidget):
             layout.addRow("iscell threshold:",self.is_cell_thr) 
             
 
-            instruction5=QLabel("Choose the channel to use for day-to-day registration (0 : functional, 1 : anatomical (if available))")
+            instruction5=QLabel("Channel to use for registration (0 : functional, 1 : anatomical (if available))")
             self.reg_chan= QLineEdit()
             self.reg_chan.setFixedWidth(50)
             self.reg_chan.setText('0')
             layout.addRow(instruction5,self.reg_chan)
 
-            trsfrm_type=QLabel("Choose the type of transformation to use for day-to-day registration:")
+            trsfrm_type=QLabel("Choose the type of transformation to use for registration:")
             self.trsfrm_type=QComboBox()
             self.trsfrm_type.addItem("affine")
             self.trsfrm_type.addItem("rigid")
             self.trsfrm_type.setCurrentIndex(0)
             layout.addRow(trsfrm_type,self.trsfrm_type)
 
-            compute_iou=QLabel("iou_dist_thr:")
-            self.compute_iou= QLineEdit()
-            self.compute_iou.setFixedWidth(50)
-            self.compute_iou.setText('16')
-            layout.addRow(compute_iou,self.compute_iou)
+            # compute_iou=QLabel("iou_dist_thr:")
+            # self.compute_iou= QLineEdit()
+            # self.compute_iou.setFixedWidth(50)
+            # self.compute_iou.setText('16')
+            # layout.addRow(compute_iou,self.compute_iou)
 
-            thr_method=QLabel("Thresholding method for IoU histogram:")
+            thr_method=QLabel("Thresholding method for filtering IoU histogram:")
             self.thr_method=QComboBox()
             self.thr_method.addItem("min")
             self.thr_method.addItem("otsu")
-            self.thr_method.setCurrentIndex(0)
+            self.thr_method.setCurrentIndex(1)
             layout.addRow(thr_method,self.thr_method)
             
-            instruction6=QLabel("Import the directory where the outputs will be saved (a 'track2p' sub-folder will be created here):")
+            instruction6=QLabel("Import the directory where outputs will be saved (a 'track2p' sub-folder will be created):")
             self.t2p_path_button = QPushButton("Import", self)
             self.t2p_path_button.clicked.connect(self.save_directoy)
             layout.addRow(instruction6,self.t2p_path_button)
             
-            instruction7= QLabel("Here is the path to access the track2P folder:")
+            instruction7= QLabel("Path to access the output 'track2p' folder:")
             instruction7.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             self.save_path=QLabel()
             self.save_path.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -111,7 +112,7 @@ class Track2pWindow(QWidget):
             self.run_button.clicked.connect(self.run)
             layout.addRow("Run the algorithm:", self.run_button)
             
-            terminal_intruction=QLabel("To monitor the progress of the algorith see outputs in the terminal where the GUI was launched from")
+            terminal_intruction=QLabel("To monitor progress see outputs in the terminal where the GUI was launched from.")
             layout.addRow(terminal_intruction)
      
     
@@ -134,7 +135,7 @@ class Track2pWindow(QWidget):
             self.track_ops.save_path = save_path
             self.track_ops.reg_chan=int(self.reg_chan.text())
             self.track_ops.transform_type=self.trsfrm_type.currentText()
-            self.track_ops.iou_dist_thr=int(self.compute_iou.text())
+            # self.track_ops.iou_dist_thr=int(self.compute_iou.text())
             self.track_ops.thr_method=self.thr_method.currentText()
             print("transformation type:", self.track_ops.transform_type)
             print("iou_dist_thr:", self.track_ops.iou_dist_thr)
@@ -168,6 +169,9 @@ class Track2pWindow(QWidget):
                 
         def import_path_to_recordings(self):
             directory = QFileDialog.getExistingDirectory(self, "Select Directory")
+            self.saved_directory=directory
+            self.save_path.setText(f'{self.saved_directory}')
+
             if directory:
                 self.path_recording.setText(f'{directory}')
                 self.computer_file_list.clear()

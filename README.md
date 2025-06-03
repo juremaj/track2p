@@ -33,7 +33,6 @@ conda activate track2p
 Then simply install the track2p package using pip:
 
 ```
-pip install itk-elastix==0.19.1 --no-deps
 pip install track2p
 ```
 
