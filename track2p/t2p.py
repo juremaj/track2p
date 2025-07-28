@@ -34,7 +34,7 @@ def run_t2p(track_ops):
     # 4) do the actual registration based on chosen channel
     all_ds_ref_img, all_ds_mov_img = get_all_ds_img_for_reg(all_ds_avg_ch1, all_ds_avg_ch2, track_ops)
 
-    all_ds_mov_img_reg, all_ds_reg_params = run_reg_loop(all_ds_ref_img, all_ds_mov_img, track_ops) # TODO: save basic parameters for each registration as feedback (e. g. ammoung of shift, rotation, etc.) for later plotting
+    all_ds_mov_img_reg, all_ds_reg_params = run_reg_loop(all_ds_ref_img, all_ds_mov_img, track_ops)
 
     plot_reg_img_output(track_ops)
     
@@ -52,7 +52,6 @@ def run_t2p(track_ops):
     track_ops.all_ds_ref_mov_inters = all_ds_ref_mov_inters
     track_ops.all_ds_ref_reg_inters = all_ds_ref_reg_inters
 
-    # this line is very memory-intensive because of the ROIS (TODO: maybe instead of contours just plot RGB) (or somehow generate RGB image of contours (in the part before))
     if track_ops.show_roi_reg_output:
         plot_roi_reg_output(track_ops)
       
@@ -83,7 +82,7 @@ def run_t2p(track_ops):
         print('Saving in suite2p format...')
         save_in_s2p_format(track_ops)
         
-    # 10) plot results
+    # 11) plot results
     print('Finished with algorithm!\n\nGenerating plots (this can take some time)...\n\n')
     all_ds_stat_iscell = load_all_ds_stat_iscell(track_ops)
     all_ds_centroids = load_all_ds_centroids(all_ds_stat_iscell, track_ops)
@@ -92,10 +91,10 @@ def run_t2p(track_ops):
         all_ds_mean_img_ch2 = load_all_ds_mean_img(track_ops, ch=2)
 
 
-    plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size) # TODO: match histogram to the first roi of first batch (not first roi of each batch)
+    plot_roi_match_multiplane(all_ds_mean_img, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size) 
     plot_allroi_match_multiplane(all_ds_mean_img, all_pl_match_mat, track_ops)
     if track_ops.nchannels==2:
-        plot_roi_match_multiplane(all_ds_mean_img_ch2, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size, ch=2) # TODO: match histogram to the first roi of first batch (not first roi of each batch)
+        plot_roi_match_multiplane(all_ds_mean_img_ch2, all_ds_centroids, all_pl_match_mat, track_ops, win_size=track_ops.win_size, ch=2)
         plot_allroi_match_multiplane(all_ds_mean_img_ch2, all_pl_match_mat, track_ops, ch=2)
 
 
