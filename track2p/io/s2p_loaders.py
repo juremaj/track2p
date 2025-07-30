@@ -6,7 +6,10 @@ def check_nplanes(track_ops):
 
     for ds_path in track_ops.all_ds_path:
         # check how many subfolders starting with plane* in suite2p folder
-        n_planes = len([name for name in os.listdir(ds_path + '/suite2p') if name.startswith('plane')])
+        if track_ops.input_format == 'suite2p':
+            n_planes = len([name for name in os.listdir(ds_path + '/suite2p') if name.startswith('plane')])
+        elif track_ops.input_format == 'npy':
+            n_planes = len([name for name in os.listdir(ds_path + '/data_npy') if name.startswith('plane')])
         print(f'Found {n_planes} planes in {ds_path}')
         all_nplanes.append(n_planes)
     track_ops.all_nplanes = all_nplanes
