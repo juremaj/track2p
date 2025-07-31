@@ -70,7 +70,7 @@ This will open a pop-up window that will allow the user to set the paths to suit
 
 Once the algorithm finishes a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results within the interface.
 
-For more details on how to run the algorithm through the GUI see [run track2p](https://github.com/juremaj/track2p/blob/main/docs/run_track2p.md) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
+For more details on how to run the algorithm through the GUI see [run track2p](https://track2p.github.io/run_track2p_gui.html) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
 
 ## Run track2p via script
 
