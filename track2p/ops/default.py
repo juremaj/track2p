@@ -11,7 +11,7 @@ class DefaultTrackOps:
             'data/ac/ac444118/2022-09-16_a'
         ]
 
-        self.input_format = 'npy'  # 'suite2p' or 'npy' (suite2p is the default suite2p format, npy is raw numpy arrays (F.npy, fov.npy, rois.npy))
+        self.input_format = 'suite2p'  # 'suite2p' or 'npy' (suite2p is the default suite2p format, npy is raw numpy arrays (F.npy, fov.npy, rois.npy))
  
         self.save_path = 'data/ac/ac444118/track2p/'
 

@@ -31,6 +31,15 @@ class Track2pWindow(QWidget):
             
             instruction3=QLabel("Once loaded press '->' to add to the list of paths to use for track2p (in the correct order):")
             
+            # TODO: Here add da driopdown menu to select the input format (e.g. suite2p, raw npy, etc.)
+            instruction_format=QLabel("Input format:")
+            self.format=QComboBox()
+            self.format.addItem("suite2p")
+            self.format.addItem("npy")
+            self.format.setCurrentIndex(0)
+            self.format.currentIndexChanged.connect(self.display_suite2p_options)
+
+
             instruction4= QLabel("Method for selecting suite2p ROIs:")
             field_checkbox= QVBoxLayout()
             self.checkbox1 = QCheckBox('manually curated', self)
@@ -62,8 +71,9 @@ class Track2pWindow(QWidget):
             file_layout.addWidget(self.move_to_paths_list)
             file_layout.addWidget(self.paths_list)
             layout.addRow(instruction3, file_layout)
+            layout.addRow(instruction_format,self.format)
             layout.addRow(instruction4,field_checkbox)
-            layout.addRow("iscell threshold:",self.is_cell_thr) 
+            layout.addRow("suite2p iscell threshold:",self.is_cell_thr) 
             
 
             instruction5=QLabel("Channel to use for registration (0 : functional, 1 : anatomical (if available))")
@@ -122,6 +132,18 @@ class Track2pWindow(QWidget):
             else:
                 self.is_cell_thr.setVisible(False)
 
+        def display_suite2p_options(self):
+            if self.format.currentText() == "suite2p":
+                self.checkbox1.setVisible(True)
+                self.checkbox2.setVisible(True)
+                self.reg_chan.setVisible(True)
+                self.is_cell_thr.setVisible(self.checkbox2.isChecked())
+            else:
+                self.checkbox1.setVisible(False)
+                self.checkbox2.setVisible(False)
+                self.reg_chan.setVisible(False)
+                self.is_cell_thr.setVisible(False)
+
         def run(self):
     
             stored_all_ds_path = []
@@ -133,6 +155,7 @@ class Track2pWindow(QWidget):
             save_path=self.saved_directory
             save_path=save_path.replace("\\", "/")
             self.track_ops.save_path = save_path
+            self.track_ops.input_format = self.format.currentText()
             self.track_ops.reg_chan=int(self.reg_chan.text())
             self.track_ops.transform_type=self.trsfrm_type.currentText()
             # self.track_ops.iou_dist_thr=int(self.compute_iou.text())
