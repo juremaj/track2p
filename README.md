@@ -108,7 +108,7 @@ All the outputs of the script will be saved in a `track2p` folder created within
 conda install conda-forge::jupyterlab
 ```
 
-For more information see documentation relating to track2p [viusalisations](https://track2p.github.io/outputs_visualisations.html) and [outputs](https://track2p.github.io/outputs_matches.html).
+For more information see documentation relating to track2p [visualisations](https://track2p.github.io/outputs_visualisations.html) and [outputs](https://track2p.github.io/outputs_matches.html).
 
 # Reference
 
