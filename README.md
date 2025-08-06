@@ -7,7 +7,6 @@ Cell tracking for longitudinal calcium imaging recordings.
 
 [![PyPI version](https://img.shields.io/pypi/v/track2p)](https://pypi.org/project/track2p/)
 [![All time downloads](https://static.pepy.tech/badge/track2p)](https://pepy.tech/project/track2p)
-[![Monthly downloads](https://img.shields.io/pypi/dm/track2p)](https://pypi.org/project/track2p/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 For more detailed information on installation and use visit:
