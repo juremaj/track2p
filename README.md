@@ -84,8 +84,6 @@ python -m run_track2p
 
 ## Visualising track2p outputs within the GUI
 
-_ _ Note: For we assume that each of the to-be-matched recordings is done at the **same imaging frequency**, for the same **imaging time**, contains the same **number of planes** and **number of imaging channels** (otherwise we can not guarantee track2p will work)_ _
-
 After activating the GUI through python -m track2p the user can import the results of any previous analysis by clicking on 'File' tab on the top left of the window and select 'Load processed data' from the dropdown menu. This will open a pop-up window that will allow the user to set the path to the track2p folder (containing the results of the algorithm) and the plane they want to open. 
 
 Once completed, the interface showcases multiple visualizations:
