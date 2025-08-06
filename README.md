@@ -69,7 +69,7 @@ This will open a pop-up window that will allow the user to set the paths to suit
 
 Once the algorithm finishes a subsequent pop-up window will prompt the user to decide whether they wish to visualize the results within the interface.
 
-For more details on how to run the algorithm through the GUI see [run track2p](https://track2p.github.io/run_track2p_gui.html) and for more description of parameters see documentation [parameters](https://github.com/juremaj/track2p/blob/main/docs/parameters.md).
+For more details on how to run the algorithm through the GUI see [run track2p](https://track2p.github.io/run_track2p_gui.html) and for more description of parameters see documentation [parameters](https://track2p.github.io/run_inputs_and_parameters.html#parameters).
 
 ## Run track2p via script
 
@@ -97,7 +97,7 @@ In addition, a zoomed-in image of the cell for each day is shown in the top righ
 
 Finally, the user can browse all the putative matches detected by the algorithm using the bar at the bottom to toggle through matches, or alternatively they can enter the index of a specific number to display it within the GUI. This bar is also used for manual curation, where we allow the user to evaluate the quality of the tracking for each individual match.
 
-For more details on how to use the GUI see [GUI usage](https://github.com/juremaj/track2p/blob/main/docs/gui.md)
+For more details on how to use the GUI see [GUI usage](https://track2p.github.io/gui_overview.html).
 
 
 # Outputs
@@ -108,7 +108,7 @@ All the outputs of the script will be saved in a `track2p` folder created within
 conda install conda-forge::jupyterlab
 ```
 
-For more information see documentation relating to track2p [viusalisations](https://github.com/juremaj/track2p/blob/main/docs/visualisations.md) and [outputs](https://github.com/juremaj/track2p/blob/main/docs/outputs.md).
+For more information see documentation relating to track2p [viusalisations](https://track2p.github.io/outputs_visualisations.html) and [outputs](https://track2p.github.io/outputs_matches.html).
 
 # Reference
 
