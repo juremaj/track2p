@@ -116,7 +116,7 @@ For now if you use the algorithm please reference the [eLife paper](https://elif
 
   **Majnik, J., Mantez, M., Zangila, S., Bugeon, S., Guignard, L., Platel, J.-C., & Cossart, R. (2025). Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p. eLife. https://doi.org/10.7554/eLife.107540.1**
 
-You can also see a Youtube recording of a talk related to the preprint: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
+You can also see a Youtube recording of a talk related to the paper: [Link to video (starting at 47:20)](https://youtu.be/Tr97HwgQ9ik?t=2839)
 
 The data associated with the paper is also available on [Zenodo](https://zenodo.org/records/17091226)
 
