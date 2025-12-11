@@ -116,7 +116,7 @@ A brief troubleshooting guide including some common issues is included [here](ht
 
 # Reference
 
-If you use the algorithm please reference the [eLife paper](https://elifesciences.org/reviewed-preprints/107540):
+If you use the algorithm please reference the [eLife paper](https://elifesciences.org/articles/107540):
 
   **Majnik, J., Mantez, M., Zangila, S., Bugeon, S., Guignard, L., Platel, J.-C., & Cossart, R. (2025). Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p. eLife. https://doi.org/10.7554/eLife.107540.1**
 
