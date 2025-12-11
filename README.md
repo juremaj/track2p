@@ -14,7 +14,7 @@ For more detailed information on installation and use visit:
 https://track2p.github.io/ 
 <br/>
 <br/>
-Or read the [preprint](https://www.biorxiv.org/content/10.1101/2025.02.26.640367v1).
+Or read the [paper](https://elifesciences.org/articles/107540).
 <br/>
 <br/>
 
@@ -110,9 +110,13 @@ conda install conda-forge::jupyterlab
 
 For more information see documentation relating to track2p [visualisations](https://track2p.github.io/outputs_visualisations.html) and [outputs](https://track2p.github.io/outputs_matches.html).
 
+# Troubleshooting
+
+A brief troubleshooting guide including some common issues is included [here](https://github.com/juremaj/track2p/blob/main/docs/troubleshooting.md).
+
 # Reference
 
-For now if you use the algorithm please reference the [eLife paper](https://elifesciences.org/reviewed-preprints/107540):
+If you use the algorithm please reference the [eLife paper](https://elifesciences.org/reviewed-preprints/107540):
 
   **Majnik, J., Mantez, M., Zangila, S., Bugeon, S., Guignard, L., Platel, J.-C., & Cossart, R. (2025). Longitudinal tracking of neuronal activity from the same cells in the developing brain using Track2p. eLife. https://doi.org/10.7554/eLife.107540.1**
 
